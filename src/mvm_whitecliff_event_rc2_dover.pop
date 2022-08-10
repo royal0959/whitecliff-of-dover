@@ -1,0 +1,129 @@
+#base robot_standard.pop
+#base robot_giant.pop
+
+#base whitecliff_of_dover_custom.pop
+
+WaveSchedule
+{
+	StartingCurrency 800
+	CanBotsAttackWhileInSpawnRoom no
+	RespawnWaveTime 5
+
+	AddSentryBusterWhenDamageDealtExceeds 3000
+	AddSentryBusterWhenKillCountExceeds 15
+
+	Advanced 1
+	EventPopfile Halloween
+	
+	FixHuntsmanDamageBonus 1
+
+	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
+
+	CustomWeapon 
+	{
+		"No Mercy"
+		{
+			OriginalItemName "Wings of Purity" //potential buffer overflow hazard
+
+			"cancel falling damage" 1
+			"increased air control" 5
+			"increased jump height" 1.2
+
+			"special item description" "Increased gravity and air control on wearer"
+			"special item description 2" "Hold DUCK to rapidly descend"
+			"special item description 3" "Wearer never takes falling damage"
+		}
+
+		"Kirin's Ascension"
+		{
+			OriginalItemName "TF_WEAPON_INVIS" //using Upgradeable mess with things for some reason
+
+			"mult cloak rate" 50
+			"mult decloak rate" 0.001
+	
+			"special item description" "On Cloak: Remove disguise and gain a speed boost with infinite air jumps"
+			"special item description 2" "No disguise while active"
+			"special item description 3" "No cloak effect"
+			"special item description 3" "Cannot gain cloak on hit from primary weapon"
+		}
+
+		"Freelance Mercenary"
+		{
+			OriginalItemName "Activated Campaign 3 Pass"
+			"custom item model" "models/player/items/all_class/hwn_spellbook_complete.mdl"
+			"special item description" "Press the Action key to switch between classes on the fly. 5 second cooldown between uses"
+		}
+	}
+
+	ExtraLoadoutItems
+	{
+		Medic 
+		{
+
+			Primary {Item "No Mercy"}
+			Secondary {Item "Comfortably Numb"}
+		}
+		Spy 
+		{
+			PDA2 {Item "Kirin's Ascension"}
+		}
+
+		Action {Item "Freelance Mercenary" Cost 100}
+	}
+
+	ItemAttributes 
+	{
+		ClassName TF_WEAPON_PDA_ENGINEER_BUILD
+		"special item description" "Buildings start at level 2 after construction"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name FreelanceMercenary_Logic
+		ItemName "Freelance Mercenary"
+	}
+
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Sentry" 
+	}
+
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Dispenser" 
+	}
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Teleporter Entry" 
+	}
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Teleporter Exit" 
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name KirinAscension_Spawn
+		ItemName "Kirin's Ascension"
+	}
+
+	Wave // Wave 1
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+
+
+	}
+}
