@@ -10,6 +10,7 @@ WaveSchedule
 			ClassIcon soldier_bison
 
 			Skill Normal
+			WeaponRestrictions SecondaryOnly
 			Item "The Righteous Bison"
 		}
 
@@ -17,11 +18,15 @@ WaveSchedule
 		{
 			Name "Giant Drone Ranger"
 
+			Class Engineer
+
 			Skill Expert
 			WeaponRestrictions PrimaryOnly
 			Item "The Rescue Ranger"
 			
 			Attributes MiniBoss
+			Attributes AlwaysFireWeapon
+			Attributes HoldFireUntilFullReload
 
 			ItemAttributes
 			{
@@ -36,6 +41,14 @@ WaveSchedule
 
 				"projectile trail particle" ""
 				"mult projectile scale" 0.001
+			}
+
+			CharacterAttributes
+			{
+				"move speed bonus" 0.5
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
 			}
 
 			ShootTemplate

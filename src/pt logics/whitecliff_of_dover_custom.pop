@@ -2,7 +2,7 @@
 WaveSchedule
 {
 	PointTemplates
-	{		
+	{	
 		Building_Level2_Spawn
 		{
 			OnSpawnOutput
