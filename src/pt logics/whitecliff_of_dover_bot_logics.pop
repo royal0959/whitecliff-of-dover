@@ -1,0 +1,72 @@
+WaveSchedule
+{
+	PointTemplates
+	{
+		DroneRanger
+		{
+			KeepAlive 1 
+
+			OnSpawnOutput
+			{
+				Target "!activator"
+				Action "AddOutput"
+				Param "targetname sentry_bolt"			
+			}
+			
+			OnSpawnOutput
+			{
+				Target "le_sentry"
+				Action "$InheritOwner"
+				Param "!activator"	
+			}
+
+			OnSpawnOutput
+			{
+				Target "droneModel"
+				Action "Trigger"
+			}
+
+			OnParentKilledOutput
+			{
+				Target "le_sentry"
+				Action "RemoveHealth"
+				Param "100000000000000"			
+			}
+
+			// OnParentKilledOutput
+			// {
+			// 	Target "le_sentry"
+			// 	Action "Kill"
+			// 	Delay 5
+			// }
+
+			OnParentKilledOutput
+			{
+				Target "droneModel"
+				Action "Kill"	
+			}
+
+			logic_relay 
+			{
+				"targetname" "droneModel"
+
+				// "OnTrigger" "le_sentry,$SetProp$m_nSolidType,0,0,-1" 
+				"OnTrigger" "le_sentry,$SetModelOverride,models/rcat/rcat_level2.mdl,0,-1" 
+				"OnTrigger" "le_sentry,$SetProp$m_nSkin,2,0,-1"
+				"OnTrigger" "le_sentry,SetHealth,50,0,-1"
+			}
+
+			obj_sentrygun
+			{
+				"targetname" "le_sentry"
+				"teamnum" "2"
+				"defaultupgrade" "0"
+				"SolidToPlayer" "0"
+				"spawnflags" "8"
+
+				"$OnKilled" "@p@le_sentry,Kill,,-1,-1"
+			}
+		}
+
+	}
+}

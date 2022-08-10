@@ -2,8 +2,9 @@
 #base robot_giant.pop
 
 #base whitecliff_of_dover_custom.pop
+#base whitecliff_of_dover_bots.pop
 
-WaveSchedule
+cliff_of_dover
 {
 	StartingCurrency 800
 	CanBotsAttackWhileInSpawnRoom no
@@ -59,9 +60,7 @@ WaveSchedule
 	{
 		Medic 
 		{
-
 			Primary {Item "No Mercy"}
-			Secondary {Item "Comfortably Numb"}
 		}
 		Spy 
 		{
@@ -124,6 +123,91 @@ WaveSchedule
 			Action Trigger
 		}
 
+		WaveSpawn
+		{
+			Name "1_banner_bison"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+		
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+				}
+			}
+		}
 
+		//1 out of 4 crit
+		WaveSpawn
+		{
+			Name "1_bat_scouts"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 25
+		
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "1_droner"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Engineer_DroneShoot
+			}
+		}
 	}
 }

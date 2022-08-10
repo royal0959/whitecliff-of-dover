@@ -1,0 +1,48 @@
+WaveSchedule
+{
+	Templates
+	{
+		T_TFBot_Soldier_Bison
+		{
+			Name "Bison Soldier"
+
+			Class Soldier
+			ClassIcon soldier_bison
+
+			Skill Normal
+			Item "The Righteous Bison"
+		}
+
+		T_TFBot_Giant_Engineer_DroneShoot
+		{
+			Name "Giant Drone Ranger"
+
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Item "The Rescue Ranger"
+			
+			Attributes MiniBoss
+
+			ItemAttributes
+			{
+				ItemName "The Rescue Ranger"
+				"arrow hit kill time" 0.01
+				"mod projectile heat no predict target speed" 1
+				"mod projectile heat seek power" 360
+				"mod projectile heat aim error" 0
+				"mod projectile heat aim time" 10
+				"fire rate penalty"	1.35
+				"Projectile speed decreased" 0.1
+
+				"projectile trail particle" ""
+				"mult projectile scale" 0.001
+			}
+
+			ShootTemplate
+			{
+				Name SentryRanger
+				AttachToProjectile 1
+			}
+		}
+	}
+}
