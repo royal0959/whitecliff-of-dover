@@ -1,17 +1,22 @@
 #base robot_standard.pop
 #base robot_giant.pop
 
+#base rotating_shield.pop
+
 #base whitecliff_of_dover_custom.pop
 #base whitecliff_of_dover_bots.pop
+#base whitecliff_of_dover_bot_logics.pop
 
 cliff_of_dover
 {
-	StartingCurrency 800
+	StartingCurrency 1200
 	CanBotsAttackWhileInSpawnRoom no
 	RespawnWaveTime 5
 
 	AddSentryBusterWhenDamageDealtExceeds 3000
 	AddSentryBusterWhenKillCountExceeds 15
+
+	PrecacheModel "models/rcat/rcat_level2.mdl"
 
 	Advanced 1
 	EventPopfile Halloween
@@ -20,8 +25,13 @@ cliff_of_dover
 	WaveStartCountdown 3
 	
 	FixHuntsmanDamageBonus 1
+	NoThrillerTaunt 1 
+	NoRomevisionCosmetics 1  
+
+	CustomUpgradesFile mvm_upgrades_tomboy3.txt
 
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
+	LuaScriptFile "scripts/remove_zombie_model.lua"
 
 	//Mission bots
 	Mission
@@ -149,7 +159,7 @@ cliff_of_dover
 			MaxActive 15
 			SpawnCount 5
 			WaitBeforeStarting 1
-			WaitBetweenSpawns 8
+			WaitBetweenSpawns 10
 			TotalCurrency 50
 		
 			Squad 
@@ -177,12 +187,12 @@ cliff_of_dover
 			}
 		}
 
-		//1 out of 6 crit
+		//1 out of 4 crit
 		WaveSpawn
 		{
 			Name "1_bat_scouts"
 			Where spawnbot
-			TotalCount 24
+			TotalCount 32
 			MaxActive 8
 			SpawnCount 4
 			WaitBeforeStarting 0
@@ -191,10 +201,6 @@ cliff_of_dover
 		
 			RandomChoice
 			{
-				TFBot
-				{
-					Template T_TFBot_Scout_Melee
-				}
 				TFBot
 				{
 					Template T_TFBot_Scout_Melee
@@ -212,21 +218,54 @@ cliff_of_dover
 				{
 					Template T_TFBot_Scout_Melee
 				}
-				TFBot
-				{
-					Template T_TFBot_Scout_Melee
-				}
 			}
 		}
 
 		WaveSpawn
 		{
-			Name "1_droner"
+			Name "1_pocket_samurai"
+			// WaitForAllSpawned "1_banner_bison"
 			Where flankers
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+		
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Demoman_Samurai 
+				}
+				TFBot
+				{
+					//will jump with pocket
+					Template T_TFBot_Medic_QuickFix
+					Name "Jumping Quick-Fix Medic"
+					Attributes AutoJump
+					AutoJumpMin 10
+					AutoJumpMax 10
+					
+					CharacterAttributes
+					{
+						"increased jump height" 2.3
+						"bot custom jump particle"	1
+						"cancel falling damage" 1
+					}
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "1_droner"
+			Where spawnbot
 			TotalCount 2
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 12
+			WaitBeforeStarting 8
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 		
@@ -240,13 +279,13 @@ cliff_of_dover
 		{
 			Name "1_conchknight"
 			WaitForAllSpawned "1_droner"
-			Where spawnbot
+			Where flankers
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 6
+			WaitBeforeStarting 20
 			WaitBetweenSpawns 0
-			TotalCurrency 0
+			TotalCurrency 50
 		
 			TFBot
 			{
@@ -267,13 +306,13 @@ cliff_of_dover
 		{
 			Name "1_otherknights"
 			WaitForAllSpawned "1_conchknight"
-			Where spawnbot
+			Where flankers
 			TotalCount 2
 			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
-			TotalCurrency 0
+			TotalCurrency 50
 		
 			TFBot
 			{
@@ -289,6 +328,53 @@ cliff_of_dover
 				}
 			}
 		}
+
+		WaveSpawn 
+		{
+			Name "1_tank"
+			WaitForAllDead "1_droner"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 0
 		
+			TotalCurrency 100
+		
+			Tank
+			{
+				Name "tankboss"
+				StartingPathTrackNode "tank_path_1"
+				Health 20000
+				Speed 75
+
+				ClassIcon tank_shield
+				Template RShieldLvL1
+		
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "1_bb"
+			WaitForAllSpawned "1_tank"
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_RocketShotgun 
+			}
+		}
 	}
 }

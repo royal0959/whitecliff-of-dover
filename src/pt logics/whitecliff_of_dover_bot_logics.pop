@@ -2,6 +2,15 @@ WaveSchedule
 {
 	PointTemplates
 	{
+		NoZombieModel
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$RemoveZombieModel"
+				Delay 0.1
+			}
+		}
 		DroneRanger
 		{
 			KeepAlive 1 
@@ -50,19 +59,19 @@ WaveSchedule
 			{
 				"targetname" "droneModel"
 
-				// "OnTrigger" "le_sentry,$SetProp$m_nSolidType,0,0,-1" 
+				"OnTrigger" "le_sentry,$SetProp$m_nSolidType,0,0,-1" 
 				"OnTrigger" "le_sentry,$SetModelOverride,models/rcat/rcat_level2.mdl,0,-1" 
-				"OnTrigger" "le_sentry,$SetProp$m_nSkin,2,0,-1"
+				"OnTrigger" "le_sentry,$SetProp$m_nSkin,1,0,-1"
 				"OnTrigger" "le_sentry,SetHealth,50,0,-1"
 			}
 
 			obj_sentrygun
 			{
 				"targetname" "le_sentry"
-				"teamnum" "2"
+				"teamnum" "3"
 				"defaultupgrade" "0"
 				"SolidToPlayer" "0"
-				"spawnflags" "8"
+				"spawnflags" "72" // inf ammo + mini sentry
 
 				"$OnKilled" "@p@le_sentry,Kill,,-1,-1"
 			}
