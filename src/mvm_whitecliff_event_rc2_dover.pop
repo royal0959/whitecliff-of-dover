@@ -61,7 +61,7 @@ cliff_of_dover
 
 			"charge recharge rate increased" 1.4
 
-			"special item description" "Alt-fire to negate all incoming damage deal back twice the amount to the attacker"
+			"special item description" "Alt-fire to negate all incoming damage and deal back twice the amount to the attacker"
 			"special item description 2" "Parry period lasts for 0.8 seconds"
 			"special item description 3" "Cannot charge"
 		}
