@@ -32,6 +32,7 @@ cliff_of_dover
 
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
 	LuaScriptFile "scripts/remove_zombie_model.lua"
+	LuaScriptFile "scripts/dover_custom_weapons.lua"
 
 	//Mission bots
 	Mission
@@ -50,6 +51,21 @@ cliff_of_dover
 
 	CustomWeapon 
 	{
+		"Parry Addiction"
+		{
+			OriginalItemName "Festive Targe 2014"
+
+			"dmg taken from blast reduced" 0.9
+			"dmg taken from fire reduced" 0.9
+			"dmg taken from bullets reduced" 0.9
+
+			"charge recharge rate increased" 1.4
+
+			"special item description" "Alt-fire to negate all incoming damage deal back twice the amount to the attacker"
+			"special item description 2" "Parry period lasts for 0.8 seconds"
+			"special item description 3" "Cannot charge"
+		}
+
 		"No Mercy"
 		{
 			OriginalItemName "Wings of Purity" //potential buffer overflow hazard
@@ -86,6 +102,10 @@ cliff_of_dover
 
 	ExtraLoadoutItems
 	{
+		Demoman 
+		{
+			Secondary {Item "Parry Addiction"}
+		}
 		Medic 
 		{
 			Primary {Item "No Mercy"}
@@ -130,6 +150,12 @@ cliff_of_dover
 	{
 		Name Building_Level2_Spawn
 		BuildingType "Teleporter Exit" 
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name ParryAddiction_Spawn
+		ItemName "Parry Addiction"
 	}
 
 	PlayerItemEquipSpawnTemplate 
@@ -224,7 +250,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "1_pocket_samurai"
-			// WaitForAllSpawned "1_banner_bison"
+			WaitForAllSpawned "1_banner_bison"
 			Where flankers
 			TotalCount 6
 			MaxActive 4

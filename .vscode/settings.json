@@ -1,0 +1,11 @@
+{
+	"Lua.diagnostics.globals": [
+		"IN_ATTACK",
+		"timer",
+		"ents",
+		"Entity",
+		"IN_ATTACK2",
+		"Vector",
+		"PrintTable"
+	],
+}

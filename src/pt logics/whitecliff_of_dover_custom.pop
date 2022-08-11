@@ -3,6 +3,20 @@ WaveSchedule
 {
 	PointTemplates
 	{	
+		ParryAddiction_Spawn
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$ParryAddictionEquip" 
+			}
+			// OnParentKilledOutput
+			// {
+			// 	Target "popscript"
+			// 	Action "$ParryAddictionUnequip" 
+			// }
+		}
+		
 		Building_Level2_Spawn
 		{
 			OnSpawnOutput
