@@ -6,6 +6,7 @@
 		"Entity",
 		"IN_ATTACK2",
 		"Vector",
-		"PrintTable"
+		"PrintTable",
+		"DMG_GENERIC"
 	],
 }

@@ -9,7 +9,7 @@
 
 cliff_of_dover
 {
-	StartingCurrency 1200
+	StartingCurrency 1500
 	CanBotsAttackWhileInSpawnRoom no
 	RespawnWaveTime 5
 
@@ -33,6 +33,7 @@ cliff_of_dover
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
 	LuaScriptFile "scripts/remove_zombie_model.lua"
 	LuaScriptFile "scripts/dover_custom_weapons.lua"
+	LuaScriptFile "scripts/dover_custom_bots.lua"
 
 	//Mission bots
 	Mission
@@ -47,6 +48,29 @@ cliff_of_dover
 		{
 			Template T_TFBot_SentryBuster
 		}
+	}
+
+	ExtraSpawnPoint 
+    {
+        Name "undying_first_death" //gets enabled after undying runner dies for the first time
+		StartDisabled 1 
+        TeamNum 3 
+        X "2921"            
+        Y "-4554"                  
+        Z "528"        
+    }
+
+	ExtraTankPath 
+	{
+		Name "monoculus" 
+		Node "3132 -3841.4 673.1" 
+		Node "2217 -4970 1100"
+		Node "1895 -4490 1100"
+		Node "1616.27 -2140.15 750"
+		Node "-358.16 421.37 750"
+		Node "-1763.047241 421.37 750"
+		Node "-2141.252441 -367.175446 750"
+		Node "-2423.677979 -1522.862427 584.926025"
 	}
 
 	CustomWeapon 
@@ -222,7 +246,7 @@ cliff_of_dover
 			MaxActive 8
 			SpawnCount 4
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 8
+			WaitBetweenSpawns 12
 			TotalCurrency 25
 		
 			RandomChoice
@@ -230,20 +254,44 @@ cliff_of_dover
 				TFBot
 				{
 					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
 					Attributes AlwaysCrit
 				}
 				TFBot
 				{
 					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
 				}
 				TFBot
 				{
 					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
 				}
 				TFBot
 				{
 					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
 				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "1_post_bat_support"
+			WaitForAllSpawned "1_bat_scouts"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 12
+			TotalCurrency 25
+
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_Flaregun
 			}
 		}
 
@@ -311,7 +359,7 @@ cliff_of_dover
 			SpawnCount 1
 			WaitBeforeStarting 20
 			WaitBetweenSpawns 0
-			TotalCurrency 50
+			TotalCurrency 100
 		
 			TFBot
 			{
@@ -338,7 +386,7 @@ cliff_of_dover
 			SpawnCount 1
 			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
-			TotalCurrency 50
+			TotalCurrency 200
 		
 			TFBot
 			{
@@ -371,7 +419,7 @@ cliff_of_dover
 			{
 				Name "tankboss"
 				StartingPathTrackNode "tank_path_1"
-				Health 20000
+				Health 15000
 				Speed 75
 
 				ClassIcon tank_shield
@@ -387,19 +435,129 @@ cliff_of_dover
 
 		WaveSpawn
 		{
+			Name "1_tank_support"
+			WaitForAllSpawned "1_tank"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 25
+
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Scattergun_SlowFire
+			}
+		}
+
+		WaveSpawn
+		{
 			Name "1_bb"
 			WaitForAllSpawned "1_tank"
 			Where flankers
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 15
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_RocketShotgun 
+			}
+		}
+	}
+
+	Wave // Wave 2
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name "2_undying_first_death"
+			Where undying_first_death
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 50
+			TotalCurrency 0
+
+			Support Limited
+		
+			RandomChoice
+			{
+				RandomChoice
+				{
+					TFBot
+					{
+						Class Scout
+						SpawnTemplate KillOnSpawn
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_undying_runner"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+
+			Support Limited
 		
 			TFBot
 			{
-				Template T_TFBot_Giant_Soldier_RocketShotgun 
+				Template T_TFBot_Undying_Runner
+			}
+		}
+
+		// spawns in after undying runner dies for the first time
+		WaveSpawn
+		{
+			Name "2_monoculus"
+			WaitForAllSpawned "2_undying_first_death"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 150
+		
+			Tank
+			{
+				Name "tankboss"
+				StartingPathTrackNode "monoculus_1"
+				Health 18000
+				Speed 100
+
+				SpawnTemplate Monoculus_Annotation
+				Template Monoculus
+		
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
 			}
 		}
 	}

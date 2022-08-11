@@ -80,7 +80,6 @@ function ParryAddictionEquip(_, activator)
 	parryCallbacks.keyPress = {
 		Type = 7,
 		ID = activator:AddCallback(7, function(_, key)
-			print(key)
 			if key ~= IN_ATTACK2 then
 				return
 			end
