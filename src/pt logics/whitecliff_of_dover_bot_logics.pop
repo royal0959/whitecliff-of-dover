@@ -38,6 +38,7 @@ WaveSchedule
 				Target "le_sentry"
 				Action "$InheritOwner"
 				Param "!activator"	
+				Delay 0.1
 			}
 
 			OnSpawnOutput

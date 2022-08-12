@@ -246,6 +246,8 @@ cliff_of_dover
 
 	SpawnTemplate Global_Filters
 
+	//add in something inbetween the drones and the tank
+
 	Wave // Wave 1
 	{
 		StartWaveOutput
@@ -606,7 +608,7 @@ cliff_of_dover
 		// 	{
 		// 		Name "tankboss"
 		// 		StartingPathTrackNode "monoculus_1"
-		// 		Health 18000
+		// 		Health 10000
 		// 		Speed 75
 
 		// 		SpawnTemplate Monoculus_Annotation
