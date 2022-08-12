@@ -34,6 +34,7 @@ cliff_of_dover
 	LuaScriptFile "scripts/remove_zombie_model.lua"
 	LuaScriptFile "scripts/dover_custom_weapons.lua"
 	LuaScriptFile "scripts/dover_custom_bots.lua"
+	LuaScriptFile "scripts/projectile_shield_damage.lua" 
 
 	//Mission bots
 	Mission
@@ -67,14 +68,38 @@ cliff_of_dover
 		Node "2217 -4970 1100"
 		Node "1895 -4490 1100"
 		Node "1616.27 -2140.15 750"
-		Node "-358.16 421.37 750"
-		Node "-1763.047241 421.37 750"
-		Node "-2141.252441 -367.175446 750"
-		Node "-2423.677979 -1522.862427 584.926025"
+		Node "-358.16 421.37 700"
+		Node "-1763.047241 421.37 650"
+		Node "-2415 -388 650"
+		Node "-2423.677979 -1522.862427 580"
 	}
 
 	CustomWeapon 
 	{
+		"Biker's Redeemer"
+		{
+			OriginalItemName "The Flying Guillotine"
+
+			"item style override" 1
+			"projectile speed decreased" 0.5
+			"damage bonus HIDDEN" 0
+			"mod projectile heat no predict target speed" 1
+			"mod projectile heat seek power" 360
+			"mod projectile heat aim error" 0
+			"mod projectile heat aim time" 100
+
+			"projectile lifetime" 9
+
+			"explosion particle" ""
+
+			"override projectile type" 2
+			"custom projectile model" "models/weapons/c_models/c_sd_cleaver/c_sd_cleaver.mdl"
+			"projectile trail particle" "eyeboss_projectile"
+
+			"special item description" "Home onto and phase through enemy, dealing contact damage each time"
+			"special item description 2" "Damage is increased by 10 for each enemy hit, up to 50 extra damage"
+		}
+
 		"Parry Addiction"
 		{
 			OriginalItemName "Festive Targe 2014"
@@ -126,6 +151,10 @@ cliff_of_dover
 
 	ExtraLoadoutItems
 	{
+		Scout 
+		{
+			Secondary {Item "Biker's Redeemer"}
+		}
 		Demoman 
 		{
 			Secondary {Item "Parry Addiction"}
@@ -141,7 +170,22 @@ cliff_of_dover
 
 		Action {Item "Freelance Mercenary" Cost 100}
 	}
+	ExtendedUpgrades
+	{
+		redeemer_dmg
+		{
+			Name "+25% damage bonus" 
+			Attribute "damage bonus" 
+			Cap 2 
+			Increment 0.25 
+			Cost 200
 
+			AllowedWeapons 
+			{
+				ItemName "Biker's Redeemer"
+			}
+		}
+	}
 	ItemAttributes 
 	{
 		ClassName TF_WEAPON_PDA_ENGINEER_BUILD
@@ -178,8 +222,20 @@ cliff_of_dover
 
 	PlayerItemEquipSpawnTemplate 
 	{
+		Name Redeemer_Spawn
+		ItemName "Biker's Redeemer"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
 		Name ParryAddiction_Spawn
 		ItemName "Parry Addiction"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name NoMercy_Spawn
+		ItemName "No Mercy"
 	}
 
 	PlayerItemEquipSpawnTemplate 
@@ -187,6 +243,8 @@ cliff_of_dover
 		Name KirinAscension_Spawn
 		ItemName "Kirin's Ascension"
 	}
+
+	SpawnTemplate Global_Filters
 
 	Wave // Wave 1
 	{
@@ -230,107 +288,87 @@ cliff_of_dover
 				{
 					Template T_TFBot_Soldier_Bison
 				}
-				TFBot
-				{
-					Template T_TFBot_Soldier_Bison
-				}
+				// TFBot
+				// {
+				// 	Template T_TFBot_Soldier_Bison
+				// }
 			}
 		}
 
 		//1 out of 4 crit
-		WaveSpawn
-		{
-			Name "1_bat_scouts"
-			Where spawnbot
-			TotalCount 32
-			MaxActive 8
-			SpawnCount 4
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 12
-			TotalCurrency 25
+		// WaveSpawn
+		// {
+		// 	Name "1_bat_scouts"
+		// 	Where spawnbot
+		// 	TotalCount 32
+		// 	MaxActive 8
+		// 	SpawnCount 4
+		// 	WaitBeforeStarting 0
+		// 	WaitBetweenSpawns 12
+		// 	TotalCurrency 25
 		
-			RandomChoice
-			{
-				TFBot
-				{
-					Template T_TFBot_Scout_Melee
-					ClassIcon scout_bat
-					Attributes AlwaysCrit
-				}
-				TFBot
-				{
-					Template T_TFBot_Scout_Melee
-					ClassIcon scout_bat
-				}
-				TFBot
-				{
-					Template T_TFBot_Scout_Melee
-					ClassIcon scout_bat
-				}
-				TFBot
-				{
-					Template T_TFBot_Scout_Melee
-					ClassIcon scout_bat
-				}
-			}
-		}
+		// 	RandomChoice
+		// 	{
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Scout_Melee
+		// 			ClassIcon scout_bat
+		// 			Attributes AlwaysCrit
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Scout_Melee
+		// 			ClassIcon scout_bat
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Scout_Melee
+		// 			ClassIcon scout_bat
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Scout_Melee
+		// 			ClassIcon scout_bat
+		// 		}
+		// 	}
+		// }
 
-		WaveSpawn
-		{
-			Name "1_post_bat_support"
-			WaitForAllSpawned "1_bat_scouts"
-			Where spawnbot
-			TotalCount 2
-			MaxActive 2
-			SpawnCount 2
-			WaitBeforeStarting 8
-			WaitBetweenSpawns 12
-			TotalCurrency 25
-
-			Support 1
-
-			TFBot
-			{
-				Template T_TFBot_Pyro_Flaregun
-			}
-		}
-
-		WaveSpawn
-		{
-			Name "1_pocket_samurai"
-			WaitForAllSpawned "1_banner_bison"
-			Where flankers
-			TotalCount 6
-			MaxActive 4
-			SpawnCount 2
-			WaitBeforeStarting 1
-			WaitBetweenSpawns 10
-			TotalCurrency 50
+		// WaveSpawn
+		// {
+		// 	Name "1_pocket_samurai"
+		// 	WaitForAllSpawned "1_banner_bison"
+		// 	Where flankers
+		// 	TotalCount 6
+		// 	MaxActive 4
+		// 	SpawnCount 2
+		// 	WaitBeforeStarting 1
+		// 	WaitBetweenSpawns 10
+		// 	TotalCurrency 50
 		
-			Squad 
-			{
-				TFBot
-				{
-					Template T_TFBot_Demoman_Samurai 
-				}
-				TFBot
-				{
-					//will jump with pocket
-					Template T_TFBot_Medic_QuickFix
-					Name "Jumping Quick-Fix Medic"
-					Attributes AutoJump
-					AutoJumpMin 10
-					AutoJumpMax 10
+		// 	Squad 
+		// 	{
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Demoman_Samurai 
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			//will jump with pocket
+		// 			Template T_TFBot_Medic_QuickFix
+		// 			Name "Jumping Quick-Fix Medic"
+		// 			Attributes AutoJump
+		// 			AutoJumpMin 10
+		// 			AutoJumpMax 10
 					
-					CharacterAttributes
-					{
-						"increased jump height" 2.3
-						"bot custom jump particle"	1
-						"cancel falling damage" 1
-					}
-				}
-			}
-		}
+		// 			CharacterAttributes
+		// 			{
+		// 				"increased jump height" 2.3
+		// 				"bot custom jump particle"	1
+		// 				"cancel falling damage" 1
+		// 			}
+		// 		}
+		// 	}
+		// }
 		
 		WaveSpawn
 		{
@@ -339,13 +377,34 @@ cliff_of_dover
 			TotalCount 2
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 8
+			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 		
 			TFBot
 			{
 				Template T_TFBot_Giant_Engineer_DroneShoot
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name "1_drone_support"
+			WaitForAllSpawned "1_droner"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 12
+			TotalCurrency 25
+
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_Flaregun
 			}
 		}
 
@@ -522,7 +581,7 @@ cliff_of_dover
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 
-			Support Limited
+			Support 1
 		
 			TFBot
 			{
@@ -531,32 +590,184 @@ cliff_of_dover
 		}
 
 		// spawns in after undying runner dies for the first time
+		// WaveSpawn
+		// {
+		// 	Name "2_monoculus"
+		// 	WaitForAllSpawned "2_undying_first_death"
+		// 	TotalCount 1
+		// 	MaxActive 1
+		// 	SpawnCount 1
+		// 	WaitBeforeStarting 0
+		// 	WaitBetweenSpawns 0
+		
+		// 	TotalCurrency 150
+		
+		// 	Tank
+		// 	{
+		// 		Name "tankboss"
+		// 		StartingPathTrackNode "monoculus_1"
+		// 		Health 18000
+		// 		Speed 75
+
+		// 		SpawnTemplate Monoculus_Annotation
+		// 		Template Monoculus
+		
+		// 		OnBombDroppedOutput
+		// 		{
+		// 			Target boss_deploy_relay
+		// 			Action Trigger
+		// 		}
+		// 	}
+		// }
+
 		WaveSpawn
 		{
-			Name "2_monoculus"
+			Name "2_charged_spam"
 			WaitForAllSpawned "2_undying_first_death"
+			Where spawnbot
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
+			TotalCurrency 50
 		
-			TotalCurrency 150
-		
-			Tank
+			TFBot
 			{
-				Name "tankboss"
-				StartingPathTrackNode "monoculus_1"
-				Health 18000
-				Speed 100
+				Template T_TFBot_Giant_Soldier_Crit 	
+				Attributes AlwaysFireWeapon
+			}
+		}
 
-				SpawnTemplate Monoculus_Annotation
-				Template Monoculus
+		WaveSpawn
+		{
+			Name "2_charged_spam"
+			WaitForAllSpawned "2_undying_first_death"
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
 		
-				OnBombDroppedOutput
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit 	
+				Attributes AlwaysFireWeapon
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_hunts"
+			WaitForAllSpawned "2_charged_spam"
+			Where spawnbot
+			TotalCount 32
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman
+			}
+		}
+		WaveSpawn
+		{
+			Name "2_grus_from_minions"
+			WaitForAllSpawned "2_hunts"
+			Where spawnbot
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_steel"
+			WaitForAllDead "2_charged_spam"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
 				{
-					Target boss_deploy_relay
-					Action Trigger
+					Template T_TFBot_Heavyweapons_Fist
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_soldierdemo"
+			WaitForAllDead "2_charged_spam"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Extended_Buff_Banner
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Demoman
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_shortboys"
+			WaitForAllDead "2_soldierdemo"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Smol
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Smol
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Smol
 				}
 			}
 		}

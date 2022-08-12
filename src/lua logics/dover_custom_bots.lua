@@ -10,8 +10,8 @@ for _, botTypeIndex in pairs(CUSTOM_BOTTYPES_INDICES) do
 	botTypesData[botTypeIndex] = {}
 end
 
-function ClearCallbacks(index, activator)
-	local handle = activator:GetHandleIndex()
+function ClearBottypeCallbacks(index, activator, handle)
+	handle = handle or activator:GetHandleIndex()
 
 	local botTypeCallbacks = callbacks[index][handle]
 
@@ -26,8 +26,8 @@ function ClearCallbacks(index, activator)
 	callbacks[index][handle] = nil
 end
 
-function ClearData(index, activator)
-	local handle = activator:GetHandleIndex()
+function ClearBottypeData(index, activator, handle)
+	handle = handle or activator:GetHandleIndex()
 
 	local botTypeData = botTypesData[index][handle]
 
@@ -40,21 +40,23 @@ end
 
 -- teleport back to spawn instead of dying
 function UndyingActivate(rechargeTime, activator)
-	activator:AcceptInput("$TeleportToEntity", "spawnbot")
-
 	local handle = activator:GetHandleIndex()
-
-	botTypesData.Undying[handle].Recharging = true
 
 	activator:ChangeAttributes("Recharging")
 	activator:SetAttributeValue("health regen", botTypesData.Undying[handle].MaxHealth / rechargeTime)
 
+	activator:AcceptInput("$TeleportToEntity", "spawnbot")
+
+	botTypesData.Undying[handle].Recharging = true
+
 	local allPlayers = ents.GetAllPlayers()
+
+	local recallText = "{blue}"..activator:GetPlayerName().."{reset} has used their {9BBF4D}RECALL{reset} Power Up Canteen!"
 
 	for _, player in pairs(allPlayers) do
 		player:AcceptInput(
 			"$DisplayTextChat",
-			"{blue}Undying Runner{reset} has used their {9BBF4D}RECALL{reset} Power Up Canteen!"
+			recallText
 		)
 		player:AcceptInput("$PlaySoundToSelf", "=35|mvm/mvm_used_powerup.wav")
 	end
@@ -130,19 +132,22 @@ function UndyingSpawn(rechargeTime, activator)
 	undyingCallbacks.onDeath = {
 		Type = 9,
 		ID = activator:AddCallback(9, function()
-			UndyingEnd(activator)
+			print("died")
+			activator:AcceptInput("$SetProp$m_bUseBossHealthBar", "0")
+			UndyingEnd(activator, handle)
 		end),
 	}
 
 	undyingCallbacks.onSpawn = {
 		Type = 1,
 		ID = activator:AddCallback(1, function()
-			UndyingEnd(activator)
+			print("spawned")
+			UndyingEnd(activator, handle)
 		end),
 	}
 end
 
-function UndyingEnd(activator)
-	ClearCallbacks("Undying", activator)
-	ClearData("Undying", activator)
+function UndyingEnd(activator, handle)
+	ClearBottypeCallbacks("Undying", activator, handle)
+	ClearBottypeData("Undying", activator, handle)
 end

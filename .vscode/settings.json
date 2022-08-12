@@ -7,6 +7,8 @@
 		"IN_ATTACK2",
 		"Vector",
 		"PrintTable",
-		"DMG_GENERIC"
+		"DMG_GENERIC",
+		"CurTime",
+		"DMG_SHOCK"
 	],
 }
