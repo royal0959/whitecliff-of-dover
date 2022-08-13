@@ -640,11 +640,11 @@ cliff_of_dover
 			Name "2_charged_spam"
 			WaitForAllSpawned "2_undying_first_death"
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
+			TotalCount 2
+			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 10
 			TotalCurrency 50
 		
 			TFBot
@@ -659,11 +659,11 @@ cliff_of_dover
 			Name "2_charged_spam"
 			WaitForAllSpawned "2_undying_first_death"
 			Where flankers
-			TotalCount 1
-			MaxActive 1
+			TotalCount 2
+			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 10
 			TotalCurrency 50
 		
 			TFBot
@@ -739,7 +739,7 @@ cliff_of_dover
 			WaitForAllDead "2_charged_spam"
 			Where spawnbot
 			TotalCount 4
-			MaxActive 2
+			MaxActive 4
 			SpawnCount 2
 			WaitBeforeStarting 6
 			WaitBetweenSpawns 10
@@ -768,7 +768,7 @@ cliff_of_dover
 			SpawnCount 3
 			WaitBeforeStarting 6
 			WaitBetweenSpawns 0
-			TotalCurrency 100
+			TotalCurrency 300
 
 			Squad
 			{
@@ -800,6 +800,25 @@ cliff_of_dover
 			Target wave_finished_relay
 			Action Trigger
 		}
+
+		
+		WaveSpawn
+		{
+			Name "3_scouts"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 9
+			TotalCurrency 0
+		
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+			}
+		}
 		
 		WaveSpawn
 		{
@@ -816,7 +835,7 @@ cliff_of_dover
 			{
 				Name "tankboss"
 				StartingPathTrackNode "monoculus_alt_1"
-				Health 20000
+				Health 18000
 				Speed 75
 
 				SpawnTemplate Monoculus_Annotation
@@ -850,7 +869,7 @@ cliff_of_dover
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Medic
+					Template T_TFBot_Giant_Medic_Regen
 				}
 			}
 		}
@@ -900,30 +919,66 @@ cliff_of_dover
 			}
 		}
 
+		// WaveSpawn
+		// {
+		// 	Name "3_pos_gshotgun_conchknight"
+		// 	WaitForAllDead "3_gshotgun"
+		// 	Where spawnbot
+		// 	TotalCount 1
+		// 	MaxActive 1
+		// 	SpawnCount 1
+		// 	WaitBeforeStarting 8
+		// 	WaitBetweenSpawns 0
+		// 	TotalCurrency 200
+		
+		// 	TFBot
+		// 	{
+		// 		Template T_TFBot_Giant_DemoMan_PrinceTavish
+		// 		Name "Giant Conch Demoknight"
+				
+		// 		ClassIcon demoknight_conch_lite
+		// 		Attributes SpawnWithFullCharge
+		// 		Item "The Concheror"
+		// 		CharacterAttributes
+		// 		{
+		// 			"increase buff duration"	9.0
+		// 		}
+		// 	}
+		// }
+		// WaveSpawn
+		// {
+		// 	Name "3_rapidsoldiers"
+		// 	WaitForAllSpawned "3_pos_gshotgun_conchknight"
+		// 	Where spawnbot
+		// 	TotalCount 2
+		// 	MaxActive 2
+		// 	SpawnCount 2
+		// 	WaitBeforeStarting 10
+		// 	WaitBetweenSpawns 0
+		// 	TotalCurrency 200
+		
+		// 	TFBot
+		// 	{
+		// 		Template T_TFBot_Giant_Soldier_Spammer
+		// 	}
+		// }
+
 		WaveSpawn
 		{
-			Name "3_pos_gshotgun_conchknight"
-			WaitForAllDead "3_gshotgun"
-			Where spawnbot
-			TotalCount 4
-			MaxActive 2
-			SpawnCount 2
+			Name "3_heavies"
+			WaitForAllSpawned "3_gshotgun"
+			Where flankers
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 5
 			WaitBeforeStarting 8
-			WaitBetweenSpawns 5
+			WaitBetweenSpawns 8
 			TotalCurrency 200
 		
 			TFBot
 			{
-				Template T_TFBot_Giant_DemoMan_PrinceTavish
-				Name "Giant Conch Demoknight"
-				
-				ClassIcon demoknight_conch_lite
-				Attributes SpawnWithFullCharge
-				Item "The Concheror"
-				CharacterAttributes
-				{
-					"increase buff duration"	9.0
-				}
+				Class Heavy
+				Skill Easy
 			}
 		}
 
@@ -932,17 +987,66 @@ cliff_of_dover
 			Name "3_bat_stream_post_mono"
 			WaitForAllDead "3_monoculus"
 			Where spawnbot
-			TotalCount 32
+			TotalCount 4
 			MaxActive 4
 			SpawnCount 4
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 6
+			WaitBetweenSpawns 10
 			TotalCurrency 0
+
+			Support 1
 		
 			TFBot
 			{
 				Template T_TFBot_Scout_Melee
 				ClassIcon scout_bat
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_colonel_post_mono"
+			WaitForAllDead "3_monoculus"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritz
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritz
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritz
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritz
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritz
+					
+				}
 			}
 		}
 	}
