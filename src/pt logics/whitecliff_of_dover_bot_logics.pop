@@ -112,7 +112,7 @@ WaveSchedule
 			{
 				"targetname" "annotation_monoculus"
 				"display_text" "Eye in the sky!"
-				"lifetime" "8"
+				"lifetime" "4"
 			}
 		}
 

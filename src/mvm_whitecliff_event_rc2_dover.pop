@@ -74,6 +74,18 @@ cliff_of_dover
 		Node "-2423.677979 -1522.862427 580"
 	}
 
+	ExtraTankPath 
+	{
+		Name "monoculus_alt" 
+		Node "857 -6600 620" 
+		Node "857 -5332 1100"
+		Node "610 -3717 1100"
+		Node "-358.16 421.37 700"
+		Node "-1763.047241 421.37 650"
+		Node "-2415 -388 650"
+		Node "-2423.677979 -1522.862427 580"
+	}
+
 	CustomWeapon 
 	{
 		"Biker's Redeemer"
@@ -290,10 +302,10 @@ cliff_of_dover
 				{
 					Template T_TFBot_Soldier_Bison
 				}
-				// TFBot
-				// {
-				// 	Template T_TFBot_Soldier_Bison
-				// }
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+				}
 			}
 		}
 
@@ -418,7 +430,7 @@ cliff_of_dover
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 20
+			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
 			TotalCurrency 100
 		
@@ -480,7 +492,7 @@ cliff_of_dover
 			{
 				Name "tankboss"
 				StartingPathTrackNode "tank_path_1"
-				Health 15000
+				Health 18000
 				Speed 75
 
 				ClassIcon tank_shield
@@ -520,15 +532,16 @@ cliff_of_dover
 			WaitForAllSpawned "1_tank"
 			Where flankers
 			TotalCount 2
-			MaxActive 2
+			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 10
-			WaitBetweenSpawns 15
-			TotalCurrency 100
+			WaitBeforeStarting 16
+			WaitBetweenSpawns 0
+			TotalCurrency 200
 		
 			TFBot
 			{
 				Template T_TFBot_Giant_Soldier_RocketShotgun 
+				Attributes AlwaysCrit
 			}
 		}
 	}
@@ -666,10 +679,10 @@ cliff_of_dover
 			WaitForAllSpawned "2_charged_spam"
 			Where spawnbot
 			TotalCount 32
-			MaxActive 10
+			MaxActive 6
 			SpawnCount 2
 			WaitBeforeStarting 15
-			WaitBetweenSpawns 5
+			WaitBetweenSpawns 3
 			TotalCurrency 50
 		
 			TFBot
@@ -704,7 +717,7 @@ cliff_of_dover
 			MaxActive 6
 			SpawnCount 6
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 5
 			TotalCurrency 100
 
 			Squad
@@ -729,7 +742,7 @@ cliff_of_dover
 			MaxActive 2
 			SpawnCount 2
 			WaitBeforeStarting 6
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 10
 			TotalCurrency 100
 
 			Squad
@@ -771,6 +784,165 @@ cliff_of_dover
 				{
 					Template T_TFBot_Giant_Heavyweapons_Smol
 				}
+			}
+		}
+	}
+
+	Wave // Wave 3
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name "3_monoculus"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 200
+		
+			Tank
+			{
+				Name "tankboss"
+				StartingPathTrackNode "monoculus_alt_1"
+				Health 20000
+				Speed 75
+
+				SpawnTemplate Monoculus_Annotation
+				Template Monoculus
+		
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_demo"
+			Where flankers
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demoman
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "3_gshotgun"
+			WaitForAllDead "3_demo"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Shotgun
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Uber
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_post_demo_pyros"
+			WaitForAllDead "3_demo"
+			Where flankers
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Class Pyro 
+				Skill Expert
+
+				Attributes AlwaysFireWeapon
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_pos_gshotgun_conchknight"
+			WaitForAllDead "3_gshotgun"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish
+				Name "Giant Conch Demoknight"
+				
+				ClassIcon demoknight_conch_lite
+				Attributes SpawnWithFullCharge
+				Item "The Concheror"
+				CharacterAttributes
+				{
+					"increase buff duration"	9.0
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_bat_stream_post_mono"
+			WaitForAllDead "3_monoculus"
+			Where spawnbot
+			TotalCount 32
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 0
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				ClassIcon scout_bat
 			}
 		}
 	}

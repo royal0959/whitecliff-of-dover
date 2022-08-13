@@ -39,11 +39,9 @@ function ClearBottypeData(index, activator, handle)
 end
 
 -- teleport back to spawn instead of dying
-function UndyingActivate(rechargeTime, activator)
+function UndyingActivate(rechargeTime, activator, handle)
 	activator:ChangeAttributes("Recharging")
 	activator:AcceptInput("$TeleportToEntity", "spawnbot")
-
-	local handle = activator:GetHandleIndex()
 
 	activator:SetAttributeValue("health regen", botTypesData.Undying[handle].MaxHealth / rechargeTime)
 
@@ -91,7 +89,8 @@ function UndyingSpawn(rechargeTime, activator)
 		Type = 3,
 		ID = activator:AddCallback(3, function(_, damageInfo)
 			if botTypesData.Undying[handle].Recharging then
-				return
+				damageInfo.Damage = 0
+				return true
 			end
 
 			local curHealth = activator.m_iHealth
@@ -102,9 +101,9 @@ function UndyingSpawn(rechargeTime, activator)
 			if curHealth - (damage + 1) <= 0 then
 				damageInfo.Damage = 0
 				damageInfo.DamageType = DMG_GENERIC
-				damageInfo.CritType = 0
+				-- damageInfo.CritType = 0
 
-				UndyingActivate(rechargeTime, activator)
+				UndyingActivate(rechargeTime, activator, handle)
 
 				-- set health to 1
 				local setHealthDmgInfo = {
