@@ -17,10 +17,28 @@ local classIndices_Internal = {
 	[8] = "Spy",
 }
 
+local function findInTable(table, value)
+	for i, v in pairs(table) do
+		if v == value then
+			return i
+		end
+	end
+end
+
+local function dictionaryLength(dictionary)
+	local length = 0
+
+	for i, _ in pairs(dictionary) do
+		length = length + 1
+	end
+
+	return length
+end
+
 local callbacks = {}
 local weaponsData = {}
 
-local CUSTOM_WEAPONS_INDICES = { "Parry" }
+local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone" }
 for _, weaponIndex in pairs(CUSTOM_WEAPONS_INDICES) do
 	callbacks[weaponIndex] = {}
 	weaponsData[weaponIndex] = {}
@@ -58,6 +76,7 @@ end
 
 local redeemerDebounces = {} --value is debounce players
 
+-- redeemer
 ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 	timer.Simple(0.01, function()
 		local owner = entity.m_hOwnerEntity
@@ -66,10 +85,7 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 			return
 		end
 
-		--TODO: check if switching class from scout with redeemer to soldier still pass the check
-		local props = owner:DumpProperties()
-
-		if not props.hasRedeemer or props.hasRedeemer ~= 1 then
+		if not owner.hasRedeemer or owner.hasRedeemer ~= 1 then
 			return
 		end
 
@@ -125,7 +141,7 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 				DamageCustom = 0,
 				DamagePosition = visualHitPost,
 				DamageForce = Vector(0, 0, 0),
-				ReportedPosition = visualHitPost
+				ReportedPosition = visualHitPost,
 			}
 
 			local dmg = target:TakeDamage(damageInfo)
@@ -140,6 +156,114 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 		end)
 	end)
 end)
+
+-- drone
+function DroneFired(sentryName, projectile)
+	local owner = projectile.m_hOwnerEntity
+
+	local sentryEnt = ents.FindByName(sentryName)
+
+	sentryEnt.m_hBuilder = owner
+
+	local ownerHandle = owner:GetHandleIndex()
+
+	local dronesData = weaponsData.Drone[ownerHandle]
+
+	local dronesList = dronesData.DronesList
+
+	if dictionaryLength(dronesList) >= 3 then
+		-- remove first drone
+		-- automatically cleared from array
+		dronesList[1]:Remove()
+	end
+
+	table.insert(dronesList, projectile)
+
+	projectile:AddCallback(0, function()
+		table.remove(dronesList, findInTable(dronesList, projectile))
+
+		local stationaryId = dronesData.DronesStationaryIds[projectile]
+
+		if stationaryId then
+			timer.Stop(stationaryId)
+			dronesData.DronesStationaryIds[projectile] = nil
+		end
+	end)
+end
+
+function DroneWalkerEquip(_, activator)
+	-- fix weird quirk with template being spawned after you switch to a different class
+	if classIndices_Internal[activator:DumpProperties().m_iClass] ~= "Engineer" then
+		return
+	end
+
+	print("drone walker equipped")
+	local handle = activator:GetHandleIndex()
+
+	if callbacks.Drone[handle] then
+		DroneWalkerUnequip(_, activator)
+	end
+
+	local meleeWeapon = activator:GetPlayerItemBySlot(2)
+	local gunslingerEquipped = meleeWeapon.m_iClassname == "tf_weapon_robot_arm"
+
+	local primary = activator:GetPlayerItemBySlot(0)
+
+	if gunslingerEquipped then
+
+		primary:SetAttributeValue("always crit", 1)
+		primary:SetAttributeValue("engy sentry damage bonus", 1.25)
+	else
+		primary:SetAttributeValue("always crit", nil)
+		primary:SetAttributeValue("engy sentry damage bonus", nil)
+	end
+
+	callbacks.Drone[handle] = {}
+	weaponsData.Drone[handle] = {
+		DronesList = {},
+
+		DronesStationaryIds = {},
+
+		Buffed = gunslingerEquipped,
+	}
+
+	local droneCallbacks = callbacks.Drone[handle]
+	local dronesData = weaponsData.Drone[handle]
+
+	-- on key press
+	droneCallbacks.keyPress = {
+		Type = 7,
+		ID = activator:AddCallback(7, function(_, key)
+			if key ~= IN_ATTACK2 then
+				return
+			end
+
+			if dictionaryLength(dronesData.DronesStationaryIds) > 0 then
+				for projectile, id in pairs(dronesData.DronesStationaryIds) do
+					timer.Stop(id)
+					dronesData.DronesStationaryIds[projectile] = nil
+				end
+
+				return
+			end
+
+			for i, projectile in pairs(dronesData.DronesList) do
+				local origin = projectile:GetAbsOrigin()
+
+				projectile:SetLocalVelocity(Vector(0, 0, 0))
+
+				dronesData.DronesStationaryIds[projectile] = timer.Create(0, function()
+					projectile:SetAbsOrigin(origin)
+				end, 0)
+			end
+		end),
+	}
+end
+
+function DroneWalkerUnequip(_, activator)
+	ClearCallbacks("Drone", activator)
+	ClearData("Drone", activator)
+end
 
 local function _parry(activator)
 	local handle = activator:GetHandleIndex()
@@ -175,21 +299,21 @@ function ParryAddictionEquip(_, activator)
 			if key ~= IN_ATTACK2 then
 				return
 			end
-
-			local props = activator:DumpProperties()
-
-			if props.m_flChargeMeter < 100 then
+			
+			if activator.m_flChargeMeter < 100 then
 				return
 			end
 
 			if weaponsData.Parry[handle] then
-				activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
+				activator.m_flChargeMeter = 0
+				-- activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
 				return
 			end
 
 			activator:AddCond(46, PARRY_TIME)
 
-			activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
+			activator.m_flChargeMeter = 0
+			-- activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
 
 			_parry(activator)
 		end),

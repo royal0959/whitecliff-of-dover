@@ -35,8 +35,15 @@ WaveSchedule
 			
 			OnSpawnOutput
 			{
+				Target "popscript"
+				Action "$DroneRangerProjectileSetOwner"
+				Param "le_sentry"			
+			}
+			
+			OnSpawnOutput
+			{
 				Target "le_sentry"
-				Action "$InheritOwner"
+				Action "$SetOwner"
 				Param "!activator"	
 				Delay 0.1
 			}
@@ -263,6 +270,58 @@ WaveSchedule
 				"$fov" "360"
 
 				"$TargetTestPass" "!parent,$FireUser5,,0,-1"
+			}
+		}
+
+		BloomRocket_Crit 
+		{
+			OnSpawnOutput 
+			{
+				Target "firer"
+				Action "FireUser1"
+				Delay 0
+			}
+
+			tf_point_weapon_mimic
+			{
+				"targetname" "firer"
+
+				"spawnflags" "1"
+				"angles" "0 -10 0"
+				"origin" "-1 0 -3"
+				"teamnum" "3"
+				"Crits" "1"
+				"Damage" "75"
+				"ModelScale" "1"
+				"SpeedMax" "600"
+				"SpeedMin" "600"
+				"SplashRadius" "144"
+				"SpreadAngle" "0"
+				"WeaponType" "0"
+
+				"OnUser1" "!self,FireOnce,,0,-1"
+				"OnUser1" "!self,FireUser1,,0.5,-1"
+			}
+
+			tf_point_weapon_mimic
+			{
+				"targetname" "firer"
+
+				"spawnflags" "1"
+				"angles" "0 10 0"
+				"origin" "-1 0 -3"
+				"teamnum" "3"
+				"Crits" "1"
+				"Damage" "75"
+				"ModelScale" "1"
+				"SpeedMax" "500"
+				"SpeedMin" "500"
+				"SplashRadius" "144"
+				"SpreadAngle" "0"
+				"WeaponType" "0"
+
+				"OnUser1" "!self,FireOnce,,0,-1"
+				"OnUser1" "!self,FireUser1,,0.5,-1"
 			}
 		}
 	}

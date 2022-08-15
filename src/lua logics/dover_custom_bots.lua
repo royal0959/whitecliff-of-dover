@@ -38,6 +38,14 @@ function ClearBottypeData(index, activator, handle)
 	botTypesData[index][handle] = nil
 end
 
+function DroneRangerProjectileSetOwner(sentryName, projectile)
+	local owner = projectile.m_hOwnerEntity
+
+	local sentryEnt = ents.FindByName(sentryName)
+
+	sentryEnt.m_hBuilder = owner
+end
+
 -- teleport back to spawn instead of dying
 function UndyingActivate(rechargeTime, activator, handle)
 	activator:ChangeAttributes("Recharging")
@@ -132,7 +140,8 @@ function UndyingSpawn(rechargeTime, activator)
 		Type = 9,
 		ID = activator:AddCallback(9, function()
 			print("died")
-			activator:AcceptInput("$SetProp$m_bUseBossHealthBar", "0")
+			-- activator:AcceptInput("$SetProp$m_bUseBossHealthBar", "0")
+			activator.m_bUseBossHealthBar = 0
 			UndyingEnd(activator, handle)
 		end),
 	}

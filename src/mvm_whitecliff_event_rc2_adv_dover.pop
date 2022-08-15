@@ -51,6 +51,26 @@ cliff_of_dover
 		}
 	}
 
+	Mission // Sniper - wave 2
+	{
+		Objective Sniper
+
+		InitialCooldown 30
+		Where spawnbot_mission_sniper
+		BeginAtWave 2
+		RunForThisManyWaves 1
+		CooldownTime 15
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Sniper
+			Skill Hard
+			Name Sniper
+			MaxVisionRange 3000
+		}
+	}
+
 	ExtraSpawnPoint 
     {
         Name "undying_first_death" //gets enabled after undying runner dies for the first time
@@ -127,6 +147,34 @@ cliff_of_dover
 			"special item description 3" "Cannot charge"
 		}
 
+		"Drone Walker"
+		{
+			OriginalItemName "The Rescue Ranger"
+
+			"paintkit_proto_def_index" 217 //Bomber Soul
+        	"set_item_texture_wear" 0 
+
+			"clip size penalty" 0.5
+
+			"engineer building teleporting pickup" 1000
+			"arrow heals buildings" 0
+
+			"mod projectile heat follow crosshair" 1
+			// "mod projectile heat no predict target speed" 1
+			"mod projectile heat seek power" 360
+			"mod projectile heat aim error" 0
+			"mod projectile heat aim time" 1000
+
+			"Projectile speed decreased" 0.2
+
+			"mult projectile scale" 0.001
+			"arrow hit kill time" 0.01
+
+			"special item description" "Fires controlled drones that follow your cursor. Only 3 drones can be active at a time"
+			"special item description 2" "Press alt-fire to toggle stationary state on active drones"
+			"special item description 3" "With gunslinger equipped: increased sentry damage and always crit"
+		}
+
 		"No Mercy"
 		{
 			OriginalItemName "Wings of Purity" //potential buffer overflow hazard
@@ -170,6 +218,10 @@ cliff_of_dover
 		Demoman 
 		{
 			Secondary {Item "Parry Addiction"}
+		}
+		Engineer 
+		{
+			Primary {Item "Drone Walker"}
 		}
 		Medic 
 		{
@@ -230,6 +282,19 @@ cliff_of_dover
 	{
 		Name Building_Level2_Spawn
 		BuildingType "Teleporter Exit" 
+	}
+	
+	PlayerShootTemplate
+	{
+		Name DroneWalker_Shoot
+		ItemName "Drone Walker"
+		AttachToProjectile 1
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name DroneWalker_Equip
+		ItemName "Drone Walker"
 	}
 
 	PlayerItemEquipSpawnTemplate 
@@ -760,12 +825,12 @@ cliff_of_dover
 
 		WaveSpawn
 		{
-			Name "2_shortboys"
+			Name "2_heavyboys"
 			WaitForAllDead "2_soldierdemo"
 			Where spawnbot
-			TotalCount 3
-			MaxActive 3
-			SpawnCount 3
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
 			WaitBeforeStarting 6
 			WaitBetweenSpawns 0
 			TotalCurrency 300
@@ -774,15 +839,11 @@ cliff_of_dover
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Heavyweapons_Smol
+					Template T_TFBot_Giant_Heavyweapons
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Heavyweapons_Smol
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Heavyweapons_Smol
+					Template T_TFBot_Giant_Heavyweapons
 				}
 			}
 		}
@@ -1008,9 +1069,9 @@ cliff_of_dover
 			Name "3_colonel_post_mono"
 			WaitForAllDead "3_monoculus"
 			Where spawnbot
-			TotalCount 2
-			MaxActive 2
-			SpawnCount 2
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 6
 			WaitBeforeStarting 20
 			WaitBetweenSpawns 0
 			TotalCurrency 0
@@ -1046,6 +1107,48 @@ cliff_of_dover
 				{
 					Template T_TFBot_Medic_Kritz
 					
+				}
+			}
+		}
+	}
+
+	Wave // Wave 4
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name "4_duke"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Boomer
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
 				}
 			}
 		}
