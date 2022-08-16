@@ -172,7 +172,7 @@ cliff_of_dover
 
 			"special item description" "Fires controlled drones that follow your cursor. Only 3 drones can be active at a time"
 			"special item description 2" "Press alt-fire to toggle stationary state on active drones"
-			"special item description 3" "With gunslinger equipped: increased sentry damage and always crit"
+			"special item description 3" "With gunslinger equipped: +1 max drone and always crit"
 		}
 
 		"No Mercy"

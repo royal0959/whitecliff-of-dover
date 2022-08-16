@@ -171,7 +171,7 @@ function DroneFired(sentryName, projectile)
 
 	local dronesList = dronesData.DronesList
 
-	if dictionaryLength(dronesList) >= 3 then
+	if dictionaryLength(dronesList) >= dronesData.DronesCap then
 		-- remove first drone
 		-- automatically cleared from array
 		dronesList[1]:Remove()
@@ -212,10 +212,10 @@ function DroneWalkerEquip(_, activator)
 	if gunslingerEquipped then
 
 		primary:SetAttributeValue("always crit", 1)
-		primary:SetAttributeValue("engy sentry damage bonus", 1.25)
+		-- primary:SetAttributeValue("engy sentry damage bonus", 1.25)
 	else
 		primary:SetAttributeValue("always crit", nil)
-		primary:SetAttributeValue("engy sentry damage bonus", nil)
+		-- primary:SetAttributeValue("engy sentry damage bonus", nil)
 	end
 
 	callbacks.Drone[handle] = {}
@@ -223,6 +223,8 @@ function DroneWalkerEquip(_, activator)
 		DronesList = {},
 
 		DronesStationaryIds = {},
+
+		DronesCap = not gunslingerEquipped and 3 or 4,
 
 		Buffed = gunslingerEquipped,
 	}
