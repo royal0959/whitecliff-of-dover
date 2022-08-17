@@ -9,6 +9,11 @@
 		"PrintTable",
 		"DMG_GENERIC",
 		"CurTime",
-		"DMG_SHOCK"
+		"DMG_SHOCK",
+		"TF_COND_BLASTJUMPING",
+		"util",
+		"TF_DMG_CUSTOM_NONE",
+		"DMG_BLAST",
+		"IsValid"
 	],
 }

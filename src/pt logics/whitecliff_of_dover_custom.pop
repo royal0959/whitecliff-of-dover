@@ -104,6 +104,20 @@ WaveSchedule
 			}
 		}
 
+		PHD_Equip
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$PHDEquip"	
+			}
+			OnParentKilledOutput
+			{
+				Target "popscript"
+				Action "$PHDUnequip"	
+			}
+		}
+
 		DroneWalker_Equip
 		{
 			OnSpawnOutput

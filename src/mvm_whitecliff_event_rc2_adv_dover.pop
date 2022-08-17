@@ -132,6 +132,18 @@ cliff_of_dover
 			"special item description 2" "Damage is increased by 10 for each enemy hit, up to 50 extra damage"
 		}
 
+		"PHD Jumper"
+		{
+			OriginalItemName "Rocket Jumper"
+
+			"cancel falling damage" 1
+			"attach particle effect" 1
+
+			"special item description" "On landing after a rocket jump: Create an explosion"
+			"special item description 2" "Explosion radius and damage is determined by airborne time"
+			"special item description 3" "Explosion damage is affected by damage bonus upgrade"
+		}
+
 		"Parry Addiction"
 		{
 			OriginalItemName "Festive Targe 2014"
@@ -194,6 +206,8 @@ cliff_of_dover
 
 			"mult cloak rate" 50
 			"mult decloak rate" 0.001
+
+			"attach particle effect" 1
 	
 			"special item description" "On Cloak: Remove disguise and gain a speed boost with infinite air jumps"
 			"special item description 2" "No disguise while active"
@@ -214,6 +228,10 @@ cliff_of_dover
 		Scout 
 		{
 			Secondary {Item "Biker's Redeemer"}
+		}
+		Soldier 
+		{
+			Primary {Item "PHD Jumper"}
 		}
 		Demoman 
 		{
@@ -260,6 +278,12 @@ cliff_of_dover
 	{
 		Name FreelanceMercenary_Logic
 		ItemName "Freelance Mercenary"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name PHD_Equip
+		ItemName "PHD Jumper"
 	}
 
 	BuildingSpawnTemplate

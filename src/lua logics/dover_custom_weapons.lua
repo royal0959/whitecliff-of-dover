@@ -3,6 +3,14 @@ local REDEEMER_HIT_DAMAGE = 40
 local REDEEMER_HIT_DAMAGE_ADDITION = 10 -- increased each hit
 local REDEEMER_HIT_DAMAGE_ADDITION_CAP = 50
 
+local PHD_THRESHOLD = {
+	["Small"] = -1,
+	["Medium"] = 1,
+	["Medium2"] = 1.4,
+	["Large"] = 2.2,
+	["Nuke"] = 3.5,
+}
+
 local PARRY_TIME = 0.8
 
 local classIndices_Internal = {
@@ -37,11 +45,13 @@ end
 
 local callbacks = {}
 local weaponsData = {}
+local weaponTimers = {}
 
-local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone" }
+local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD" }
 for _, weaponIndex in pairs(CUSTOM_WEAPONS_INDICES) do
 	callbacks[weaponIndex] = {}
 	weaponsData[weaponIndex] = {}
+	weaponTimers[weaponIndex] = {}
 end
 
 function ClearCallbacks(index, activator, handle)
@@ -74,11 +84,33 @@ function ClearData(index, activator)
 	weaponsData[index][handle] = nil
 end
 
+function ClearTimers(index, activator, handle)
+	handle = handle or activator:GetHandleIndex()
+
+	local weaponTimer = weaponTimers[index][handle]
+
+	if not weaponTimer then
+		return
+	end
+
+	if activator then
+		for _, timerId in pairs(weaponTimer) do
+			timer.Stop(timerId)
+		end
+	end
+
+	weaponTimers[index][handle] = nil
+end
+
 local redeemerDebounces = {} --value is debounce players
 
 -- redeemer
 ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 	timer.Simple(0.01, function()
+		if not IsValid(entity) then
+			return
+		end
+
 		local owner = entity.m_hOwnerEntity
 
 		if not owner then
@@ -255,7 +287,7 @@ function DroneWalkerEquip(_, activator)
 				return
 			end
 
-			for i, projectile in pairs(dronesData.DronesList) do
+			for _, projectile in pairs(dronesData.DronesList) do
 				local origin = projectile:GetAbsOrigin()
 
 				projectile:SetLocalVelocity(Vector(0, 0, 0))
@@ -281,6 +313,145 @@ local function _parry(activator)
 	timer.Simple(PARRY_TIME, function()
 		weaponsData.Parry[handle] = nil
 	end)
+end
+
+function PHDEquip(_, activator)
+	-- fix weird quirk with template being spawned after you switch to a different class
+	if classIndices_Internal[activator:DumpProperties().m_iClass] ~= "Soldier" then
+		return
+	end
+
+	print("phd jumper equipped")
+	local handle = activator:GetHandleIndex()
+
+	if callbacks.PHD[handle] then
+		PHDUnequip(_, activator)
+	end
+
+	callbacks.PHD[handle] = {}
+	weaponTimers.PHD[handle] = {}
+	weaponsData.PHD[handle] = {
+		JumpStartTime = false,
+	}
+
+	local phdCallbacks = callbacks.PHD[handle]
+	local phdTimers = callbacks.PHD[handle]
+	local phdData = weaponsData.PHD[handle]
+
+	phdTimers.rocketJumpCheck = timer.Create(0.1, function()
+		local jumping = activator:InCond(TF_COND_BLASTJUMPING)
+
+		if jumping == 0 then
+			if phdData.JumpStartTime then
+				print("here")
+				local timeDiff = CurTime() - phdData.JumpStartTime
+
+				print(timeDiff)
+				local currentThreshold = {nil, -1}
+				
+				for thresHoldName, timeRequired in pairs(PHD_THRESHOLD) do
+					if timeRequired < currentThreshold[2] then
+						goto continue
+					end
+
+					if timeDiff < timeRequired then
+						goto continue
+					end
+
+					currentThreshold = {thresHoldName, timeRequired}
+					
+					::continue::
+				end
+
+				local chosenThreshold = currentThreshold[1]
+				print(chosenThreshold)
+
+				local activatorOrigin = activator:GetAbsOrigin()
+
+				--todo: damage
+
+				local radius = 0
+				local damage = 0
+
+				if chosenThreshold == "Small" then
+					util.ParticleEffect("hammer_impact_button", activatorOrigin, Vector(0, 0, 0))
+					radius = 300
+					damage = 75
+				elseif chosenThreshold == "Medium" then
+					util.ParticleEffect("ExplosionCore_buildings", activatorOrigin, Vector(0, 0, 0))
+					radius = 300
+					damage = 125
+				elseif chosenThreshold == "Medium2" then
+					util.ParticleEffect("ExplosionCore_Wall", activatorOrigin, Vector(0, 0, 0))
+					radius = 300
+					damage = 175
+				elseif chosenThreshold == "Large" then
+					util.ParticleEffect("asplode_hoodoo", activatorOrigin, Vector(0, 0, 0))
+					radius = 400
+					damage = 250
+				elseif chosenThreshold == "Nuke" then
+					util.ParticleEffect("skull_island_explosion", activatorOrigin, Vector(0, 0, 0))
+					radius = 800
+					damage = 700
+				end
+
+				local enemiesInRange = ents.GetAllPlayers() --ents.FindAllInSphere(activatorOrigin, radius)
+
+				local primary = activator:GetPlayerItemBySlot(0)
+
+				local damageMult = primary:GetAttributeValue("damage bonus") or 1
+
+				for _, enemy in pairs(enemiesInRange) do
+					-- if not enemy:IsPlayer() then
+					-- 	goto continue
+					-- end
+
+					if enemy.m_iTeamNum == activator.m_iTeamNum then
+						goto continue
+					end
+
+					local distance = activatorOrigin:Distance(enemy:GetAbsOrigin())
+
+					if tonumber(distance) < radius then
+						local damageInfo = {
+							Attacker = activator,
+							Inflictor = nil,
+							Weapon = primary,
+							Damage = damage * damageMult,
+							DamageType = DMG_BLAST,
+							DamageCustom = TF_DMG_CUSTOM_NONE,
+							DamagePosition = enemy:GetAbsOrigin(), -- Where the target was hit at
+							DamageForce = Vector(0,0,0), -- Knockback force of the attack
+							ReportedPosition = activatorOrigin -- Where the attacker attacked from
+						}
+					
+						enemy:TakeDamage(damageInfo)
+	
+					end
+					::continue::
+				end
+
+				print("kaboom")
+
+
+				phdData.JumpStartTime = false
+			end
+
+			return
+		end
+
+		if phdData.JumpStartTime then
+			return
+		end
+
+		phdData.JumpStartTime = CurTime()
+	end, 0)
+end
+
+function PHDUnequip(_, activator)
+	ClearCallbacks("PHD", activator)
+	ClearData("PHD", activator)
+	ClearTimers("PHD", activator)
 end
 
 function ParryAddictionEquip(_, activator)
