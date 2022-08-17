@@ -666,6 +666,7 @@ cliff_of_dover
 			TFBot
 			{
 				Template T_TFBot_Undying_Runner
+				tag bot_giant
 			}
 		}
 
@@ -716,6 +717,10 @@ cliff_of_dover
 			{
 				Template T_TFBot_Giant_Soldier_Crit 	
 				Attributes AlwaysFireWeapon
+
+				tag bot_giant
+
+				AddTemplate Gatebot
 			}
 		}
 
@@ -735,6 +740,52 @@ cliff_of_dover
 			{
 				Template T_TFBot_Giant_Soldier_Crit 	
 				Attributes AlwaysFireWeapon
+				
+				tag bot_giant
+
+				AddTemplate Gatebot
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_pyros"
+			WaitForAllDead "2_charged_spam"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Pyro 	
+				Attributes AlwaysFireWeapon
+
+				tag bot_giant
+				AddTemplate Gatebot
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_grus_from_minions"
+			// WaitForAllSpawned "2_hunts"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+
+				AddTemplate Gatebot
 			}
 		}
 
@@ -755,34 +806,17 @@ cliff_of_dover
 				Template T_TFBot_Sniper_Huntsman
 			}
 		}
-		WaveSpawn
-		{
-			Name "2_grus_from_minions"
-			WaitForAllSpawned "2_hunts"
-			Where spawnbot
-			TotalCount 16
-			MaxActive 4
-			SpawnCount 4
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
-			TotalCurrency 50
-		
-			TFBot
-			{
-				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
-			}
-		}
 
 		WaveSpawn
 		{
 			Name "2_steel"
-			WaitForAllDead "2_charged_spam"
+			WaitForAllSpawned "2_charged_spam"
 			Where spawnbot
-			TotalCount 12
+			TotalCount 18
 			MaxActive 6
 			SpawnCount 6
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 5
+			WaitBetweenSpawns 3
 			TotalCurrency 100
 
 			Squad
@@ -790,6 +824,8 @@ cliff_of_dover
 				TFBot
 				{
 					Template T_TFBot_Heavyweapons_Fist
+					
+					tag bot_giant
 				}
 				TFBot
 				{
@@ -798,30 +834,34 @@ cliff_of_dover
 			}
 		}
 
-		WaveSpawn
-		{
-			Name "2_soldierdemo"
-			WaitForAllDead "2_charged_spam"
-			Where spawnbot
-			TotalCount 4
-			MaxActive 4
-			SpawnCount 2
-			WaitBeforeStarting 6
-			WaitBetweenSpawns 10
-			TotalCurrency 100
+		// WaveSpawn
+		// {
+		// 	Name "2_soldierdemo"
+		// 	WaitForAllDead "2_charged_spam"
+		// 	Where spawnbot
+		// 	TotalCount 4
+		// 	MaxActive 2
+		// 	SpawnCount 2
+		// 	WaitBeforeStarting 15
+		// 	WaitBetweenSpawns 0
+		// 	TotalCurrency 100
 
-			Squad
-			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Extended_Buff_Banner
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Demoman
-				}
-			}
-		}
+		// 	Squad
+		// 	{
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Soldier_Extended_Buff_Banner
+					
+		// 			tag bot_giant
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Demoman
+					
+		// 			tag bot_giant
+		// 		}
+		// 	}
+		// }
 
 		WaveSpawn
 		{
@@ -840,10 +880,14 @@ cliff_of_dover
 				TFBot
 				{
 					Template T_TFBot_Giant_Heavyweapons
+					
+					tag bot_giant
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Heavyweapons
+					
+					tag bot_giant
 				}
 			}
 		}

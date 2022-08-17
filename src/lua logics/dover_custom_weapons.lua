@@ -55,7 +55,7 @@ function ClearCallbacks(index, activator, handle)
 
 	if activator then
 		for _, callbackData in pairs(weaponCallbacks) do
-			activator:RemoveCallback(callbackData.Type, callbackData.ID)
+			activator:RemoveCallback(callbackData.ID)
 		end
 	end
 
@@ -237,6 +237,12 @@ function DroneWalkerEquip(_, activator)
 		Type = 7,
 		ID = activator:AddCallback(7, function(_, key)
 			if key ~= IN_ATTACK2 then
+				return
+			end
+
+			print(activator.m_hActiveWeapon)
+
+			if activator.m_hActiveWeapon.m_iClassname ~= "tf_weapon_shotgun_building_rescue" then
 				return
 			end
 

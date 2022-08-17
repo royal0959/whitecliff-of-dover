@@ -20,7 +20,7 @@ function ClearBottypeCallbacks(index, activator, handle)
 	end
 
 	for _, callbackData in pairs(botTypeCallbacks) do
-		activator:RemoveCallback(callbackData.Type, callbackData.ID)
+		activator:RemoveCallback(callbackData.ID)
 	end
 
 	callbacks[index][handle] = nil

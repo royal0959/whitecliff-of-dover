@@ -111,6 +111,11 @@ WaveSchedule
 				Target "popscript"
 				Action "$DroneWalkerEquip"	
 			}
+			OnParentKilledOutput
+			{
+				Target "popscript"
+				Action "$DroneWalkerUnequip"	
+			}
 		}
 
 		DroneWalker_Shoot

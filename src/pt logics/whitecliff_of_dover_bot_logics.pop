@@ -228,6 +228,8 @@ WaveSchedule
 				"SpreadAngle" "0"
 				"WeaponType" "0"
 
+				"$killicon" "eyeball_rocket"
+
 				"OnUser1" "monoculus_model,FireUser1,,0,-1"
 
 				"OnUser1" "!self,FireOnce,,0,-1"
@@ -235,6 +237,8 @@ WaveSchedule
 				"OnUser1" "!self,FireOnce,,0.8,-1"
 
 				"OnUser1" "!self,FireUser1,,4,-1"
+
+				"$OnFire" "!activator,$SetModel,models/props_halloween/eyeball_projectile.mdl,0,-1"
 			}
 
 			prop_dynamic

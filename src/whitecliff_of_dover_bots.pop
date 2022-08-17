@@ -216,11 +216,11 @@ WaveSchedule
 
 		T_TFBot_Soldier_Boomer 
 		{
-			Name "Bloomer Boomer Soldier"
+			Name "Boomer Soldier"
 
 			Class Soldier
 			ClassIcon soldier_barrage_charged
-			Health 3800
+			Health 5000
 
 			Skill Expert
 			WeaponRestrictions PrimaryOnly
@@ -252,5 +252,35 @@ WaveSchedule
 				AttachToProjectile 1
 			}
 		}
+
+	    Gatebot
+        {
+            EventChangeAttributes
+			{
+				Default
+				{
+					Tag bot_gatebot 				// having these will cause bots to run towards gates
+					Tag nav_prefer_gate1_flank		// having these will cause bots to run towards gates
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+
+					Item "Ghostly Gibus"
+
+					ItemAttributes
+					{
+						ItemName "Ghostly Gibus"
+						"custom item model" "models/player/items/all_class/gately_gibus_heavy.mdl"
+						"attachment name" "head"
+						"attachment scale" "1.04"
+						"attachment offset" "-2.2 0.45 -11.5"
+						"attachment angles" "0 0 6"
+					}
+				}
+				RevertGateBotsBehavior
+				{
+					Item "Ghostly Gibus"
+				}
+			}
+        }
 	}
 }
