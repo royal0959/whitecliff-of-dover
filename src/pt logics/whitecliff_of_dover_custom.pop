@@ -134,7 +134,7 @@ WaveSchedule
 
 		DroneWalker_Shoot
 		{
-			KeepAlive 1 
+			// KeepAlive 1 
 
 			OnSpawnOutput
 			{
@@ -165,18 +165,18 @@ WaveSchedule
 				Action "Trigger"
 			}
 
-			OnParentKilledOutput
-			{
-				Target "le_sentry"
-				Action "RemoveHealth"
-				Param "100000000000000"			
-			}
-			OnParentKilledOutput
-			{
-				Target "le_sentry"
-				Action "kill"		
-				Delay 0.1
-			}
+			// OnParentKilledOutput
+			// {
+			// 	Target "le_sentry"
+			// 	Action "RemoveHealth"
+			// 	Param "100000000000000"			
+			// }
+			// OnParentKilledOutput
+			// {
+			// 	Target "le_sentry"
+			// 	Action "kill"		
+			// 	Delay 0.1
+			// }
 
 			// OnParentKilledOutput
 			// {

@@ -240,7 +240,12 @@ function DroneFired(sentryName, projectile)
 
 	table.insert(dronesList, projectile)
 
-	projectile:AddCallback(0, function()
+	projectile:AddCallback(ON_REMOVE, function()
+		if IsValid(sentryEnt) then
+			util.ParticleEffect("ExplosionCore_buildings", sentryEnt:GetAbsOrigin(), Vector(0, 0, 0))
+			sentryEnt:Remove()
+		end
+
 		table.remove(dronesList, findInTable(dronesList, projectile))
 
 		local stationaryId = dronesData.DronesStationaryIds[projectile]
@@ -300,8 +305,6 @@ function DroneWalkerEquip(_, activator)
 			if key ~= IN_ATTACK2 then
 				return
 			end
-
-			print(activator.m_hActiveWeapon)
 
 			if activator.m_hActiveWeapon.m_iClassname ~= "tf_weapon_shotgun_building_rescue" then
 				return
