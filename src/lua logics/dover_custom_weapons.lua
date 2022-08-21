@@ -23,7 +23,7 @@ local PHD_EXPLOSIONS = {
 
 local PARRY_TIME = 0.8
 
-local SCAVENGER_EXPLOSION_BASE_DAMAGE = 150
+local SCAVENGER_EXPLOSION_BASE_DAMAGE = 300 -- actual damage is half of this
 
 local classIndices_Internal = {
 	[1] = "Scout",

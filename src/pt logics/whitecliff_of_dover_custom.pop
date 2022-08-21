@@ -259,7 +259,7 @@ WaveSchedule
 				Target "tip_explosion"
 				Action "$InheritOwner"
 				Param "!activator"
-				Delay 0.1
+				Delay -1
 			}
 
 			OnSpawnOutput 
@@ -274,7 +274,7 @@ WaveSchedule
 				Target "popscript"
 				Action "$SetScavengerMimicDamage"
 				Param "tip_explosion"
-				Delay 0.1
+				// Delay 0.01
 			}
 
 			// OnParentKilledOutput 
@@ -479,14 +479,15 @@ WaveSchedule
 			{
 				"targetname" "attach_to_enemy"
 				"origin" "0 0 0"
-				"mins" "-5 -5 -5"
-				"maxs" "5 5 5"
+				"mins" "-8 -8 -8"
+				"maxs" "8 8 8"
 				"Damage" "0"
 				"spawnflags" "1" 
 				"filtername" "filter_is_blue"
 
 				"OnStartTouch" "detonate_position,SetParent,!activator,0.1,-1"
 				"OnStartTouch" "!self,Disable,,0,-1"
+				"OnStartTouch" "!parent,Kill,,-1,-1"
 
 				"OnUser1" "!self,Kill,,2.1,-1"
 			}

@@ -102,7 +102,7 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$UndyingSpawn"
-				Param "20" // recharge time	
+				Param "30" // recharge time	
 			}
 		}
 
