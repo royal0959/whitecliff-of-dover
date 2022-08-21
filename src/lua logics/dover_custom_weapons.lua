@@ -11,7 +11,17 @@ local PHD_THRESHOLD = {
 	["Nuke"] = 3.5,
 }
 
+local PHD_EXPLOSIONS = {
+	["Small"] = {Particle = "hammer_impact_button", Radius = 300, Damage = 75},
+	["Medium"] = {Particle = "ExplosionCore_buildings", Radius = 300, Damage = 125},
+	["Medium2"] = {Particle = "ExplosionCore_Wall", Radius = 300, Damage = 175},
+	["Large"] = {Particle = "asplode_hoodoo", Radius = 400, Damage = 250},
+	["Nuke"] = {Particle = "skull_island_explosion", Radius = 800, Damage = 700}
+}
+
 local PARRY_TIME = 0.8
+
+local SCAVENGER_EXPLOSION_BASE_DAMAGE = 150
 
 local classIndices_Internal = {
 	[1] = "Scout",
@@ -188,6 +198,23 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 		end)
 	end)
 end)
+
+function SetScavengerMimicDamage(mimicName, projectile)
+	if not IsValid(projectile) then
+		return
+	end
+
+	local mimic = ents.FindByName(mimicName)
+
+	local owner = mimic.m_hOwnerEntity
+	local primary = owner:GetPlayerItemBySlot(0)
+
+	local damageMult = primary:GetAttributeValue("damage bonus") or 1
+
+	print(damageMult)
+
+	mimic.Damage = SCAVENGER_EXPLOSION_BASE_DAMAGE * damageMult
+end
 
 -- drone
 function DroneFired(sentryName, projectile)
@@ -368,32 +395,33 @@ function PHDEquip(_, activator)
 
 				local activatorOrigin = activator:GetAbsOrigin()
 
-				--todo: damage
+				-- if chosenThreshold == "Small" then
+				-- 	util.ParticleEffect("hammer_impact_button", activatorOrigin, Vector(0, 0, 0))
+				-- 	radius = 300
+				-- 	damage = 75
+				-- elseif chosenThreshold == "Medium" then
+				-- 	util.ParticleEffect("ExplosionCore_buildings", activatorOrigin, Vector(0, 0, 0))
+				-- 	radius = 300
+				-- 	damage = 125
+				-- elseif chosenThreshold == "Medium2" then
+				-- 	util.ParticleEffect("ExplosionCore_Wall", activatorOrigin, Vector(0, 0, 0))
+				-- 	radius = 300
+				-- 	damage = 175
+				-- elseif chosenThreshold == "Large" then
+				-- 	util.ParticleEffect("asplode_hoodoo", activatorOrigin, Vector(0, 0, 0))
+				-- 	radius = 400
+				-- 	damage = 250
+				-- elseif chosenThreshold == "Nuke" then
+				-- 	util.ParticleEffect("skull_island_explosion", activatorOrigin, Vector(0, 0, 0))
+				-- 	radius = 800
+				-- 	damage = 700
+				-- end
 
-				local radius = 0
-				local damage = 0
-
-				if chosenThreshold == "Small" then
-					util.ParticleEffect("hammer_impact_button", activatorOrigin, Vector(0, 0, 0))
-					radius = 300
-					damage = 75
-				elseif chosenThreshold == "Medium" then
-					util.ParticleEffect("ExplosionCore_buildings", activatorOrigin, Vector(0, 0, 0))
-					radius = 300
-					damage = 125
-				elseif chosenThreshold == "Medium2" then
-					util.ParticleEffect("ExplosionCore_Wall", activatorOrigin, Vector(0, 0, 0))
-					radius = 300
-					damage = 175
-				elseif chosenThreshold == "Large" then
-					util.ParticleEffect("asplode_hoodoo", activatorOrigin, Vector(0, 0, 0))
-					radius = 400
-					damage = 250
-				elseif chosenThreshold == "Nuke" then
-					util.ParticleEffect("skull_island_explosion", activatorOrigin, Vector(0, 0, 0))
-					radius = 800
-					damage = 700
-				end
+				local explosionData = PHD_EXPLOSIONS[chosenThreshold]
+				
+				util.ParticleEffect(explosionData.Particle, activatorOrigin, Vector(0, 0, 0))
+				local radius = explosionData.Radius
+				local damage = explosionData.Damage
 
 				local enemiesInRange = ents.GetAllPlayers() --ents.FindAllInSphere(activatorOrigin, radius)
 
