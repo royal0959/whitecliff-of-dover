@@ -3,6 +3,8 @@ local REDEEMER_HIT_DAMAGE = 40
 local REDEEMER_HIT_DAMAGE_ADDITION = 10 -- increased each hit
 local REDEEMER_HIT_DAMAGE_ADDITION_CAP = 50
 
+local DRONES_CAP = 2
+
 local PHD_THRESHOLD = {
 	["Small"] = -1,
 	["Medium"] = 1,
@@ -283,7 +285,7 @@ function DroneWalkerEquip(_, activator)
 
 		DronesStationaryIds = {},
 
-		DronesCap = not gunslingerEquipped and 3 or 4,
+		DronesCap = not gunslingerEquipped and DRONES_CAP or DRONES_CAP + 1,
 
 		Buffed = gunslingerEquipped,
 	}
