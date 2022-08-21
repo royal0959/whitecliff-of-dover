@@ -350,6 +350,23 @@ WaveSchedule
 
 				"OnUser1" "!self,Kill,,2,-1"
 			}
+
+			dispenser_touch_trigger
+			{
+				"targetname" "cart_dispenser_trigger"
+				"mins" "-600 -600 -600"
+				"maxs" "600 600 600"
+				"spawnflags" "1"
+			}
+			
+			mapobj_cart_dispenser
+			{
+				"targetname" "cart_dispenser"
+				"origin" "-80 -20 100"
+				"spawnflags" "10"
+				"TeamNum" "3"
+				"touch_trigger" "cart_dispenser_trigger"
+			}
 		}
 	}
 }

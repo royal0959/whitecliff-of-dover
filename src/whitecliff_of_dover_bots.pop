@@ -230,7 +230,7 @@ WaveSchedule
 
 		T_TFBot_Soldier_Boomer 
 		{
-			Name "Boomer Soldier"
+			Name "Giant Boomer Soldier"
 
 			Class Soldier
 			ClassIcon soldier_barrage_charged
@@ -250,6 +250,13 @@ WaveSchedule
 			Attributes IgnoreFlag 			// having these will cause bots to run towards gates
 			Tag bot_giant
 
+			// this is his gate hat
+			ItemAttributes
+			{
+				ItemName "The Nuke"
+				"set item tint rgb" 15185211
+			}
+
 			ItemAttributes
 			{
 				ItemName "The Original"
@@ -260,7 +267,7 @@ WaveSchedule
 
 			CharacterAttributes
 			{
-				"move speed bonus"	0.4
+				"move speed bonus"	0.45 //moves slightly slower due to the sheer size of his balls
 				"damage force reduction" 0.4
 				"airblast vulnerability multiplier" 0.4
 				"override footstep sound set" 3
@@ -270,6 +277,19 @@ WaveSchedule
 			{
 				Name BloomRocket_Crit
 				AttachToProjectile 1
+			}
+		}
+
+		FollowAmbulance
+		{
+			Action Mobber
+			InterruptAction 
+			{
+				Target "ambulancetank" 
+
+				Delay 0.1
+				Duration 9999999
+				WaitUntilDone 1 
 			}
 		}
 

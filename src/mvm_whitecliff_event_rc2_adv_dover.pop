@@ -205,15 +205,18 @@ cliff_of_dover
 			OriginalItemName "craftsmann_sniperrifle_shotinthedark"
 
 			"override projectile type" 2 //rocket
-			// "projectile gravity native" 0.4
-			// "arrow hit kill time" 0.01
+
 			"custom projectile model" "models/weapons/w_models/w_repair_claw.mdl" //no trail particle
 			"mult projectile scale" 0.0001
-			// "projectile trail particle" "ghost_trail" 
+
+
 			"blast radius decreased" 0.1
-			"projectile speed increased" 2.5
 			"no explosion particles" 1
 			"attach particle effect" 703
+			"projectile speed increased" 2.5
+
+			"maxammo primary reduced" 0.5
+			"no primary ammo from dispensers while active" 1
 			"fire rate penalty" 2.5
 
 			"rocket jump damage reduction HIDDEN" 0.3
@@ -941,8 +944,8 @@ cliff_of_dover
 			Name "2_heavyboys"
 			WaitForAllDead "2_pyros"
 			Where spawnbot
-			TotalCount 3
-			MaxActive 3
+			TotalCount 2
+			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 6
 			WaitBetweenSpawns 10
@@ -1258,8 +1261,6 @@ cliff_of_dover
 				TFBot
 				{
 					Template T_TFBot_Soldier_Boomer
-
-					AddTemplate Gatebot
 				}
 				TFBot
 				{
@@ -1279,13 +1280,14 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "4_dh"
+			WaitForAllDead "4_duke"
 			Where spawnbot
 			TotalCount 18
 			MaxActive 3
 			SpawnCount 3
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 100
+			TotalCurrency 50
 	
 			TFBot
 			{
@@ -1299,9 +1301,29 @@ cliff_of_dover
 			}
 		}
 
+		WaveSpawn
+		{
+			Name "4_shortstop"
+			WaitForAllDead "4_duke"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+	
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop
+				AddTemplate FollowAmbulance
+			}
+		}
+
 		WaveSpawn 
 		{
 			Name "4_ambulance"
+			WaitForAllDead "4_duke"
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
@@ -1312,7 +1334,7 @@ cliff_of_dover
 		
 			Tank
 			{
-				Name "tankboss"
+				Name "ambulancetank"
 				StartingPathTrackNode "tank_path_1"
 				Health 18000
 				Speed 75
@@ -1326,5 +1348,66 @@ cliff_of_dover
 				}
 			}
 		}
+
+		WaveSpawn
+		{
+			Name "4_theboys"
+			WaitForAllDead "4_ambulance"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 15
+			TotalCurrency 0
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Fast 
+				Name "Super Bumper Scout"
+
+				Health 800
+				Attributes IgnoreFlag
+
+				AddCond {Index 82}
+
+				FireWeapon
+                {
+                    Delay 5
+                    Cooldown 7
+					Type "Secondary"
+				}
+
+				CharacterAttributes
+				{
+					"always allow taunt" 1
+					"cannot pick up intelligence" 1
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "4_bats_bomb_push"
+			WaitForAllDead "4_duke"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 0
+
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				ClassIcon scout_bat
+
+				Attributes AlwaysCrit
+			}
+		}
+
 	}
 }
