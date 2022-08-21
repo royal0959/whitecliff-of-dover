@@ -30,6 +30,20 @@ WaveSchedule
 			DisableChildModels 1  
 		}
 
+		Ambulance 
+		{
+			SpawnTemplate Ambulance_Tank
+
+			Model "models/empty.mdl" 
+
+			DisableSmokestack 1  
+			TriggerDestroyBuildingFix 1
+			DisableTracks 1  
+			DisableChildModels 1  
+			PingSound "misc/null.wav"
+			EngineLoopSound "misc/null.wav"
+		}
+
 		T_TFBot_Soldier_Bison
 		{
 			Name "Bison Soldier"
@@ -230,6 +244,12 @@ WaveSchedule
 			Attributes AlwaysCrit
 			Attributes MiniBoss
 
+			Tag bot_gatebot 				// having these will cause bots to run towards gates
+			Tag nav_prefer_gate1_flank		// having these will cause bots to run towards gates
+			BehaviorModifiers push			// having these will cause bots to run towards gates
+			Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			Tag bot_giant
+
 			ItemAttributes
 			{
 				ItemName "The Original"
@@ -240,7 +260,7 @@ WaveSchedule
 
 			CharacterAttributes
 			{
-				"move speed bonus"	0.5
+				"move speed bonus"	0.4
 				"damage force reduction" 0.4
 				"airblast vulnerability multiplier" 0.4
 				"override footstep sound set" 3

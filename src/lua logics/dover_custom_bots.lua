@@ -97,8 +97,8 @@ function UndyingSpawn(rechargeTime, activator)
 		Type = 3,
 		ID = activator:AddCallback(3, function(_, damageInfo)
 			if botTypesData.Undying[handle].Recharging then
-				damageInfo.Damage = 0
-				return true
+				-- damageInfo.Damage = 0
+				return
 			end
 
 			local curHealth = activator.m_iHealth
@@ -111,7 +111,7 @@ function UndyingSpawn(rechargeTime, activator)
 				damageInfo.DamageType = DMG_GENERIC
 				-- damageInfo.CritType = 0
 
-				UndyingActivate(rechargeTime, activator, handle)
+				botTypesData.Undying[handle].Recharging = true
 
 				-- set health to 1
 				local setHealthDmgInfo = {
@@ -127,7 +127,9 @@ function UndyingSpawn(rechargeTime, activator)
 					ReportedPosition = damageInfo.ReportedPosition,
 				}
 
-				activator:TakeDamage(setHealthDmgInfo)
+				print(activator:TakeDamage(setHealthDmgInfo))
+				
+				UndyingActivate(rechargeTime, activator, handle)
 
 				return true
 			end

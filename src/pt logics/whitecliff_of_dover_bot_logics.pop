@@ -328,5 +328,28 @@ WaveSchedule
 				"OnUser1" "!self,FireUser1,,0.5,-1"
 			}
 		}
+
+		Ambulance_Tank
+		{
+			prop_dynamic
+			{
+				"targetname" "ambulance"
+				"spawnflags" "0"
+				"solid" "0"
+				"rendercolor" "255 255 255"
+				"renderamt" "255"
+				"RandomAnimation" "0"
+				"pressuredelay" "0"
+				"physdamagescale" "1.0"
+				"PerformanceMode" "0"
+				"model" "models/ambulance.mdl"
+				"body" "0"
+				"angles" "0 -90 0"
+
+				"modelscale" "1.2"
+
+				"OnUser1" "!self,Kill,,2,-1"
+			}
+		}
 	}
 }

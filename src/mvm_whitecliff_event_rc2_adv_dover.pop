@@ -793,7 +793,7 @@ cliff_of_dover
 
 				tag bot_giant
 
-				AddTemplate Gatebot
+				// AddTemplate Gatebot
 			}
 		}
 
@@ -838,7 +838,7 @@ cliff_of_dover
 				Attributes AlwaysFireWeapon
 
 				tag bot_giant
-				AddTemplate Gatebot
+				// AddTemplate Gatebot
 			}
 		}
 
@@ -883,7 +883,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "2_steel"
-			WaitForAllSpawned "2_charged_spam"
+			WaitForAllSpawned "2_pyros"
 			Where spawnbot
 			TotalCount 18
 			MaxActive 6
@@ -939,13 +939,13 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "2_heavyboys"
-			WaitForAllDead "2_soldierdemo"
+			WaitForAllDead "2_pyros"
 			Where spawnbot
-			TotalCount 2
-			MaxActive 2
-			SpawnCount 2
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
 			WaitBeforeStarting 6
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 10
 			TotalCurrency 300
 
 			Squad
@@ -1258,14 +1258,71 @@ cliff_of_dover
 				TFBot
 				{
 					Template T_TFBot_Soldier_Boomer
+
+					AddTemplate Gatebot
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Medic_Regen
+
+					AddTemplate Gatebot
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Medic_Regen
+
+					AddTemplate Gatebot
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "4_dh"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+	
+			TFBot
+			{
+				Class Soldier
+				Skill Expert 
+				Name "Direct Hit Soldier"
+				ClassIcon soldier_dh_nys
+				item "The Direct Hit"
+
+				AddTemplate Gatebot
+			}
+		}
+
+		WaveSpawn 
+		{
+			Name "4_ambulance"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 100
+		
+			Tank
+			{
+				Name "tankboss"
+				StartingPathTrackNode "tank_path_1"
+				Health 18000
+				Speed 75
+
+				Template Ambulance
+		
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
 				}
 			}
 		}
