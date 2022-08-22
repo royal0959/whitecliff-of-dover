@@ -17,6 +17,7 @@
 		"IsValid",
 		"ON_REMOVE",
 		"ON_SPAWN",
-		"ON_DEATH"
+		"ON_DEATH",
+		"ON_TOUCH"
 	],
 }

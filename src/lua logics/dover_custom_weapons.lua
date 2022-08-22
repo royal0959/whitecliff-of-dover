@@ -26,7 +26,7 @@ local PHD_EXPLOSIONS = {
 
 local PARRY_TIME = 0.8
 
-local SCAVENGER_EXPLOSION_BASE_DAMAGE = 225
+local SCAVENGER_EXPLOSION_BASE_DAMAGE = 200
 
 local classIndices_Internal = {
 	[1] = "Scout",
@@ -260,7 +260,7 @@ end
 
 function DroneWalkerEquip(_, activator)
 	-- fix weird quirk with template being spawned after you switch to a different class
-	if classIndices_Internal[activator:DumpProperties().m_iClass] ~= "Engineer" then
+	if classIndices_Internal[activator.m_iClass] ~= "Engineer" then
 		return
 	end
 
@@ -362,7 +362,7 @@ end
 
 function PHDEquip(_, activator)
 	-- fix weird quirk with template being spawned after you switch to a different class
-	if classIndices_Internal[activator:DumpProperties().m_iClass] ~= "Soldier" then
+	if classIndices_Internal[activator.m_iClass] ~= "Soldier" then
 		return
 	end
 

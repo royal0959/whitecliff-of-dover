@@ -1,7 +1,7 @@
 #base robot_standard.pop
 #base robot_giant.pop
 
-#base rotating_shield.pop
+#base rotating_shield_whitecliff.pop
 
 #base whitecliff_of_dover_custom.pop
 #base whitecliff_of_dover_bots.pop
@@ -36,11 +36,18 @@ cliff_of_dover
 	LuaScriptFile "scripts/remove_zombie_model.lua"
 	LuaScriptFile "scripts/dover_custom_weapons.lua"
 	LuaScriptFile "scripts/dover_custom_bots.lua"
-	LuaScriptFile "scripts/projectile_shield_damage.lua" 
+	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua" 
 
 	DisallowUpgrade
 	{
 		Upgrade	"explosive sniper shot" 
+		MaxLevel 0
+		ItemName "Scavenger"
+	}
+	
+	DisallowUpgrade
+	{
+		Upgrade	"projectile penetration" 
 		MaxLevel 0
 		ItemName "Scavenger"
 	}
@@ -89,6 +96,16 @@ cliff_of_dover
         X "2921"            
         Y "-4554"                  
         Z "528"        
+    }
+
+	ExtraSpawnPoint 
+    {
+        Name "ambulance_support" //gets enabled after ambulance spawns and disabled after death
+		StartDisabled 1 
+        TeamNum 3 
+        X "2022.725708"            
+        Y "-6524.927734"                  
+        Z "692.031311"        
     }
 
 	ExtraTankPath 
@@ -169,7 +186,18 @@ cliff_of_dover
 
 			"special item description" "Alt-fire to negate all incoming damage and deal back twice the amount to the attacker"
 			"special item description 2" "Parry period lasts for 0.8 seconds"
-			"special item description 3" "Cannot charge"
+			// "special item description 3" "Cannot charge"
+		}
+
+		"Thunderdome"
+		{
+			OriginalItemName "Upgradeable TF_WEAPON_MINIGUN" 
+
+			"hidden primary max ammo bonus" 0.0001
+			"cannot be upgraded" 1
+			"special item description" "Create 2 small projectile shields that orbit around you and damage enemies"
+			"special item description 2" "Increased damage for secondary and melee"
+			"special item description 3" "No primary weapon"
 		}
 
 		"Drone Walker"
@@ -207,19 +235,19 @@ cliff_of_dover
 			"override projectile type" 2 //rocket
 
 			"custom projectile model" "models/weapons/w_models/w_repair_claw.mdl" //no trail particle
-			"mult projectile scale" 0.0001
-
+			"mult projectile scale" 0.01
 
 			"blast radius decreased" 0.1
 			"no explosion particles" 1
 			"attach particle effect" 703
 			"projectile speed increased" 2.5
 
-			"maxammo primary reduced" 0.5
+			"maxammo primary reduced" 0.3
 			"no primary ammo from dispensers while active" 1
-			"fire rate penalty" 2.5
+			"fire rate penalty" 2
 
-			"rocket jump damage reduction HIDDEN" 0.3
+			"rocket jump damage reduction" 0
+			"cancel falling damage" 1
 
 			// doesn't work
 			// "projectile sound" "scavenger_fire.mp3"
@@ -273,6 +301,10 @@ cliff_of_dover
 		Soldier 
 		{
 			Primary {Item "PHD Jumper"}
+		}
+		Heavyweapons
+		{
+			Primary {Item "Thunderdome"}
 		}
 		Demoman 
 		{
@@ -370,6 +402,12 @@ cliff_of_dover
 	{
 		Name Redeemer_Spawn
 		ItemName "Biker's Redeemer"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name Thunderdome_Spawn
+		ItemName "Thunderdome"
 	}
 
 	PlayerItemEquipSpawnTemplate 
@@ -1303,91 +1341,6 @@ cliff_of_dover
 
 		WaveSpawn
 		{
-			Name "4_shortstop"
-			WaitForAllDead "4_duke"
-			Where spawnbot
-			TotalCount 24
-			MaxActive 4
-			SpawnCount 4
-			WaitBeforeStarting 3
-			WaitBetweenSpawns 3
-			TotalCurrency 50
-	
-			TFBot
-			{
-				Template T_TFBot_Scout_Shortstop
-				AddTemplate FollowAmbulance
-			}
-		}
-
-		WaveSpawn 
-		{
-			Name "4_ambulance"
-			WaitForAllDead "4_duke"
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
-		
-			TotalCurrency 100
-		
-			Tank
-			{
-				Name "ambulancetank"
-				StartingPathTrackNode "tank_path_1"
-				Health 18000
-				Speed 75
-
-				Template Ambulance
-		
-				OnBombDroppedOutput
-				{
-					Target boss_deploy_relay
-					Action Trigger
-				}
-			}
-		}
-
-		WaveSpawn
-		{
-			Name "4_theboys"
-			WaitForAllDead "4_ambulance"
-			Where spawnbot
-			TotalCount 4
-			MaxActive 4
-			SpawnCount 1
-			WaitBeforeStarting 8
-			WaitBetweenSpawns 15
-			TotalCurrency 0
-		
-			TFBot
-			{
-				Template T_TFBot_Giant_Scout_Fast 
-				Name "Super Bumper Scout"
-
-				Health 800
-				Attributes IgnoreFlag
-
-				AddCond {Index 82}
-
-				FireWeapon
-                {
-                    Delay 5
-                    Cooldown 7
-					Type "Secondary"
-				}
-
-				CharacterAttributes
-				{
-					"always allow taunt" 1
-					"cannot pick up intelligence" 1
-				}
-			}
-		}
-
-		WaveSpawn
-		{
 			Name "4_bats_bomb_push"
 			WaitForAllDead "4_duke"
 			Where spawnbot
@@ -1409,5 +1362,142 @@ cliff_of_dover
 			}
 		}
 
+		WaveSpawn
+		{
+			Name "4_shortstop"
+			WaitForAllDead "4_duke"
+			Where ambulance_support
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+
+			Support 1
+	
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop
+				AddTemplate FollowAmbulance
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "4_giant_punchies"
+			WaitForAllDead "4_duke"
+			Where ambulance_support
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			Support 1
+	
+			TFBot
+			{
+				Template T_TFBot_Giant_Boxing_Heavy
+			}
+		}
+
+		WaveSpawn 
+		{
+			Name "4_ambulance"
+			WaitForAllDead "4_duke"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 100
+		
+			Tank
+			{
+				Name "ambulancetank"
+				StartingPathTrackNode "tank_path_1"
+				Health 25000
+				Speed 75
+
+				Template Ambulance
+		
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "4_carriers"
+			WaitForAllDead "4_ambulance"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 0
+		
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast 
+					SpawnTemplate Bot_Carrier
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout 
+					WeaponRestrictions PrimaryOnly 
+					Attributes AlwaysFireWeapon
+					SpawnTemplate Bot_Carried
+				}
+			}
+
+		}
+
+		// funny yet impractical
+		// WaveSpawn
+		// {
+		// 	Name "4_theboys"
+		// 	WaitForAllDead "4_ambulance"
+		// 	Where spawnbot
+		// 	TotalCount 4
+		// 	MaxActive 4
+		// 	SpawnCount 1
+		// 	WaitBeforeStarting 8
+		// 	WaitBetweenSpawns 15
+		// 	TotalCurrency 0
+		
+		// 	TFBot
+		// 	{
+		// 		Template T_TFBot_Giant_Scout_Fast 
+		// 		Name "Super Bumper Scout"
+
+		// 		Health 800
+		// 		Attributes IgnoreFlag
+
+		// 		AddCond {Index 82}
+
+		// 		FireWeapon
+        //         {
+        //             Delay 5
+        //             Cooldown 7
+		// 			Type "Secondary"
+		// 		}
+
+		// 		CharacterAttributes
+		// 		{
+		// 			"always allow taunt" 1
+		// 			"cannot pick up intelligence" 1
+		// 		}
+		// 	}
+		// }
 	}
 }

@@ -332,6 +332,18 @@ WaveSchedule
 
 		Ambulance_Tank
 		{
+			OnSpawnOutput 
+			{
+				Target "ambulance_support"
+				Action "Enable"
+			}
+
+			OnParentKilledOutput
+			{
+				Target "ambulance_support"
+				Action "Disable"
+			}
+
 			prop_dynamic
 			{
 				"targetname" "ambulance"
@@ -369,5 +381,84 @@ WaveSchedule
 				"touch_trigger" "cart_dispenser_trigger"
 			}
 		}
+
+    //remember to only have 1 of each active at a time
+    //remember to spawn the Bot_Carried at least 0.1 seconds after Bot_Carrier so that it doesn't carry the bomb accidentally
+    //only spawn the next pairs at least 0.5 seconds after the current pair dies 
+	Bot_Carrier
+    {
+		NoFixup 1
+		KeepAlive 1
+
+		OnParentKilledOutput 
+		{
+			Target "bot_teleport_relay"
+			Action "Disable"
+			Delay 0
+		}
+
+		OnParentKilledOutput 
+		{
+			Target "bot_teleport_relay_final"
+			Action "Trigger"
+			Delay 0.01
+		}
+
+		OnParentKilledOutput 
+		{
+			Target "bot_carrier_target"
+			Action "kill"
+			Delay 0.1
+		}
+
+		OnParentKilledOutput 
+		{
+			Target "bot_carrier_target_inital"
+			Action "kill"
+			Delay 0.5 //bruteforced fix to a source jank bug woo
+		}
+
+		info_target
+		{
+			"targetname" "bot_carrier_target"
+			"origin" "0 0 150" //adjust height to accomodate for bot scale 
+		} 
+
+		info_target
+		{
+			"targetname" "bot_carrier_target_inital"
+			"origin" "0 0 0" //keep this at 0 0 0 always
+		} 
+    }
+
+	Bot_Carried
+	{
+		NoFixup 1
+
+		OnSpawnOutput
+		{
+			Target "bot_teleport_relay"
+			Action "Trigger"
+		}
+
+		logic_relay 
+		{
+			"targetname" "bot_teleport_relay"
+			"spawnflags" "2"
+
+			"OnTrigger" "!activator,$TeleportToEntity,bot_carrier_target,0,-1"
+			"OnTrigger" "!self,Trigger,,0.01,-1"
+		}
+
+		//makes sure the bot doesn't teleport back to spawn because wonky source fuckeries I guess????
+		logic_relay 
+		{
+			"targetname" "bot_teleport_relay_final"
+			"spawnflags" "2"
+
+			"OnTrigger" "!activator,$TeleportToEntity,bot_carrier_target_inital,0,-1"
+			"OnTrigger" "!self,Trigger,,0.01,-1"
+		}
+	}
 	}
 }
