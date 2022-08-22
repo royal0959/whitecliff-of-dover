@@ -1,7 +1,10 @@
 local REDEEMER_HIT_DEBOUNCE = 10
-local REDEEMER_HIT_DAMAGE = 40
-local REDEEMER_HIT_DAMAGE_ADDITION = 10 -- increased each hit
-local REDEEMER_HIT_DAMAGE_ADDITION_CAP = 50
+local REDEEMER_HIT_DAMAGE = 50
+-- local REDEEMER_HIT_DAMAGE_ADDITION = 10 -- increased each hit
+-- local REDEEMER_HIT_DAMAGE_ADDITION_CAP = 50
+
+local REDEEMER_HIT_DAMAGE_ADDITION_MULT_ADDITIVE = 1 -- increased each hit
+local REDEEMER_HIT_DAMAGE_ADDITION_CAP_ADDITIVE = 10
 
 local DRONES_CAP = 2
 
@@ -10,15 +13,15 @@ local PHD_THRESHOLD = {
 	["Medium"] = 1,
 	["Medium2"] = 1.4,
 	["Large"] = 2.2,
-	["Nuke"] = 3.5,
+	["Nuke"] = 3.1,
 }
 
 local PHD_EXPLOSIONS = {
-	["Small"] = {Particle = "hammer_impact_button", Radius = 300, Damage = 75},
-	["Medium"] = {Particle = "ExplosionCore_buildings", Radius = 300, Damage = 125},
-	["Medium2"] = {Particle = "ExplosionCore_Wall", Radius = 300, Damage = 175},
-	["Large"] = {Particle = "asplode_hoodoo", Radius = 400, Damage = 250},
-	["Nuke"] = {Particle = "skull_island_explosion", Radius = 800, Damage = 700}
+	["Small"] = { Particle = "hammer_impact_button", Radius = 300, Damage = 75 },
+	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 300, Damage = 125 },
+	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 300, Damage = 175 },
+	["Large"] = { Particle = "asplode_hoodoo", Radius = 400, Damage = 250 },
+	["Nuke"] = { Particle = "skull_island_explosion", Radius = 800, Damage = 700 },
 }
 
 local PARRY_TIME = 0.8
@@ -75,17 +78,17 @@ function ClearCallbacks(index, activator, handle)
 		return
 	end
 
-	if activator then
-		for _, callbackData in pairs(weaponCallbacks) do
-			activator:RemoveCallback(callbackData.ID)
+	if activator and IsValid(activator) then
+		for _, callbackId in pairs(weaponCallbacks) do
+			activator:RemoveCallback(callbackId)
 		end
 	end
 
 	callbacks[index][handle] = nil
 end
 
-function ClearData(index, activator)
-	local handle = activator:GetHandleIndex()
+function ClearData(index, activator, handle)
+	handle = handle or activator:GetHandleIndex()
 
 	local weaponData = weaponsData[index][handle]
 
@@ -105,10 +108,8 @@ function ClearTimers(index, activator, handle)
 		return
 	end
 
-	if activator then
-		for _, timerId in pairs(weaponTimer) do
-			timer.Stop(timerId)
-		end
+	for _, timerId in pairs(weaponTimer) do
+		timer.Stop(timerId)
 	end
 
 	weaponTimers[index][handle] = nil
@@ -138,7 +139,7 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 			return
 		end
 
-		local extraDamage = 0
+		local extraDamageMult = 1
 
 		local handle = entity:GetHandleIndex()
 
@@ -180,7 +181,7 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 				Attacker = owner,
 				Inflictor = nil,
 				Weapon = nil,
-				Damage = baseDamage * damageMult + extraDamage,
+				Damage = baseDamage * damageMult * extraDamageMult,
 				DamageType = DMG_SHOCK,
 				DamageCustom = 0,
 				DamagePosition = visualHitPost,
@@ -190,10 +191,10 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 
 			local dmg = target:TakeDamage(damageInfo)
 
-			extraDamage = extraDamage + REDEEMER_HIT_DAMAGE_ADDITION
+			extraDamageMult = extraDamageMult + REDEEMER_HIT_DAMAGE_ADDITION_MULT_ADDITIVE
 
-			if extraDamage > REDEEMER_HIT_DAMAGE_ADDITION_CAP then
-				extraDamage = REDEEMER_HIT_DAMAGE_ADDITION_CAP
+			if extraDamageMult > REDEEMER_HIT_DAMAGE_ADDITION_CAP_ADDITIVE then
+				extraDamageMult = REDEEMER_HIT_DAMAGE_ADDITION_CAP_ADDITIVE
 			end
 
 			return false
@@ -267,7 +268,7 @@ function DroneWalkerEquip(_, activator)
 	local handle = activator:GetHandleIndex()
 
 	if callbacks.Drone[handle] then
-		DroneWalkerUnequip(_, activator)
+		DroneWalkerUnequip(activator, handle)
 	end
 
 	local meleeWeapon = activator:GetPlayerItemBySlot(2)
@@ -276,7 +277,6 @@ function DroneWalkerEquip(_, activator)
 	local primary = activator:GetPlayerItemBySlot(0)
 
 	if gunslingerEquipped then
-
 		primary:SetAttributeValue("always crit", 1)
 		-- primary:SetAttributeValue("engy sentry damage bonus", 1.25)
 	else
@@ -299,42 +299,55 @@ function DroneWalkerEquip(_, activator)
 	local dronesData = weaponsData.Drone[handle]
 
 	-- on key press
-	droneCallbacks.keyPress = {
-		Type = 7,
-		ID = activator:AddCallback(7, function(_, key)
-			if key ~= IN_ATTACK2 then
-				return
+	droneCallbacks.keyPress = activator:AddCallback(7, function(_, key)
+		if key ~= IN_ATTACK2 then
+			return
+		end
+
+		if activator.m_hActiveWeapon.m_iClassname ~= "tf_weapon_shotgun_building_rescue" then
+			return
+		end
+
+		if dictionaryLength(dronesData.DronesStationaryIds) > 0 then
+			for projectile, id in pairs(dronesData.DronesStationaryIds) do
+				timer.Stop(id)
+				dronesData.DronesStationaryIds[projectile] = nil
 			end
 
-			if activator.m_hActiveWeapon.m_iClassname ~= "tf_weapon_shotgun_building_rescue" then
-				return
-			end
+			return
+		end
 
-			if dictionaryLength(dronesData.DronesStationaryIds) > 0 then
-				for projectile, id in pairs(dronesData.DronesStationaryIds) do
-					timer.Stop(id)
-					dronesData.DronesStationaryIds[projectile] = nil
-				end
+		for _, projectile in pairs(dronesData.DronesList) do
+			local origin = projectile:GetAbsOrigin()
 
-				return
-			end
+			projectile:SetLocalVelocity(Vector(0, 0, 0))
 
-			for _, projectile in pairs(dronesData.DronesList) do
-				local origin = projectile:GetAbsOrigin()
+			dronesData.DronesStationaryIds[projectile] = timer.Create(0, function()
+				projectile:SetAbsOrigin(origin)
+			end, 0)
+		end
+	end)
 
-				projectile:SetLocalVelocity(Vector(0, 0, 0))
+	droneCallbacks.onRemoved = activator:AddCallback(ON_REMOVE, function()
+		DroneWalkerUnequip(activator, handle)
+	end)
 
-				dronesData.DronesStationaryIds[projectile] = timer.Create(0, function()
-					projectile:SetAbsOrigin(origin)
-				end, 0)
-			end
-		end),
-	}
+	droneCallbacks.onDeath = activator:AddCallback(9, function()
+		DroneWalkerUnequip(activator, handle)
+	end)
+
+	droneCallbacks.onSpawn = activator:AddCallback(1, function()
+		DroneWalkerUnequip(activator, handle)
+	end)
 end
 
-function DroneWalkerUnequip(_, activator)
-	ClearCallbacks("Drone", activator)
-	ClearData("Drone", activator)
+function DroneWalkerUnequip(activator, handle)
+	if not IsValid(activator) then
+		activator = nil
+	end
+
+	ClearCallbacks("Drone", activator, handle)
+	ClearData("Drone", activator, handle)
 end
 
 local function _parry(activator)
@@ -357,7 +370,7 @@ function PHDEquip(_, activator)
 	local handle = activator:GetHandleIndex()
 
 	if callbacks.PHD[handle] then
-		PHDUnequip(_, activator)
+		PHDUnequip(activator, handle)
 	end
 
 	callbacks.PHD[handle] = {}
@@ -367,32 +380,39 @@ function PHDEquip(_, activator)
 	}
 
 	local phdCallbacks = callbacks.PHD[handle]
-	local phdTimers = callbacks.PHD[handle]
+	local phdTimers = weaponTimers.PHD[handle]
 	local phdData = weaponsData.PHD[handle]
 
+	phdCallbacks.removed = activator:AddCallback(ON_REMOVE, function()
+		PHDUnequip(activator, handle)
+	end)
+
+	phdCallbacks.died = activator:AddCallback(ON_DEATH, function()
+		PHDUnequip(activator, handle)
+	end)
+
+	phdCallbacks.spawned = activator:AddCallback(ON_SPAWN, function()
+		PHDUnequip(activator, handle)
+	end)
+
 	phdTimers.rocketJumpCheck = timer.Create(0.1, function()
+		-- if not IsValid(activator) then
+		-- 	print("a")
+		-- 	return
+		-- end
+
 		local jumping = activator:InCond(TF_COND_BLASTJUMPING)
 
 		if jumping == 0 then
 			if phdData.JumpStartTime then
-				print("here")
 				local timeDiff = CurTime() - phdData.JumpStartTime
 
-				print(timeDiff)
-				local currentThreshold = {nil, -1}
-				
+				local currentThreshold = { nil, -10000 }
+
 				for thresHoldName, timeRequired in pairs(PHD_THRESHOLD) do
-					if timeRequired < currentThreshold[2] then
-						goto continue
+					if timeRequired > currentThreshold[2] and timeDiff > timeRequired then
+						currentThreshold = { thresHoldName, timeRequired }
 					end
-
-					if timeDiff < timeRequired then
-						goto continue
-					end
-
-					currentThreshold = {thresHoldName, timeRequired}
-					
-					::continue::
 				end
 
 				local chosenThreshold = currentThreshold[1]
@@ -400,35 +420,13 @@ function PHDEquip(_, activator)
 
 				local activatorOrigin = activator:GetAbsOrigin()
 
-				-- if chosenThreshold == "Small" then
-				-- 	util.ParticleEffect("hammer_impact_button", activatorOrigin, Vector(0, 0, 0))
-				-- 	radius = 300
-				-- 	damage = 75
-				-- elseif chosenThreshold == "Medium" then
-				-- 	util.ParticleEffect("ExplosionCore_buildings", activatorOrigin, Vector(0, 0, 0))
-				-- 	radius = 300
-				-- 	damage = 125
-				-- elseif chosenThreshold == "Medium2" then
-				-- 	util.ParticleEffect("ExplosionCore_Wall", activatorOrigin, Vector(0, 0, 0))
-				-- 	radius = 300
-				-- 	damage = 175
-				-- elseif chosenThreshold == "Large" then
-				-- 	util.ParticleEffect("asplode_hoodoo", activatorOrigin, Vector(0, 0, 0))
-				-- 	radius = 400
-				-- 	damage = 250
-				-- elseif chosenThreshold == "Nuke" then
-				-- 	util.ParticleEffect("skull_island_explosion", activatorOrigin, Vector(0, 0, 0))
-				-- 	radius = 800
-				-- 	damage = 700
-				-- end
-
 				local explosionData = PHD_EXPLOSIONS[chosenThreshold]
-				
+
 				util.ParticleEffect(explosionData.Particle, activatorOrigin, Vector(0, 0, 0))
 				local radius = explosionData.Radius
 				local damage = explosionData.Damage
 
-				local enemiesInRange = ents.GetAllPlayers() --ents.FindAllInSphere(activatorOrigin, radius)
+				local enemiesInRange = ents.FindInSphere(activatorOrigin, radius) --ents.GetAllPlayers()
 
 				local primary = activator:GetPlayerItemBySlot(0)
 
@@ -443,29 +441,28 @@ function PHDEquip(_, activator)
 						goto continue
 					end
 
-					local distance = activatorOrigin:Distance(enemy:GetAbsOrigin())
+					-- local distance = activatorOrigin:Distance(enemy:GetAbsOrigin())
 
-					if tonumber(distance) < radius then
-						local damageInfo = {
-							Attacker = activator,
-							Inflictor = nil,
-							Weapon = primary,
-							Damage = damage * damageMult,
-							DamageType = DMG_BLAST,
-							DamageCustom = TF_DMG_CUSTOM_NONE,
-							DamagePosition = enemy:GetAbsOrigin(), -- Where the target was hit at
-							DamageForce = Vector(0,0,0), -- Knockback force of the attack
-							ReportedPosition = activatorOrigin -- Where the attacker attacked from
-						}
-					
-						enemy:TakeDamage(damageInfo)
-	
-					end
+					-- if tonumber(distance) < radius then
+					local damageInfo = {
+						Attacker = activator,
+						Inflictor = nil,
+						Weapon = primary,
+						Damage = damage * damageMult,
+						DamageType = DMG_BLAST,
+						DamageCustom = TF_DMG_CUSTOM_NONE,
+						DamagePosition = enemy:GetAbsOrigin(), -- Where the target was hit at
+						DamageForce = Vector(0, 0, 0), -- Knockback force of the attack
+						ReportedPosition = activatorOrigin, -- Where the attacker attacked from
+					}
+
+					enemy:TakeDamage(damageInfo)
+					-- end
+
 					::continue::
 				end
 
 				print("kaboom")
-
 
 				phdData.JumpStartTime = false
 			end
@@ -481,10 +478,14 @@ function PHDEquip(_, activator)
 	end, 0)
 end
 
-function PHDUnequip(_, activator)
-	ClearCallbacks("PHD", activator)
-	ClearData("PHD", activator)
-	ClearTimers("PHD", activator)
+function PHDUnequip(activator, handle)
+	if not IsValid(activator) then
+		activator = nil
+	end
+
+	ClearCallbacks("PHD", activator, handle)
+	ClearData("PHD", activator, handle)
+	ClearTimers("PHD", activator, handle)
 end
 
 function ParryAddictionEquip(_, activator)
@@ -497,7 +498,7 @@ function ParryAddictionEquip(_, activator)
 	local handle = activator:GetHandleIndex()
 
 	if callbacks.Parry[handle] then
-		ParryAddictionUnequip(_, activator)
+		ParryAddictionUnequip(activator, handle)
 	end
 
 	callbacks.Parry[handle] = {}
@@ -505,84 +506,80 @@ function ParryAddictionEquip(_, activator)
 	local parryCallbacks = callbacks.Parry[handle]
 
 	-- on key press
-	parryCallbacks.keyPress = {
-		Type = 7,
-		ID = activator:AddCallback(7, function(_, key)
-			if key ~= IN_ATTACK2 then
-				return
-			end
-			
-			if activator.m_flChargeMeter < 100 then
-				return
-			end
+	parryCallbacks.keyPress = activator:AddCallback(7, function(_, key)
+		if key ~= IN_ATTACK2 then
+			return
+		end
 
-			if weaponsData.Parry[handle] then
-				activator.m_flChargeMeter = 0
-				-- activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
-				return
-			end
+		if activator.m_flChargeMeter < 100 then
+			return
+		end
 
-			activator:AddCond(46, PARRY_TIME)
-
+		if weaponsData.Parry[handle] then
 			activator.m_flChargeMeter = 0
 			-- activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
+			return
+		end
 
-			_parry(activator)
-		end),
-	}
+		activator:AddCond(46, PARRY_TIME)
+
+		activator.m_flChargeMeter = 0
+		-- activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
+
+		_parry(activator)
+	end)
 
 	-- on damage
-	parryCallbacks.onDamagePre = {
-		Type = 3,
-		ID = activator:AddCallback(3, function(_, damageInfo)
-			if not weaponsData.Parry[handle] then
-				return
-			end
+	parryCallbacks.onDamagePre = activator:AddCallback(3, function(_, damageInfo)
+		if not weaponsData.Parry[handle] then
+			return
+		end
 
-			if damageInfo.Attacker == activator then
-				return
-			end
+		if damageInfo.Attacker == activator then
+			return
+		end
 
-			local deflectDmg = damageInfo.Damage * 2
+		local deflectDmg = damageInfo.Damage * 2
 
-			local deflectDmgInfo = {
-				Attacker = activator,
-				Inflictor = nil,
-				Weapon = nil,
-				Damage = deflectDmg,
-				DamageType = 0,
-				DamageCustom = 0,
-				DamagePosition = Vector(0, 0, 0),
-				DamageForce = Vector(0, 0, 0),
-				ReportedPosition = Vector(0, 0, 0),
-			}
+		local deflectDmgInfo = {
+			Attacker = activator,
+			Inflictor = nil,
+			Weapon = nil,
+			Damage = deflectDmg,
+			DamageType = 0,
+			DamageCustom = 0,
+			DamagePosition = Vector(0, 0, 0),
+			DamageForce = Vector(0, 0, 0),
+			ReportedPosition = Vector(0, 0, 0),
+		}
 
-			-- negate damage
-			damageInfo.Damage = 0
+		-- negate damage
+		damageInfo.Damage = 0
 
-			-- deflect
-			damageInfo.Attacker:TakeDamage(deflectDmgInfo)
+		-- deflect
+		damageInfo.Attacker:TakeDamage(deflectDmgInfo)
 
-			return true
-		end),
-	}
+		return true
+	end)
 
-	parryCallbacks.onDeath = {
-		Type = 9,
-		ID = activator:AddCallback(9, function()
-			ParryAddictionUnequip(_, activator)
-		end),
-	}
+	parryCallbacks.onRemoved = activator:AddCallback(ON_REMOVE, function()
+		ParryAddictionUnequip(activator, handle)
+	end)
 
-	parryCallbacks.onSpawn = {
-		Type = 1,
-		ID = activator:AddCallback(1, function()
-			ParryAddictionUnequip(_, activator)
-		end),
-	}
+	parryCallbacks.onDeath = activator:AddCallback(9, function()
+		ParryAddictionUnequip(activator, handle)
+	end)
+
+	parryCallbacks.onSpawn = activator:AddCallback(1, function()
+		ParryAddictionUnequip(activator, handle)
+	end)
 end
 
-function ParryAddictionUnequip(_, activator)
-	ClearCallbacks("Parry", activator)
-	ClearData("Parry", activator)
+function ParryAddictionUnequip(activator, handle)
+	if not IsValid(activator) then
+		activator = nil
+	end
+
+	ClearCallbacks("Parry", activator, handle)
+	ClearData("Parry", activator, handle)
 end

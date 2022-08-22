@@ -142,7 +142,7 @@ cliff_of_dover
 			"projectile trail particle" "eyeboss_projectile"
 
 			"special item description" "Home onto and phase through enemy, dealing contact damage each time"
-			"special item description 2" "Damage is increased by 10 for each enemy hit, up to 50 extra damage"
+			"special item description 2" "Damage is multiplied each hit, up to a cap of 10x"
 		}
 
 		"PHD Jumper"

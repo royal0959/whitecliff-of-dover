@@ -111,11 +111,11 @@ WaveSchedule
 				Target "popscript"
 				Action "$PHDEquip"	
 			}
-			OnParentKilledOutput
-			{
-				Target "popscript"
-				Action "$PHDUnequip"	
-			}
+			// OnParentKilledOutput
+			// {
+			// 	Target "popscript"
+			// 	Action "$PHDUnequip"	
+			// }
 		}
 
 		DroneWalker_Equip
@@ -125,11 +125,11 @@ WaveSchedule
 				Target "popscript"
 				Action "$DroneWalkerEquip"	
 			}
-			OnParentKilledOutput
-			{
-				Target "popscript"
-				Action "$DroneWalkerUnequip"	
-			}
+			// OnParentKilledOutput
+			// {
+			// 	Target "popscript"
+			// 	Action "$DroneWalkerUnequip"	
+			// }
 		}
 
 		DroneWalker_Shoot

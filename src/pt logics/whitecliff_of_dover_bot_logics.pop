@@ -59,14 +59,15 @@ WaveSchedule
 				Target "le_sentry"
 				Action "RemoveHealth"
 				Param "100000000000000"			
+				Delay 0.01
 			}
 
-			// OnParentKilledOutput
-			// {
-			// 	Target "le_sentry"
-			// 	Action "Kill"
-			// 	Delay 5
-			// }
+			OnParentKilledOutput
+			{
+				Target "le_sentry"
+				Action "Kill"
+				Delay 1
+			}
 
 			OnParentKilledOutput
 			{
