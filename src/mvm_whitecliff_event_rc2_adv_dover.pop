@@ -234,7 +234,7 @@ cliff_of_dover
 
 			"override projectile type" 2 //rocket
 
-			"custom projectile model" "models/weapons/w_models/w_repair_claw.mdl" //no trail particle
+			// "custom projectile model" "models/weapons/w_models/w_repair_claw.mdl" //no trail particle
 			"mult projectile scale" 0.01
 
 			"blast radius decreased" 0.1
@@ -866,8 +866,8 @@ cliff_of_dover
 			Name "2_pyros"
 			WaitForAllDead "2_charged_spam"
 			Where spawnbot
-			TotalCount 3
-			MaxActive 3
+			TotalCount 4
+			MaxActive 4
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 20
@@ -926,7 +926,7 @@ cliff_of_dover
 			Name "2_steel"
 			WaitForAllSpawned "2_pyros"
 			Where spawnbot
-			TotalCount 18
+			TotalCount 24
 			MaxActive 6
 			SpawnCount 6
 			WaitBeforeStarting 0
@@ -982,11 +982,11 @@ cliff_of_dover
 			Name "2_heavyboys"
 			WaitForAllDead "2_pyros"
 			Where spawnbot
-			TotalCount 2
-			MaxActive 2
+			TotalCount 4
+			MaxActive 4
 			SpawnCount 1
 			WaitBeforeStarting 6
-			WaitBetweenSpawns 10
+			WaitBetweenSpawns 15
 			TotalCurrency 300
 
 			Squad
@@ -1387,12 +1387,12 @@ cliff_of_dover
 		{
 			Name "4_giant_punchies"
 			WaitForAllDead "4_duke"
-			Where ambulance_support
+			Where spawnbot
 			TotalCount 3
 			MaxActive 3
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 8
+			WaitBetweenSpawns 20
 			TotalCurrency 50
 
 			Support 1
@@ -1434,9 +1434,29 @@ cliff_of_dover
 
 		WaveSpawn
 		{
+			Name "4_demo_support"
+			WaitForAllDead "4_duke"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 50
+
+			Support 1
+	
+			TFBot
+			{
+				Template T_TFBot_Giant_Demoman
+			}
+		}
+
+		WaveSpawn
+		{
 			Name "4_carriers"
 			WaitForAllDead "4_ambulance"
-			Where spawnbot
+			Where flankers
 			TotalCount 6
 			MaxActive 2
 			SpawnCount 2
@@ -1450,13 +1470,33 @@ cliff_of_dover
 				{
 					Template T_TFBot_Giant_Scout_Fast 
 					SpawnTemplate Bot_Carrier
+
+					InterruptAction 
+					{
+						Target "2256 -5186 493" 
+						
+						Delay 1
+						Duration 0
+
+						Repeats 1
+
+						WaitUntilDone 1 
+					}
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout 
 					WeaponRestrictions PrimaryOnly 
-					Attributes AlwaysFireWeapon
+					// Attributes AlwaysFireWeapon
 					SpawnTemplate Bot_Carried
+
+					FireWeapon
+					{
+						Delay 0
+						Cooldown 0.2 
+						IfSeeTarget 1
+						Type "Primary" 
+					}
 				}
 			}
 
@@ -1499,5 +1539,36 @@ cliff_of_dover
 		// 		}
 		// 	}
 		// }
+	}
+
+	Wave // Wave 5
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name "4_scavenger"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+		
+			TFBot
+			{
+				Template T_TFBot_Sergeant_Scavage
+			}
+		}
 	}
 }

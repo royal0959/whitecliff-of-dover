@@ -293,6 +293,145 @@ WaveSchedule
 			}
 		}
 
+		T_TFBot_Sergeant_Scavage
+		{
+			Name "Sergeant Scavage"
+
+			Class Sniper
+			ClassIcon sniper_explosive
+			Health 35000
+
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Item "craftsmann_sniperrifle_shotinthedark"
+			Item "dec2014 hunter_ushanka"
+			
+			Attributes MiniBoss
+			Attributes AlwaysFireWeapon
+			Attributes UseBossHealthBar
+
+			Action FetchFlag
+
+			ItemAttributes
+			{
+				ItemName "dec2014 hunter_ushanka"
+				"set item tint rgb" 15185211
+			}
+
+			ItemAttributes
+			{
+				ItemName "craftsmann_sniperrifle_shotinthedark"
+				"override projectile type" 2 //rocket
+
+				// "custom projectile model" "models/weapons/w_models/w_repair_claw.mdl" //no trail particle
+				"mult projectile scale" 0.01
+
+				"damage bonus" 1.1
+
+				"zoom speed mod disabled" 1
+
+				"blast radius decreased" 0.1
+				"no explosion particles" 1
+				"attach particle effect" 703
+				"projectile speed increased" 2.5
+				"projectile trail particle" "eyeboss_projectile"
+
+				"fire rate penalty" 1.8
+
+				"rocket jump damage reduction" 0
+			}
+
+			CharacterAttributes
+			{
+				"move speed bonus" 0.5
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
+			}
+
+			ShootTemplate
+			{
+				Name Explosive_Tip_Scavenger_Bot
+				AttachToProjectile 1
+			}
+
+
+			FireWeapon
+			{
+				Delay 0
+				IfSeeTarget 0
+				Duration 10000
+				Type "Secondary" 
+			}
+
+			EventChangeAttributes
+			{
+				Default
+				{
+					ChangeAttributes
+					{
+						Delay 0
+						Repeats 1 
+						Cooldown 99999
+						IfSeeTarget 0
+						IfHealthBelow 25000 
+						Name "Phase2" 
+					}
+				}
+				Phase2
+				{
+					ChangeAttributes
+					{
+						Delay 0
+						Repeats 1 
+						Cooldown 99999
+						IfSeeTarget 0
+						IfHealthBelow 11000 
+						Name "Phase3" 
+					}
+					ItemAttributes
+					{
+						ItemName "craftsmann_sniperrifle_shotinthedark"
+
+						"fire rate penalty" 1.25
+						"projectile speed increased" 0.3
+
+						"mod projectile heat no predict target speed" 1
+						"mod projectile heat seek power" 360
+						"mod projectile heat aim error" 0
+						"mod projectile heat aim time" 2
+					}
+
+					AddCond {Index 36}
+				}
+				Phase3
+				{
+					ItemAttributes
+					{
+						ItemName "craftsmann_sniperrifle_shotinthedark"
+
+						"mod projectile heat seek power" 0
+						"mod projectile heat aim time" 0
+						"projectile speed increased" 2.5
+						// "damage bonus" 1.25
+						"fire rate penalty" 0.8
+					}
+
+					//remove hype
+					FireInput 
+					{
+						Target "!activator"
+						Action "$RemoveCond"
+						Param "36"
+						Delay 0
+						Repeats 1
+					}
+
+					AddCond {Index 46}
+				}
+			}
+		}
+
 	    Gatebot
         {
             EventChangeAttributes

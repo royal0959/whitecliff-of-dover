@@ -103,7 +103,7 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$UndyingSpawn"
-				Param "30" // recharge time	
+				Param "20" // recharge time	
 			}
 		}
 
@@ -382,83 +382,348 @@ WaveSchedule
 			}
 		}
 
-    //remember to only have 1 of each active at a time
-    //remember to spawn the Bot_Carried at least 0.1 seconds after Bot_Carrier so that it doesn't carry the bomb accidentally
-    //only spawn the next pairs at least 0.5 seconds after the current pair dies 
-	Bot_Carrier
-    {
-		NoFixup 1
-		KeepAlive 1
-
-		OnParentKilledOutput 
+		//remember to only have 1 of each active at a time
+		//remember to spawn the Bot_Carried at least 0.1 seconds after Bot_Carrier so that it doesn't carry the bomb accidentally
+		//only spawn the next pairs at least 0.5 seconds after the current pair dies 
+		Bot_Carrier
 		{
-			Target "bot_teleport_relay"
-			Action "Disable"
-			Delay 0
+			NoFixup 1
+			KeepAlive 1
+
+			OnParentKilledOutput 
+			{
+				Target "bot_teleport_relay"
+				Action "Disable"
+				Delay 0.3
+			}
+
+			OnParentKilledOutput 
+			{
+				Target "bot_teleport_relay_final"
+				Action "Trigger"
+				Delay 0.35
+			}
+
+			OnParentKilledOutput 
+			{
+				Target "bot_carrier_target"
+				Action "kill"
+				Delay 0.1
+			}
+
+			OnParentKilledOutput 
+			{
+				Target "bot_carrier_target_inital"
+				Action "kill"
+				Delay 0.5 //bruteforced fix to a source jank bug woo
+			}
+
+			info_target
+			{
+				"targetname" "bot_carrier_target"
+				"origin" "0 0 150" //adjust height to accomodate for bot scale 
+			} 
+
+			info_target
+			{
+				"targetname" "bot_carrier_target_inital"
+				"origin" "0 0 0" //keep this at 0 0 0 always
+			} 
 		}
 
-		OnParentKilledOutput 
+		Bot_Carried
 		{
-			Target "bot_teleport_relay_final"
-			Action "Trigger"
-			Delay 0.01
+			NoFixup 1
+
+			OnSpawnOutput
+			{
+				Target "bot_teleport_relay"
+				Action "Trigger"
+			}
+
+			// OnSpawnOutput
+			// {
+			// 	Target "!activator"
+			// 	Action "AddOutput"
+			// 	Param "$module fakeparent"
+			// }
+
+			// OnSpawnOutput
+			// {
+			// 	Target "!activator"
+			// 	Action "$SetFakeParent"
+			// 	Param "$module fakeparent"
+			// }
+
+			// OnParentKilledOutput
+			// {
+			// 	Target "!activator"
+			// 	Action "AddOutput"
+			// 	Param "$module  "
+			// }
+
+			logic_relay 
+			{
+				"targetname" "bot_teleport_relay"
+				"spawnflags" "2"
+
+				"OnTrigger" "!activator,$TeleportToEntity,bot_carrier_target,0,-1"
+				"OnTrigger" "!self,Trigger,,0.01,-1"
+			}
+
+			//makes sure the bot doesn't teleport back to spawn because wonky source fuckeries I guess????
+			logic_relay 
+			{
+				"targetname" "bot_teleport_relay_final"
+				"spawnflags" "2"
+
+				"OnTrigger" "!activator,$TeleportToEntity,bot_carrier_target,0,-1"
+				"OnTrigger" "!self,Trigger,,0.01,-1"
+			}
 		}
 
-		OnParentKilledOutput 
+		Explosive_Tip_Scavenger_Bot
 		{
-			Target "bot_carrier_target"
-			Action "kill"
-			Delay 0.1
+			KeepAlive 1
+
+			OnSpawnOutput 
+			{
+				Target "tip_explosion"
+				Action "$InheritOwner"
+				Param "!activator"
+				Delay 0
+			}
+
+			OnSpawnOutput 
+			{
+				Target "popscript"
+				Action "$SetScavengerMimicDamage"
+				Param "tip_explosion"
+				// Delay 0.01
+			}
+
+			//failsafe
+			OnSpawnOutput 
+			{
+				Target "explosive_tip_relay"
+				Action "FireUser1"
+				Delay 15
+			}
+
+			// OnParentKilledOutput 
+			// {
+			//     Target "@c@!activator"
+			//     Action "FireUser1"
+			//     Delay 0
+			// }
+
+			OnParentKilledOutput 
+			{
+				Target "explosive_tip_relay"
+				Action "FireUser1"
+				Delay 0.1
+			}
+
+			// logic_relay
+			// {
+			// 	"targetname" "getdamage"
+
+			// 	// "OnTrigger" "tip_explosion,$SetVar$baseDamage,75,0,-1"
+			// 	"OnTrigger" "@e@m_hOwnerEntity@!activator,$GetItemAttribute,0|damage bonus|setdamage|$FireUser5|1,0.01,-1"
+
+			// 	"OnUser1" "!self,Kill,,5,-1"
+			// }
+
+			// logic_relay
+			// {
+			// 	"targetname" "setdamage"
+
+			// 	"$OnUser5" "setdamage,$SetVar$DamageMult,,0,-1"
+			// 	// "$OnUser5" "tip_explosion,$SetKey$Damage,$$=setdamage.DamageMult * 75,0.1,-1"
+			// 	"$OnUser5" "tip_explosion,$SetKey$Damage,$$=setdamage.DamageMult * 75,0.1,-1"
+			// 	"$OnUser5" "player,$DisplayTextChat,$$=setdamage.DamageMult * 75,0.1,-1"
+
+			// 	"OnUser1" "!self,Kill,,5,-1"
+			// }
+
+			logic_relay
+			{
+				"targetname" "explosive_tip_relay"
+
+				"OnUser1" "tip_explosion,FireUser1,,0,-1"
+				"OnUser1" "scavenger_explode_particle,FireUser1,,0,-1"
+				"OnUser1" "sticky_flicker,FireUser1,,0,-1"
+				"OnUser1" "sticky_sound,FireUser1,,0,-1"
+				"OnUser1" "attach_to_enemy,FireUser1,,0,-1"
+				"OnUser1" "detonate_position,FireUser1,,0,-1"
+				"OnUser1" "scavenger_bolt,FireUser1,,0,-1"
+				// "OnUser1" "getdamage,FireUser1,,0,-1"
+				// "OnUser1" "setdamage,FireUser1,,0,-1"
+
+				"OnUser1" "measure,Kill,,4,-1"
+				"OnUser1" "!self,Kill,,5,-1"
+			}
+
+			prop_dynamic
+			{
+				// "parentname" "detonate_position"
+				"origin" "0 0 0"
+				"targetname" "scavenger_bolt"
+				"spawnflags" "0"
+				"solid" "0"
+				"rendercolor" "255 255 255"
+				"renderamt" "255"
+				"RandomAnimation" "0"
+				"pressuredelay" "0"
+				"physdamagescale" "1.0"
+				"PerformanceMode" "0"
+				"model" "models/weapons/w_models/w_repair_claw.mdl"
+				"body" "0"
+				"angles" "0 0 0"
+
+				"modelscale" "2"
+
+				"OnUser1" "!self,Kill,,2,-1"
+			}
+
+			logic_measure_movement 
+			{
+				"targetname" "measure"
+
+				"MeasureReference" "detonate_position"
+				"MeasureTarget" "detonate_position"
+				"MeasureType" "0"
+				"Target" "scavenger_bolt"
+				"TargetReference" "detonate_position"
+				"TargetScale" "1"
+			}
+
+			info_target
+			{
+				"targetname" "detonate_position"
+
+				"OnUser1" "!self,Kill,,5,-1"
+			}
+
+			tf_point_weapon_mimic
+			{
+				"targetname" "tip_explosion"
+
+				"spawnflags" "1"
+				"angles" "0 0 0"
+				// "origin" "-1 0 -3"
+				"origin" "0 0 0"
+				"teamnum" "3"
+				"Crits" "0"
+				"Damage" "100"
+				"ModelScale" "1"
+				"SpeedMax" "1000000"
+				"SpeedMin" "1000000"
+				"SplashRadius" "400"
+				"SpreadAngle" "0"
+				"WeaponType" "3"
+
+				"OnUser1" "!self,FireOnce,,2,-1"
+				"OnUser4" "!self,DetonateStickies,,0,-1"
+			}
+
+			logic_measure_movement 
+			{
+				"targetname" "measure"
+
+				"MeasureReference" "detonate_position"
+				"MeasureTarget" "detonate_position"
+				"MeasureType" "0"
+				"Target" "tip_explosion"
+				"TargetReference" "detonate_position"
+				"TargetScale" "1"
+			}
+
+			info_particle_system
+			{
+				"targetname" "sticky_flicker"
+				"effect_name" "stickybomb_pulse_blue"
+				"flag_as_weather" "0"
+				"start_active" "0"
+
+				"OnUser1" "!self,Start,2,1,-1"
+				"OnUser1" "!self,Kill,,3,-1"
+			}
+
+			info_particle_system
+			{
+				"targetname" "scavenger_explode_particle"
+				"effect_name" "asplode_hoodoo"
+				"flag_as_weather" "0"
+				"start_active" "0"
+
+				"OnUser1" "!self,Start,2,2,-1"
+				"OnUser1" "!self,Kill,,3,-1"
+			}
+
+			logic_measure_movement 
+			{
+				"targetname" "measure"
+
+				"MeasureReference" "detonate_position"
+				"MeasureTarget" "detonate_position"
+				"MeasureType" "0"
+				"Target" "sticky_flicker"
+				"TargetReference" "detonate_position"
+				"TargetScale" "1"
+			}
+			logic_measure_movement 
+			{
+				"targetname" "measure"
+
+				"MeasureReference" "detonate_position"
+				"MeasureTarget" "detonate_position"
+				"MeasureType" "0"
+				"Target" "scavenger_explode_particle"
+				"TargetReference" "detonate_position"
+				"TargetScale" "1"
+			}
+
+			ambient_generic
+			{
+				"targetname" "sticky_sound"
+				"message" "weapons/stickybomblauncher_det.wav"
+				"radius" "4000"
+				"health" "5"
+				"spawnflags" "48"
+
+				"OnUser1" "!self,PlaySound,,1,-1"
+				"OnUser1" "!self,Kill,,3,-1"
+			}
+
+			logic_measure_movement 
+			{
+				"targetname" "measure"
+
+				"MeasureReference" "detonate_position"
+				"MeasureTarget" "detonate_position"
+				"MeasureType" "0"
+				"Target" "sticky_sound"
+				"TargetReference" "detonate_position"
+				"TargetScale" "1"
+			}
+
+			trigger_hurt //for some reason I can't explain using a trigger_once or trigger_multiple just blocks the projectile
+			{
+				"targetname" "attach_to_enemy"
+				"origin" "0 0 0"
+				"mins" "-8 -8 -8"
+				"maxs" "8 8 8"
+				"Damage" "0"
+				"spawnflags" "1" 
+				"filtername" "filter_is_red"
+
+				"OnStartTouch" "detonate_position,SetParent,!activator,0.1,-1"
+				"OnStartTouch" "!self,Disable,,0,-1"
+				"OnStartTouch" "!parent,Kill,,-1,-1"
+
+				"OnUser1" "!self,Kill,,2.1,-1"
+			}
 		}
-
-		OnParentKilledOutput 
-		{
-			Target "bot_carrier_target_inital"
-			Action "kill"
-			Delay 0.5 //bruteforced fix to a source jank bug woo
-		}
-
-		info_target
-		{
-			"targetname" "bot_carrier_target"
-			"origin" "0 0 150" //adjust height to accomodate for bot scale 
-		} 
-
-		info_target
-		{
-			"targetname" "bot_carrier_target_inital"
-			"origin" "0 0 0" //keep this at 0 0 0 always
-		} 
-    }
-
-	Bot_Carried
-	{
-		NoFixup 1
-
-		OnSpawnOutput
-		{
-			Target "bot_teleport_relay"
-			Action "Trigger"
-		}
-
-		logic_relay 
-		{
-			"targetname" "bot_teleport_relay"
-			"spawnflags" "2"
-
-			"OnTrigger" "!activator,$TeleportToEntity,bot_carrier_target,0,-1"
-			"OnTrigger" "!self,Trigger,,0.01,-1"
-		}
-
-		//makes sure the bot doesn't teleport back to spawn because wonky source fuckeries I guess????
-		logic_relay 
-		{
-			"targetname" "bot_teleport_relay_final"
-			"spawnflags" "2"
-
-			"OnTrigger" "!activator,$TeleportToEntity,bot_carrier_target_inital,0,-1"
-			"OnTrigger" "!self,Trigger,,0.01,-1"
-		}
-	}
 	}
 }

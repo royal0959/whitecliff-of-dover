@@ -535,6 +535,12 @@ function ParryAddictionEquip(_, activator)
 			return
 		end
 
+		if not damageInfo.Attacker then
+			-- negate damage, don't try deflecting
+			damageInfo.Damage = 0
+			return true
+		end
+
 		if damageInfo.Attacker == activator then
 			return
 		end
