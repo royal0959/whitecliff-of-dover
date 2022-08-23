@@ -1,3 +1,11 @@
 >make wave 2's middle push stronger
 >make monoculus blimp more interesting 
 >wave 4 lol
+
+>fix drone walker retaining crit after switching off
+>fix phd jumper + base jumper 
+>fix suiciding with drones out to keep them
+>nerf phd jumper (less damage) and drone walker (sentry damage penalty)
+>make wave 2 gpyro subwave more potent
+>give sergeant scavage a title card
+>make carried bot teleport to the carrier's 0 0 0 after abit as a failsafe incase they got stuck in the celling

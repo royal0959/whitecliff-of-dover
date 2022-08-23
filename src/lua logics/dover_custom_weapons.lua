@@ -11,22 +11,22 @@ local DRONES_CAP = 2
 local PHD_THRESHOLD = {
 	["Small"] = -1,
 	["Medium"] = 1,
-	["Medium2"] = 1.4,
-	["Large"] = 2.2,
-	["Nuke"] = 3.1,
+	["Medium2"] = 1.7,
+	["Large"] = 2.3,
+	["Nuke"] = 4,
 }
 
 local PHD_EXPLOSIONS = {
-	["Small"] = { Particle = "hammer_impact_button", Radius = 300, Damage = 75 },
-	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 300, Damage = 125 },
-	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 300, Damage = 175 },
-	["Large"] = { Particle = "asplode_hoodoo", Radius = 400, Damage = 250 },
-	["Nuke"] = { Particle = "skull_island_explosion", Radius = 800, Damage = 700 },
+	["Small"] = { Particle = "hammer_impact_button", Radius = 144, Damage = 25 },
+	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 144, Damage = 50 },
+	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 100 },
+	["Large"] = { Particle = "asplode_hoodoo", Radius = 200, Damage = 150 },
+	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 250 },
 }
 
 local PARRY_TIME = 0.8
 
-local SCAVENGER_EXPLOSION_BASE_DAMAGE = 200
+local SCAVENGER_EXPLOSION_BASE_DAMAGE = 175
 
 local classIndices_Internal = {
 	[1] = "Scout",

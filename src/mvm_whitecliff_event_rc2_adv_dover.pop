@@ -212,6 +212,8 @@ cliff_of_dover
 			"engineer building teleporting pickup" 1000
 			"arrow heals buildings" 0
 
+			"engy sentry damage bonus" 0.85 //15% penalty
+
 			"mod projectile heat follow crosshair" 1
 			// "mod projectile heat no predict target speed" 1
 			"mod projectile heat seek power" 360
@@ -986,23 +988,14 @@ cliff_of_dover
 			MaxActive 4
 			SpawnCount 1
 			WaitBeforeStarting 6
-			WaitBetweenSpawns 15
+			WaitBetweenSpawns 20
 			TotalCurrency 300
 
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Heavyweapons
-					
-					tag bot_giant
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Heavyweapons
-					
-					tag bot_giant
-				}
+				Template T_TFBot_Giant_Heavyweapons
+				
+				tag bot_giant
 			}
 		}
 	}
@@ -1230,7 +1223,7 @@ cliff_of_dover
 			TotalCount 6
 			MaxActive 6
 			SpawnCount 6
-			WaitBeforeStarting 20
+			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 		
@@ -1320,7 +1313,7 @@ cliff_of_dover
 			Name "4_dh"
 			WaitForAllDead "4_duke"
 			Where spawnbot
-			TotalCount 18
+			TotalCount 24
 			MaxActive 3
 			SpawnCount 3
 			WaitBeforeStarting 0
@@ -1392,7 +1385,7 @@ cliff_of_dover
 			MaxActive 3
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 20
+			WaitBetweenSpawns 30
 			TotalCurrency 50
 
 			Support 1
@@ -1441,7 +1434,7 @@ cliff_of_dover
 			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 25
+			WaitBetweenSpawns 40
 			TotalCurrency 50
 
 			Support 1
