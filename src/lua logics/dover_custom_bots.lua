@@ -1,13 +1,15 @@
-local CRIT_CONDS  = {11, 34, 40, 44, 56, 105}
-local MINI_CRIT_CONDS  = {11, 34, 40, 44, 56, 105}
+local CRIT_CONDS = { 11, 34, 40, 44, 56, 105 }
+local MINI_CRIT_CONDS = { 11, 34, 40, 44, 56, 105 }
 
 local callbacks = {}
 local botTypesData = {}
+local botTypesTimers = {}
 
-local CUSTOM_BOTTYPES_INDICES = { "Undying" }
+local CUSTOM_BOTTYPES_INDICES = { "Undying", "Pairs" }
 for _, botTypeIndex in pairs(CUSTOM_BOTTYPES_INDICES) do
 	callbacks[botTypeIndex] = {}
 	botTypesData[botTypeIndex] = {}
+	botTypesTimers[botTypeIndex] = {}
 end
 
 function ClearBottypeCallbacks(index, activator, handle)
@@ -19,8 +21,8 @@ function ClearBottypeCallbacks(index, activator, handle)
 		return
 	end
 
-	for _, callbackData in pairs(botTypeCallbacks) do
-		activator:RemoveCallback(callbackData.ID)
+	for _, callbackId in pairs(botTypeCallbacks) do
+		activator:RemoveCallback(callbackId)
 	end
 
 	callbacks[index][handle] = nil
@@ -38,12 +40,127 @@ function ClearBottypeData(index, activator, handle)
 	botTypesData[index][handle] = nil
 end
 
+
+function ClearBotTimers(index, activator, handle)
+	handle = handle or activator:GetHandleIndex()
+
+	local weaponTimer = botTypesTimers[index][handle]
+
+	if not weaponTimer then
+		return
+	end
+
+	for _, timerId in pairs(weaponTimer) do
+		timer.Stop(timerId)
+	end
+
+	botTypesTimers[index][handle] = nil
+end
+
 function DroneRangerProjectileSetOwner(sentryName, projectile)
 	local owner = projectile.m_hOwnerEntity
 
 	local sentryEnt = ents.FindByName(sentryName)
 
 	sentryEnt.m_hBuilder = owner
+end
+
+-- only spawn 1 pair a time
+local waitingCarrier
+local waitingCarried
+local waitingHeight
+
+-- just in case
+function OnWaveInit()
+	waitingCarrier = nil
+	waitingCarried = nil
+	waitingHeight = nil
+end
+
+local function pair()
+	local carrier = waitingCarrier
+	local carried = waitingCarried
+	local height = tonumber(waitingHeight)
+	
+	local handle = carrier:GetHandleIndex()
+
+	local carrierCallbacks = {}
+	local carrierTimers = {}
+
+	local lastOrigin
+	local function teleport()
+		if not IsValid(carrier)  then
+			if not lastOrigin then
+				return
+			end
+
+			-- prevents carried briefly disappearing after carrier death
+			carried:SetAbsOrigin(lastOrigin + Vector(0, 0, height))
+
+			return
+		end
+
+		local origin = carrier:GetAbsOrigin()
+		carried:SetAbsOrigin(origin + Vector(0, 0, height))
+
+		lastOrigin = origin
+	end
+
+	carrierTimers.teleport = timer.Create(0.015, function ()
+		teleport()
+	end, 0)
+
+	teleport()
+
+	carrierCallbacks.died = carrier:AddCallback(ON_DEATH, function ()
+		-- carried:ClearFakeParent()
+		ClearBottypeCallbacks("Pairs", carrier, handle)
+		ClearBotTimers("Pairs", carrier, handle)
+
+		if not lastOrigin then
+			return
+		end
+
+		local iterated = 1
+		local top = lastOrigin + Vector(0, 0, height)
+		for i = 0, 1, 0.05 do
+			timer.Simple(0.015 * iterated, function ()
+				carried:SetAbsOrigin(top - Vector(0, 0, height * i))
+			end)
+
+			iterated = iterated + 1
+		end
+
+	end)
+	carrierCallbacks.spawn = carrier:AddCallback(ON_SPAWN, function ()
+		ClearBottypeCallbacks("Pairs", carrier, handle)
+		ClearBotTimers("Pairs", carrier, handle)
+	end)
+
+	waitingCarrier = nil
+	waitingCarried = nil
+	waitingHeight = nil
+
+	callbacks.Pairs[handle] = carrierCallbacks
+	botTypesTimers.Pairs[handle] = carrierTimers
+end
+
+function PairCarrierSpawn(height, activator)
+	waitingCarrier = activator
+	waitingHeight = height
+
+	if waitingCarried then
+		pair()
+		return
+	end
+end
+function PairCarriedSpawn(_, activator)
+	waitingCarried = activator
+
+	if waitingCarrier then
+		pair()
+		return
+	end
 end
 
 -- teleport back to spawn instead of dying
@@ -57,13 +174,12 @@ function UndyingActivate(rechargeTime, activator, handle)
 
 	local allPlayers = ents.GetAllPlayers()
 
-	local recallText = "{blue}"..activator:GetPlayerName().."{reset} has used their {9BBF4D}RECALL{reset} Power Up Canteen!"
+	local recallText = "{blue}"
+		.. activator:GetPlayerName()
+		.. "{reset} has used their {9BBF4D}RECALL{reset} Power Up Canteen!"
 
 	for _, player in pairs(allPlayers) do
-		player:AcceptInput(
-			"$DisplayTextChat",
-			recallText
-		)
+		player:AcceptInput("$DisplayTextChat", recallText)
 		player:AcceptInput("$PlaySoundToSelf", "=35|mvm/mvm_used_powerup.wav")
 	end
 
@@ -93,68 +209,59 @@ function UndyingSpawn(rechargeTime, activator)
 	local undyingCallbacks = callbacks.Undying[handle]
 
 	-- on damage
-	undyingCallbacks.onDamagePre = {
-		Type = 3,
-		ID = activator:AddCallback(3, function(_, damageInfo)
-			if botTypesData.Undying[handle].Recharging then
-				-- damageInfo.Damage = 0
-				return
-			end
+	undyingCallbacks.onDamagePre = activator:AddCallback(3, function(_, damageInfo)
+		if botTypesData.Undying[handle].Recharging then
+			-- damageInfo.Damage = 0
+			return
+		end
 
-			local curHealth = activator.m_iHealth
+		local curHealth = activator.m_iHealth
 
-			-- can't detect crit damage, assume all damage are crit instead for fatal check
-			local damage = damageInfo.Damage * 3
+		-- can't detect crit damage, assume all damage are crit instead for fatal check
+		local damage = damageInfo.Damage * 3
 
-			if curHealth - (damage + 1) <= 0 then
-				damageInfo.Damage = 0
-				damageInfo.DamageType = DMG_GENERIC
-				-- damageInfo.CritType = 0
+		if curHealth - (damage + 1) <= 0 then
+			damageInfo.Damage = 0
+			damageInfo.DamageType = DMG_GENERIC
+			-- damageInfo.CritType = 0
 
-				botTypesData.Undying[handle].Recharging = true
+			botTypesData.Undying[handle].Recharging = true
 
-				-- set health to 1
-				local setHealthDmgInfo = {
-					Attacker = damageInfo.Attacker,
-					Inflictor = damageInfo.Inflictor,
-					Weapon = damageInfo.Weapon,
-					Damage = curHealth - 1,
-					CritType = 0,
-					DamageType = damageInfo.DamageType,
-					DamageCustom = damageInfo.DamageCustom,
-					DamagePosition = damageInfo.DamagePosition,
-					DamageForce = damageInfo.DamageForce,
-					ReportedPosition = damageInfo.ReportedPosition,
-				}
+			-- set health to 1
+			local setHealthDmgInfo = {
+				Attacker = damageInfo.Attacker,
+				Inflictor = damageInfo.Inflictor,
+				Weapon = damageInfo.Weapon,
+				Damage = curHealth - 1,
+				CritType = 0,
+				DamageType = damageInfo.DamageType,
+				DamageCustom = damageInfo.DamageCustom,
+				DamagePosition = damageInfo.DamagePosition,
+				DamageForce = damageInfo.DamageForce,
+				ReportedPosition = damageInfo.ReportedPosition,
+			}
 
-				print(activator:TakeDamage(setHealthDmgInfo))
-				
-				UndyingActivate(rechargeTime, activator, handle)
+			print(activator:TakeDamage(setHealthDmgInfo))
 
-				return true
-			end
+			UndyingActivate(rechargeTime, activator, handle)
 
 			return true
-		end),
-	}
+		end
 
-	undyingCallbacks.onDeath = {
-		Type = 9,
-		ID = activator:AddCallback(9, function()
-			print("died")
-			-- activator:AcceptInput("$SetProp$m_bUseBossHealthBar", "0")
-			activator.m_bUseBossHealthBar = 0
-			UndyingEnd(activator, handle)
-		end),
-	}
+		return true
+	end)
 
-	undyingCallbacks.onSpawn = {
-		Type = 1,
-		ID = activator:AddCallback(1, function()
-			print("spawned")
-			UndyingEnd(activator, handle)
-		end),
-	}
+	undyingCallbacks.onDeath = activator:AddCallback(9, function()
+		print("died")
+		-- activator:AcceptInput("$SetProp$m_bUseBossHealthBar", "0")
+		activator.m_bUseBossHealthBar = 0
+		UndyingEnd(activator, handle)
+	end)
+
+	undyingCallbacks.onSpawn = activator:AddCallback(1, function()
+		print("spawned")
+		UndyingEnd(activator, handle)
+	end)
 end
 
 function UndyingEnd(activator, handle)

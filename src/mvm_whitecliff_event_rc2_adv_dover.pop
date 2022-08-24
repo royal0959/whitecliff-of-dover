@@ -872,7 +872,7 @@ cliff_of_dover
 			MaxActive 4
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 20
+			WaitBetweenSpawns 10
 			TotalCurrency 50
 		
 			TFBot
@@ -890,7 +890,7 @@ cliff_of_dover
 			Name "2_grus_from_minions"
 			// WaitForAllSpawned "2_hunts"
 			Where spawnbot
-			TotalCount 24
+			TotalCount 28
 			MaxActive 4
 			SpawnCount 4
 			WaitBeforeStarting 0
@@ -911,7 +911,7 @@ cliff_of_dover
 			WaitForAllSpawned "2_charged_spam"
 			Where spawnbot
 			TotalCount 32
-			MaxActive 6
+			MaxActive 8
 			SpawnCount 2
 			WaitBeforeStarting 15
 			WaitBetweenSpawns 3
@@ -1157,23 +1157,24 @@ cliff_of_dover
 		// 		}
 		// 	}
 		// }
-		// WaveSpawn
-		// {
-		// 	Name "3_rapidsoldiers"
-		// 	WaitForAllSpawned "3_pos_gshotgun_conchknight"
-		// 	Where spawnbot
-		// 	TotalCount 2
-		// 	MaxActive 2
-		// 	SpawnCount 2
-		// 	WaitBeforeStarting 10
-		// 	WaitBetweenSpawns 0
-		// 	TotalCurrency 200
+		WaveSpawn
+		{
+			Name "3_rapidsoldiers"
+			// WaitForAllSpawned "3_pos_gshotgun_conchknight"
+			WaitForAllDead "3_gshotgun"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+			TotalCurrency 200
 		
-		// 	TFBot
-		// 	{
-		// 		Template T_TFBot_Giant_Soldier_Spammer
-		// 	}
-		// }
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Spammer
+			}
+		}
 
 		WaveSpawn
 		{
@@ -1184,7 +1185,7 @@ cliff_of_dover
 			MaxActive 10
 			SpawnCount 5
 			WaitBeforeStarting 8
-			WaitBetweenSpawns 8
+			WaitBetweenSpawns 3
 			TotalCurrency 200
 		
 			TFBot
@@ -1203,7 +1204,7 @@ cliff_of_dover
 			MaxActive 4
 			SpawnCount 4
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 10
+			WaitBetweenSpawns 5
 			TotalCurrency 0
 
 			Support 1
@@ -1218,12 +1219,12 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "3_colonel_post_mono"
-			WaitForAllDead "3_monoculus"
+			// WaitForAllDead "3_monoculus"
 			Where spawnbot
 			TotalCount 6
 			MaxActive 6
 			SpawnCount 6
-			WaitBeforeStarting 0
+			WaitBeforeStarting 45
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 		
@@ -1451,10 +1452,10 @@ cliff_of_dover
 			WaitForAllDead "4_ambulance"
 			Where flankers
 			TotalCount 6
-			MaxActive 2
+			MaxActive 4
 			SpawnCount 2
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 2
+			WaitBetweenSpawns 15
 			TotalCurrency 0
 		
 			Squad 
