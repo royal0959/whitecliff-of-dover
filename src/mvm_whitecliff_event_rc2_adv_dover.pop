@@ -275,7 +275,7 @@ cliff_of_dover
 			// "projectile sound" "scavenger_fire.mp3"
 
 			"special item description" "Fires high-power explosive tipped bolt that sticks to enemies and surfaces. Detonate after 3 seconds"
-			"special item description 2" "Explosion damage is affected by damage bonus upgrade"
+			"special item description 2" "Explosion damage is affected by damage bonus upgrade and distance rampup"
 		}
 
 		"No Mercy"
@@ -1601,7 +1601,7 @@ cliff_of_dover
 			{
 				Name "teleblimpboss"
 				StartingPathTrackNode "tele_blimp_1"
-				Health 30000
+				Health 23000
 				Speed 120
 
 				SpawnTemplate Teleporter_Blimp
@@ -1646,7 +1646,7 @@ cliff_of_dover
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 5
 			TotalCurrency 50
-			
+
 			TFBot
 			{
 				Class Scout 
