@@ -1,9 +1,5 @@
->fix phd jumper + base jumper 
-
 >make wave 2's middle push stronger
->make monoculus blimp more interesting 
 
->fix drone walker retaining crit after switching off
 >fix suiciding with drones out to keep them
 >give sergeant scavage a title card
 

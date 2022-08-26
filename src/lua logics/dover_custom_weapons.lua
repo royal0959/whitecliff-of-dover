@@ -398,10 +398,6 @@ function PHDEquip(_, activator)
 	local timeSpentParachuting = 0
 
 	phdTimers.rocketJumpCheck = timer.Create(0.1, function()
-		-- if not IsValid(activator) then
-		-- 	print("a")
-		-- 	return
-		-- end
 
 		local jumping = activator:InCond(TF_COND_BLASTJUMPING)
 
@@ -438,17 +434,14 @@ function PHDEquip(_, activator)
 				local damageMult = primary:GetAttributeValue("damage bonus") or 1
 
 				for _, enemy in pairs(enemiesInRange) do
-					-- if not enemy:IsPlayer() then
-					-- 	goto continue
-					-- end
+					if not enemy:IsPlayer() then
+						goto continue
+					end
 
 					if enemy.m_iTeamNum == activator.m_iTeamNum then
 						goto continue
 					end
 
-					-- local distance = activatorOrigin:Distance(enemy:GetAbsOrigin())
-
-					-- if tonumber(distance) < radius then
 					local damageInfo = {
 						Attacker = activator,
 						Inflictor = nil,
@@ -462,7 +455,6 @@ function PHDEquip(_, activator)
 					}
 
 					enemy:TakeDamage(damageInfo)
-					-- end
 
 					::continue::
 				end

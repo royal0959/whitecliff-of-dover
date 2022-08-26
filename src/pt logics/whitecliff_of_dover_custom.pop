@@ -324,11 +324,12 @@ WaveSchedule
 				Target "popscript"
 				Action "$DroneWalkerEquip"	
 			}
-			// OnParentKilledOutput
-			// {
-			// 	Target "popscript"
-			// 	Action "$DroneWalkerUnequip"	
-			// }
+			OnParentKilledOutput
+			{
+				Target "!activator"
+				Action "$RemoveItemAttribute"
+				Param "always crit|0"	
+			}
 		}
 
 		DroneWalker_Shoot
@@ -340,7 +341,14 @@ WaveSchedule
 				Target "!activator"
 				Action "$SetCollisionFilter"
 				Param "filter_is_blue"
-				// Delay 0.1
+				Delay 0.1
+			}
+
+			OnSpawnOutput
+			{
+				Target "le_sentry"
+				Action "$SetProp$m_bDisposableBuilding"
+				Param "1"
 			}
 
 			OnSpawnOutput

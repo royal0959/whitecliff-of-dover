@@ -30,9 +30,24 @@ WaveSchedule
 			DisableChildModels 1  
 		}
 
+		Blimp
+		{
+			DisableSmokestack 1  
+			ClassIcon blimp2_lite
+			Skin 2
+			Model "models/bots/boss_bot/boss_blimp.mdl"
+			// PingSound "misc/null.wav"
+			// EngineLoopSound "misc/null.wav"
+			TriggerDestroyBuildingFix 1
+			Gravity 0  
+			DisableTracks 1  
+			DisableChildModels 1  
+		}
+
 		Ambulance 
 		{
 			SpawnTemplate Ambulance_Tank
+			ClassIcon tank_regen
 
 			Model "models/empty.mdl" 
 

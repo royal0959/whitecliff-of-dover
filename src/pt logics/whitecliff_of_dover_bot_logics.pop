@@ -278,6 +278,49 @@ WaveSchedule
 			}
 		}
 
+		Teleporter_Blimp
+		{
+			NoFixup 1
+
+			OnSpawnOutput
+			{
+				Target "!activator"
+				Action "$SetCollisionFilter"
+				Param "filter_is_red"
+				Delay 0.1
+			}
+
+			obj_teleporter
+			{
+				"targetname" "blimp_teleporter"
+				"teamnum" "3"
+				"defaultupgrade" "0"
+				"SolidToPlayer" "0"
+				"spawnflags" "2"
+				"origin" "0 0 -15"
+				"angles" "180 0 0"
+
+				"$TeleportWhere" "blimp_tele"
+			}
+
+			info_target 
+			{
+				"targetname" "blimp_tele_pos"
+				"origin" "0 0 0"
+			}
+		}
+
+		TeleportToBlimp
+		{
+			OnSpawnOutput 
+			{
+				Target "!activator"
+				Action "$TeleportToEntity"
+				Param "blimp_tele_pos"
+				Delay 0.1
+			}
+		}
+
 		BloomRocket_Crit 
 		{
 			OnSpawnOutput 
@@ -440,6 +483,7 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$PairCarriedSpawn"
+				Delay 0.5
 			}
 			// NoFixup 1
 

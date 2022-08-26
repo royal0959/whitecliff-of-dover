@@ -17,6 +17,7 @@ cliff_of_dover
 	AddSentryBusterWhenKillCountExceeds 15
 
 	PrecacheModel "models/rcat/rcat_level2.mdl"
+	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
 
 	// PrecacheSound "scavenger_fire.mp3"
 
@@ -213,13 +214,13 @@ cliff_of_dover
 			"engineer building teleporting pickup" 1000
 			"arrow heals buildings" 0
 
-			"engy sentry damage bonus" 0.85 //15% penalty
+			"engy sentry damage bonus" 0.65 //35% penalty
 
 			"mod projectile heat follow crosshair" 1
 			// "mod projectile heat no predict target speed" 1
 			"mod projectile heat seek power" 360
 			"mod projectile heat aim error" 0
-			"mod projectile heat aim time" 1000
+			"mod projectile heat aim time" 100000
 
 			"Projectile speed decreased" 0.2
 
@@ -1563,6 +1564,56 @@ cliff_of_dover
 			TFBot
 			{
 				Template T_TFBot_Sergeant_Scavage
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "5_tele_blimp"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 200
+		
+			Tank
+			{
+				Name "tankboss"
+				StartingPathTrackNode "monoculus_alt_1"
+				Health 30000
+				Speed 120
+
+				SpawnTemplate Teleporter_Blimp
+				Template Blimp
+		
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "5_airdrop"
+			Where spawnbot
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+
+			Support 1
+	
+			TFBot
+			{
+				SpawnTemplate TeleportToBlimp
+				Template T_TFBot_Giant_Demoman
+				Item "The B.A.S.E Jumper"
 			}
 		}
 	}
