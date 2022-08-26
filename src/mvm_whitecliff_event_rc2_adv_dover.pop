@@ -109,6 +109,15 @@ cliff_of_dover
         Z "692.031311"        
     }
 
+	ExtraSpawnPoint 
+    {
+        Name "teleblimp_support" //gets disabled after blimp death
+        TeamNum 3 
+        X "2022.725708"            
+        Y "-6524.927734"                  
+        Z "692.031311"        
+    }
+
 	ExtraTankPath 
 	{
 		Name "monoculus" 
@@ -132,6 +141,15 @@ cliff_of_dover
 		Node "-1763.047241 421.37 650"
 		Node "-2415 -388 650"
 		Node "-2423.677979 -1522.862427 580"
+	}
+
+	ExtraTankPath 
+	{
+		Name "tele_blimp" 
+		Node "857 -6600 620" 
+		Node "857 -5332 1100"
+		Node "671 -4075 1000"
+		Node "610 -3717 1000"
 	}
 
 	CustomWeapon 
@@ -1570,6 +1588,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "5_tele_blimp"
+			WaitForAllDead "4_scavenger"
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
@@ -1580,31 +1599,26 @@ cliff_of_dover
 		
 			Tank
 			{
-				Name "tankboss"
-				StartingPathTrackNode "monoculus_alt_1"
+				Name "teleblimpboss"
+				StartingPathTrackNode "tele_blimp_1"
 				Health 30000
 				Speed 120
 
 				SpawnTemplate Teleporter_Blimp
 				Template Blimp
-		
-				OnBombDroppedOutput
-				{
-					Target boss_deploy_relay
-					Action Trigger
-				}
 			}
 		}
 
 		WaveSpawn
 		{
-			Name "5_airdrop"
-			Where spawnbot
-			TotalCount 5
-			MaxActive 5
-			SpawnCount 1
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 5
+			Name "5_airdrop_support"
+			WaitForAllDead "4_scavenger"
+			Where teleblimp_support
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 11
+			WaitBetweenSpawns 8
 			TotalCurrency 50
 
 			Support 1
@@ -1612,8 +1626,104 @@ cliff_of_dover
 			TFBot
 			{
 				SpawnTemplate TeleportToBlimp
-				Template T_TFBot_Giant_Demoman
-				Item "The B.A.S.E Jumper"
+				Class Soldier 
+				Skill Normal
+				Item "The Air Strike"
+				Item "The B.A.S.E. Jumper"
+
+				ClassIcon soldier_airstrike_lite
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "5_scouts"
+			WaitForAllDead "4_scavenger"
+			Where flankers
+			TotalCount 28
+			MaxActive 7
+			SpawnCount 7
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			
+			TFBot
+			{
+				Class Scout 
+				Skill Hard
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "5_boxing_tower"
+			WaitForAllDead "4_scavenger"
+			Where flankers
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 50
+	
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Boxing_Heavy 
+					Item "Gloves of Running Urgently MvM"
+					Attributes AlwaysCrit
+					SpawnTemplate Bot_Carrier
+
+					InterruptAction 
+					{
+						Target "2256 -5186 493" 
+						
+						Delay 1
+						Duration 0
+
+						Repeats 1
+
+						WaitUntilDone 1 
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Boxing_Heavy 
+					Attributes AlwaysCrit
+					SpawnTemplate Bot_Carried
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "5_airdrop_colonel"
+			WaitForAllDead "4_scavenger"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 11
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+	
+			TFBot
+			{
+				SpawnTemplate TeleportToBlimp
+				Template T_TFBot_Giant_Soldier_SlowBarrage
+				Attributes AlwaysCrit
+				Item "The B.A.S.E. Jumper"
+				Item "The Air Strike"
+
+				ItemAttributes
+				{
+					ItemName "The Air Strike"
+					"clip size upgrade atomic" 26.0
+					"faster reload rate" 0.22
+					"fire rate bonus" 0.2
+					"projectile spread angle penalty" 5
+				}
 			}
 		}
 	}

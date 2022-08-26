@@ -290,6 +290,31 @@ WaveSchedule
 				Delay 0.1
 			}
 
+			OnSpawnOutput
+			{
+				Target "tele_blimp_3"
+				Action "AddOutput"
+				Param "OnPass teleblimp_pitstop:Trigger::0:-1"
+			}
+			OnParentKilledOutput
+			{
+				Target "tele_blimp_2"
+				Action "$RemoveOutput"
+				Param "OnPass"
+			}
+			OnParentKilledOutput
+			{
+				Target "teleblimp_support"
+				Action "Disable"
+			}
+
+			logic_relay
+			{
+				"targetname" "teleblimp_pitstop"
+
+				"OnTrigger" "teleblimpboss,SetSpeed,0,0,-1"
+			}
+
 			obj_teleporter
 			{
 				"targetname" "blimp_teleporter"
@@ -299,14 +324,12 @@ WaveSchedule
 				"spawnflags" "2"
 				"origin" "0 0 -15"
 				"angles" "180 0 0"
-
-				"$TeleportWhere" "blimp_tele"
 			}
 
 			info_target 
 			{
 				"targetname" "blimp_tele_pos"
-				"origin" "0 0 0"
+				"origin" "0 0 -100"
 			}
 		}
 
