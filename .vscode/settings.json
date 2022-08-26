@@ -18,6 +18,8 @@
 		"ON_REMOVE",
 		"ON_SPAWN",
 		"ON_DEATH",
-		"ON_TOUCH"
+		"ON_TOUCH",
+		"TF_COND_PARACHUTE_ACTIVE",
+		"ON_KEY_PRESSED"
 	],
 }

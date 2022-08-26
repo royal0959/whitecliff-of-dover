@@ -172,6 +172,7 @@ cliff_of_dover
 			"special item description" "On landing after a rocket jump: Create an explosion"
 			"special item description 2" "Explosion radius and damage is determined by airborne time"
 			"special item description 3" "Explosion damage is affected by damage bonus upgrade"
+			"special item description 4" "Airborne time while parachuting is not counted"
 		}
 
 		"Parry Addiction"

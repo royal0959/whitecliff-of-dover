@@ -9,7 +9,7 @@ local REDEEMER_HIT_DAMAGE_ADDITION_CAP_ADDITIVE = 10
 local DRONES_CAP = 2
 
 local PHD_THRESHOLD = {
-	["Small"] = -1,
+	["Small"] = -100,
 	["Medium"] = 1,
 	["Medium2"] = 1.7,
 	["Large"] = 2.3,
@@ -299,7 +299,7 @@ function DroneWalkerEquip(_, activator)
 	local dronesData = weaponsData.Drone[handle]
 
 	-- on key press
-	droneCallbacks.keyPress = activator:AddCallback(7, function(_, key)
+	droneCallbacks.keyPress = activator:AddCallback(ON_KEY_PRESSED, function(_, key)
 		if key ~= IN_ATTACK2 then
 			return
 		end
@@ -332,11 +332,11 @@ function DroneWalkerEquip(_, activator)
 		DroneWalkerUnequip(activator, handle)
 	end)
 
-	droneCallbacks.onDeath = activator:AddCallback(9, function()
+	droneCallbacks.onDeath = activator:AddCallback(ON_DEATH, function()
 		DroneWalkerUnequip(activator, handle)
 	end)
 
-	droneCallbacks.onSpawn = activator:AddCallback(1, function()
+	droneCallbacks.onSpawn = activator:AddCallback(ON_SPAWN, function()
 		DroneWalkerUnequip(activator, handle)
 	end)
 end
@@ -395,6 +395,8 @@ function PHDEquip(_, activator)
 		PHDUnequip(activator, handle)
 	end)
 
+	local timeSpentParachuting = 0
+
 	phdTimers.rocketJumpCheck = timer.Create(0.1, function()
 		-- if not IsValid(activator) then
 		-- 	print("a")
@@ -405,7 +407,10 @@ function PHDEquip(_, activator)
 
 		if jumping == 0 then
 			if phdData.JumpStartTime then
-				local timeDiff = CurTime() - phdData.JumpStartTime
+				local timeDiff = CurTime() - phdData.JumpStartTime - timeSpentParachuting
+				print(timeDiff, timeSpentParachuting)
+
+				timeSpentParachuting = 0
 
 				local currentThreshold = { nil, -10000 }
 
@@ -468,6 +473,12 @@ function PHDEquip(_, activator)
 			end
 
 			return
+		end
+
+		local parachuting = activator:InCond(TF_COND_PARACHUTE_ACTIVE)
+
+		if parachuting ~= 0 then
+			timeSpentParachuting = timeSpentParachuting + 0.1
 		end
 
 		if phdData.JumpStartTime then
