@@ -456,48 +456,6 @@ WaveSchedule
 				Action "$PairCarrierSpawn"
 				Param "150"
 			}
-			// NoFixup 1
-			// KeepAlive 1
-
-			// OnParentKilledOutput 
-			// {
-			// 	Target "bot_teleport_relay*"
-			// 	Action "Disable"
-			// 	Delay 0
-			// }
-
-			// OnParentKilledOutput 
-			// {
-			// 	Target "bot_teleport_relay_final*"
-			// 	Action "Trigger"
-			// 	Delay 0.31
-			// }
-
-			// OnParentKilledOutput 
-			// {
-			// 	Target "bot_carrier_target"
-			// 	Action "kill"
-			// 	Delay 0.1
-			// }
-
-			// OnParentKilledOutput 
-			// {
-			// 	Target "bot_carrier_target_inital"
-			// 	Action "kill"
-			// 	Delay 0.7 //bruteforced fix to a source jank bug woo
-			// }
-
-			// info_target
-			// {
-			// 	"targetname" "bot_carrier_target"
-			// 	"origin" "0 0 150" //adjust height to accomodate for bot scale 
-			// } 
-
-			// info_target
-			// {
-			// 	"targetname" "bot_carrier_target_inital"
-			// 	"origin" "0 0 20" 
-			// } 
 		}
 
 		Bot_Carried
@@ -508,66 +466,6 @@ WaveSchedule
 				Action "$PairCarriedSpawn"
 				Delay 0.5
 			}
-			// NoFixup 1
-
-			// OnSpawnOutput
-			// {
-			// 	Target "bot_teleport_relay"
-			// 	Action "Trigger"
-			// }
-
-			// OnSpawnOutput
-			// {
-			// 	Target "bot_teleport_relay_final"
-			// 	Action "SetParent"
-			// 	Param "!activator"
-			// }
-
-			// // OnSpawnOutput
-			// // {
-			// // 	Target "!activator"
-			// // 	Action "AddOutput"
-			// // 	Param "$module fakeparent"
-			// // }
-
-			// // OnSpawnOutput
-			// // {
-			// // 	Target "!activator"
-			// // 	Action "$SetFakeParent"
-			// // 	Param "$module fakeparent"
-			// // }
-
-			// // OnParentKilledOutput
-			// // {
-			// // 	Target "!activator"
-			// // 	Action "AddOutput"
-			// // 	Param "$module  "
-			// // }
-
-			// logic_relay 
-			// {
-			// 	"targetname" "bot_teleport_relay"
-			// 	"spawnflags" "2"
-
-			// 	"OnTrigger" "!activator,$TeleportToEntity,bot_carrier_target,0,-1"
-			// 	"OnTrigger" "!self,Trigger,,0.01,-1"
-			// }
-
-			// //makes sure the bot doesn't teleport back to spawn because wonky source fuckeries I guess????
-			// logic_relay 
-			// {
-			// 	"targetname" "bot_teleport_relay_final"
-			// 	"spawnflags" "2"
-
-			// 	"OnTrigger" "!parent,$TeleportToEntity,bot_carrier_target_inital,0,-1"
-			// 	"OnTrigger" "!parent,$TeleportToEntity,bot_carrier_target_inital,0.1,-1"
-			// 	"OnTrigger" "!parent,$TeleportToEntity,bot_carrier_target_inital,0.2,-1"
-			// 	// "OnTrigger" "!parent,$MoveRelative,0 0 -150,0,-1"
-			// 	"OnTrigger" "!parent,SetHealth,1,0,-1"
-			// 	// "OnTrigger" "!self,Trigger,,0.1,-1"
-			// 	// "OnTrigger" "!self,Trigger,,0.2,-1"
-
-			// }
 		}
 
 		Explosive_Tip_Scavenger_Bot

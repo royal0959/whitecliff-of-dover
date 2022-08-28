@@ -1,5 +1,4 @@
 >give phd big explosions more damage
->precache small shields
 >>>>>fix suiciding with drones out to keep them
 >give sergeant scavage a title card
 >replace kirin's ascension with moonlight menace reprogrammer
@@ -10,3 +9,4 @@
 
 ideas:
 >phd jumper bots
+>bots that shoot out monoculus heads

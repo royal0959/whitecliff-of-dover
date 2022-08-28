@@ -106,7 +106,7 @@ local function pair()
 		lastOrigin = origin
 	end
 
-	carrierTimers.teleport = timer.Create(0.015, function ()
+	carrierTimers.teleport = timer.Create(0, function ()
 		teleport()
 	end, 0)
 
@@ -117,19 +117,37 @@ local function pair()
 		ClearBottypeCallbacks("Pairs", carrier, handle)
 		ClearBotTimers("Pairs", carrier, handle)
 
+
 		if not lastOrigin then
 			return
 		end
 
+		-- suspend in place to prevent source jank from teleporting it back to spawn
 		local iterated = 1
 		local top = lastOrigin + Vector(0, 0, height)
-		for i = 0, 1, 0.05 do
-			timer.Simple(0.015 * iterated, function ()
-				carried:SetAbsOrigin(top - Vector(0, 0, height * i))
+		for i = 0, 1, 0.1 do
+			timer.Simple(0.03 * iterated, function ()
+				carried:SetAbsOrigin(top)
 			end)
 
 			iterated = iterated + 1
 		end
+		
+		-- carried:ChangeAttributes("NotCarried")
+
+		-- if not lastOrigin then
+		-- 	return
+		-- end
+
+		-- local iterated = 1
+		-- local top = lastOrigin + Vector(0, 0, height)
+		-- for i = 0, 1, 0.05 do
+		-- 	timer.Simple(0.015 * iterated, function ()
+		-- 		carried:SetAbsOrigin(top - Vector(0, 0, height * i))
+		-- 	end)
+
+		-- 	iterated = iterated + 1
+		-- end
 
 	end)
 	carrierCallbacks.spawn = carrier:AddCallback(ON_SPAWN, function ()
@@ -214,6 +232,8 @@ function UndyingSpawn(rechargeTime, activator)
 			-- damageInfo.Damage = 0
 			return
 		end
+
+		activator:AddCond(TF_COND_PREVENT_DEATH)
 
 		local curHealth = activator.m_iHealth
 

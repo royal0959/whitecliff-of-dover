@@ -16,7 +16,9 @@ cliff_of_dover
 	AddSentryBusterWhenDamageDealtExceeds 3000
 	AddSentryBusterWhenKillCountExceeds 15
 
+	PrecacheModel "models/props_mvm/mvm_comically_small_player_shield.mdl"
 	PrecacheModel "models/rcat/rcat_level2.mdl"
+	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
 
 	// PrecacheSound "scavenger_fire.mp3"
@@ -1141,6 +1143,8 @@ cliff_of_dover
 			WaitBeforeStarting 8
 			WaitBetweenSpawns 0
 			TotalCurrency 50
+
+			Support Limited
 		
 			TFBot
 			{
@@ -1207,6 +1211,8 @@ cliff_of_dover
 			WaitBeforeStarting 8
 			WaitBetweenSpawns 3
 			TotalCurrency 200
+
+			Support Limited
 		
 			TFBot
 			{
@@ -1480,22 +1486,12 @@ cliff_of_dover
 		
 			Squad 
 			{
+				NoWaitForFormation 1
+				NoFormation 1
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout_Fast 
 					SpawnTemplate Bot_Carrier
-
-					InterruptAction 
-					{
-						Target "2256 -5186 493" 
-						
-						Delay 1
-						Duration 0
-
-						Repeats 1
-
-						WaitUntilDone 1 
-					}
 				}
 				TFBot
 				{
@@ -1503,17 +1499,8 @@ cliff_of_dover
 					WeaponRestrictions PrimaryOnly 
 					// Attributes AlwaysFireWeapon
 					SpawnTemplate Bot_Carried
-
-					FireWeapon
-					{
-						Delay 0
-						Cooldown 0.2 
-						IfSeeTarget 1
-						Type "Primary" 
-					}
 				}
 			}
-
 		}
 
 		// funny yet impractical
@@ -1570,7 +1557,7 @@ cliff_of_dover
 
 		WaveSpawn
 		{
-			Name "4_scavenger"
+			Name "5_scavenger"
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -1588,7 +1575,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "5_tele_blimp"
-			WaitForAllDead "4_scavenger"
+			WaitForAllDead "5_scavenger"
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
@@ -1601,7 +1588,7 @@ cliff_of_dover
 			{
 				Name "teleblimpboss"
 				StartingPathTrackNode "tele_blimp_1"
-				Health 23000
+				Health 20000
 				Speed 120
 
 				SpawnTemplate Teleporter_Blimp
@@ -1612,7 +1599,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "5_airdrop_support"
-			WaitForAllDead "4_scavenger"
+			WaitForAllDead "5_scavenger"
 			Where teleblimp_support
 			TotalCount 8
 			MaxActive 8
@@ -1638,7 +1625,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "5_scouts"
-			WaitForAllDead "4_scavenger"
+			WaitForAllDead "5_scavenger"
 			Where flankers
 			TotalCount 28
 			MaxActive 7
@@ -1654,58 +1641,48 @@ cliff_of_dover
 			}
 		}
 		
-		WaveSpawn
-		{
-			Name "5_boxing_tower"
-			WaitForAllDead "4_scavenger"
-			Where flankers
-			TotalCount 4
-			MaxActive 4
-			SpawnCount 2
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 20
-			TotalCurrency 50
+		// WaveSpawn
+		// {
+		// 	Name "5_boxing_tower"
+		// 	WaitForAllDead "5_scavenger"
+		// 	Where flankers
+		// 	TotalCount 4
+		// 	MaxActive 4
+		// 	SpawnCount 2
+		// 	WaitBeforeStarting 0
+		// 	WaitBetweenSpawns 20
+		// 	TotalCurrency 50
 	
-			Squad 
-			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Boxing_Heavy 
-					Item "Gloves of Running Urgently MvM"
-					Attributes AlwaysCrit
-					SpawnTemplate Bot_Carrier
-
-					InterruptAction 
-					{
-						Target "2256 -5186 493" 
-						
-						Delay 1
-						Duration 0
-
-						Repeats 1
-
-						WaitUntilDone 1 
-					}
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Boxing_Heavy 
-					Attributes AlwaysCrit
-					SpawnTemplate Bot_Carried
-				}
-			}
-		}
+		// 	Squad 
+		// 	{
+		// 		NoWaitForFormation 1
+		// 		NoFormation 1
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Boxing_Heavy 
+		// 			Item "Gloves of Running Urgently MvM"
+		// 			Attributes AlwaysCrit
+		// 			SpawnTemplate Bot_Carrier
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Boxing_Heavy 
+		// 			Attributes AlwaysCrit
+		// 			SpawnTemplate Bot_Carried
+		// 		}
+		// 	}
+		// }
 
 		WaveSpawn
 		{
 			Name "5_airdrop_colonel"
-			WaitForAllDead "4_scavenger"
+			WaitForAllDead "5_scavenger"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 11
-			WaitBetweenSpawns 5
+			WaitBetweenSpawns 0
 			TotalCurrency 50
 	
 			TFBot
@@ -1723,6 +1700,111 @@ cliff_of_dover
 					"faster reload rate" 0.22
 					"fire rate bonus" 0.2
 					"projectile spread angle penalty" 5
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "5_stacking_heavies"
+			WaitForAllDead "5_airdrop_colonel"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+	
+			Squad
+			{
+				NoWaitForFormation 1
+				NoFormation 1
+				TFBot
+				{
+					SpawnTemplate TeleportToBlimp
+					Template T_TFBot_Giant_Heavyweapons_Shotgun
+					Item "The B.A.S.E. Jumper"
+					SpawnTemplate Bot_Carrier
+				}
+				TFBot
+				{
+					SpawnTemplate TeleportToBlimp
+					Template T_TFBot_Giant_Heavyweapons_Shotgun
+					Item "The B.A.S.E. Jumper"
+					SpawnTemplate Bot_Carried
+				}
+			}
+		}
+	}
+
+	Wave // Wave 6
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name "6_drone_ranger"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Engineer_DroneShoot_Slow
+			}
+		}
+		WaveSpawn
+		{
+			Name "6_drone_ranger"
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Engineer_DroneShoot_Slow
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "6_homing_rapid"
+			WaitForAllDead "6_drone_ranger"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Homing_Rapid
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Uber
 				}
 			}
 		}
