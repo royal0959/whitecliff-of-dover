@@ -1,12 +1,13 @@
->give phd big explosions more damage
+>make wave 2 faster
+>make rapids spawn before colonel in wave 4
+>extend wave 5
+>make blimp self destruct when dual shotgun heavies die
+>make wave 5 more potent
+
+>caber buster
+
 >>>>>fix suiciding with drones out to keep them
 >give sergeant scavage a title card
->replace kirin's ascension with moonlight menace reprogrammer
-
->reduce 1 subwave for heavy and pyro on wave 3 or support limited
->give carried bot no player collision
->make carried bots short to not get stuck (or make them perma crouch maybe?)
 
 ideas:
 >phd jumper bots
->bots that shoot out monoculus heads

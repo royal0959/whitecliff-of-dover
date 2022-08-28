@@ -68,6 +68,7 @@ cliff_of_dover
 		TFBot
 		{
 			Template T_TFBot_SentryBuster
+			Tag no_reprogram
 		}
 	}
 
@@ -211,6 +212,17 @@ cliff_of_dover
 			// "special item description 3" "Cannot charge"
 		}
 
+
+		"Holy Diver"
+		{
+			OriginalItemName "The Degreaser"
+
+			"damage penalty" 0.1
+
+			"special item description" "+50% damage bonus on secondary weapon"
+			"special item description 2" "+125% damage bonus on melee weapon"
+		}
+
 		"Thunderdome"
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_MINIGUN" 
@@ -308,6 +320,21 @@ cliff_of_dover
 			"special item description 3" "Cannot gain cloak on hit from primary weapon"
 		}
 
+		"Seducer"
+		{
+			OriginalItemName "The Enforcer"
+
+			"mod no reload DISPLAY ONLY" 1
+			"mod max primary clip override" -1
+			"damage penalty" 0.1
+
+			"fire input on hit" "popscript^$SeducerHit^"
+
+			"special item description" "On hit: force a non-giant enemy to fight on your side"
+			"special item description 2" "Controlled enemies are crit boosted and will self-destruct after 8 seconds"
+			"special item description 3" "8 seconds cooldown"
+		}
+
 		"Freelance Mercenary"
 		{
 			OriginalItemName "Activated Campaign 3 Pass"
@@ -330,6 +357,10 @@ cliff_of_dover
 		{
 			Primary {Item "Thunderdome"}
 		}
+		Pyro 
+		{
+			Primary {Item "Holy Diver"}
+		}
 		Demoman 
 		{
 			Secondary {Item "Parry Addiction"}
@@ -348,10 +379,11 @@ cliff_of_dover
 		}
 		Spy 
 		{
-			PDA2 {Item "Kirin's Ascension"}
+			// PDA2 {Item "Kirin's Ascension"}
+			Secondary {Item "Seducer"}
 		}
 
-		Action {Item "Freelance Mercenary" Cost 100}
+		Action {Item "Freelance Mercenary"}
 	}
 	ExtendedUpgrades
 	{
@@ -426,6 +458,12 @@ cliff_of_dover
 	{
 		Name Redeemer_Spawn
 		ItemName "Biker's Redeemer"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name HolyDiver_Spawn
+		ItemName "Holy Diver"
 	}
 
 	PlayerItemEquipSpawnTemplate 

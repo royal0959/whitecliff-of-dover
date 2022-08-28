@@ -104,6 +104,41 @@ WaveSchedule
 			}
 		}
 
+		HolyDiver_Spawn
+		{
+			OnSpawnOutput
+			{
+				Target "!activator"
+				Action "$AddItemAttribute"
+				Param "damage bonus|1.5|1"
+				Delay 0
+			}
+
+			OnSpawnOutput
+			{
+				Target "!activator"
+				Action "$AddItemAttribute"
+				Param "damage bonus|2.25|2"
+				Delay 0
+			}
+
+			OnParentKilledOutput 
+			{
+				Target "!activator"
+				Action "$RemoveItemAttribute"
+				Param "damage bonus|1"
+				Delay 0
+			}
+
+			OnParentKilledOutput 
+			{
+				Target "!activator"
+				Action "$RemoveItemAttribute"
+				Param "damage bonus|2"
+				Delay 0
+			}
+		}
+
 		PHD_Equip
 		{
 			OnSpawnOutput

@@ -21,7 +21,7 @@ local PHD_EXPLOSIONS = {
 	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 144, Damage = 50 },
 	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 100 },
 	["Large"] = { Particle = "asplode_hoodoo", Radius = 200, Damage = 150 },
-	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 250 },
+	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 350 },
 }
 
 local PARRY_TIME = 0.8
@@ -113,6 +113,56 @@ function ClearTimers(index, activator, handle)
 	end
 
 	weaponTimers[index][handle] = nil
+end
+
+local noReprogram = {}
+function OnWaveSpawnBot(bot, _, tags)
+	noReprogram[bot] = nil
+
+	if not findInTable(tags, "no_reprogram") then
+		return
+	end
+
+	noReprogram[bot] = true
+end
+
+local controlled = {}
+function SeducerHit(_, activator, caller)
+	if noReprogram[caller] then
+		return
+	end
+
+	if not caller:IsPlayer() then
+		return
+	end
+
+	if caller.m_bIsMiniBoss ~= 0 then
+		return
+	end
+
+	if caller:InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) ~= 0 then
+		return
+	end
+
+	if caller.m_iTeamNum == activator.m_iTeamNum then
+		return
+	end
+
+	local handle = activator:GetHandleIndex()
+
+	if controlled[handle] then
+		return
+	end
+
+	controlled[handle] = caller
+
+	caller:AddCond(TF_COND_REPROGRAMMED)
+	caller:AddCond(TF_COND_CRITBOOSTED_CARD_EFFECT)
+
+	timer.Simple(8, function ()
+		controlled[handle] = nil
+		caller:Suicide()
+	end)
 end
 
 local redeemerDebounces = {} --value is debounce players
