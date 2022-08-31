@@ -423,9 +423,11 @@ WaveSchedule
 				"PerformanceMode" "0"
 				"model" "models/ambulance.mdl"
 				"body" "0"
+
+				"origin" "50 0 0"
 				"angles" "0 -90 0"
 
-				"modelscale" "1.2"
+				"modelscale" "1.1"
 
 				"OnUser1" "!self,Kill,,2,-1"
 			}
@@ -483,7 +485,7 @@ WaveSchedule
 			OnSpawnOutput 
 			{
 				Target "popscript"
-				Action "$SetScavengerMimicDamage"
+				Action "$SetScavengerMimicDamageBoss"
 				Param "tip_explosion"
 				// Delay 0.01
 			}
@@ -709,6 +711,55 @@ WaveSchedule
 				"OnStartTouch" "!parent,Kill,,-1,-1"
 
 				"OnUser1" "!self,Kill,,2.1,-1"
+			}
+		}
+
+		Yakuza_Title_Card_Scavage
+		{
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 0
+			}
+
+			OnSpawnOutput
+			{
+				Target "middle_text"
+				Action "Display"
+				Delay 0.2
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "RAVENGER OF THE NIGHT"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "2"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "middle_text"
+				"message" "SERGEANT SCAVAGE"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "1"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "4.8"
 			}
 		}
 	}

@@ -32,6 +32,7 @@ cliff_of_dover
 	FixHuntsmanDamageBonus 1
 	NoThrillerTaunt 1 
 	NoRomevisionCosmetics 1  
+	FixSetCustomModelInput 1
 
 	CustomUpgradesFile mvm_upgrades_tomboy3.txt
 
@@ -53,6 +54,20 @@ cliff_of_dover
 		Upgrade	"projectile penetration" 
 		MaxLevel 0
 		ItemName "Scavenger"
+	}
+
+	DisallowUpgrade
+	{
+		Upgrade	"faster reload rate" 
+		MaxLevel 1
+		ItemName "Scavenger"
+	}
+
+	DisallowUpgrade
+	{
+		Upgrade	"effect bar recharge rate increased" 
+		MaxLevel 1
+		ItemName "Biker's Redeemer"
 	}
 	
 
@@ -212,6 +227,13 @@ cliff_of_dover
 			// "special item description 3" "Cannot charge"
 		}
 
+		"Caber Buster"
+		{
+			OriginalItemName "The Ullapool Caber" 
+
+			"special item description" "Becomes a Sentry Buster. Taunt to detonate (revert back to a regular Demoman on detonation)"
+		}
+
 
 		"Holy Diver"
 		{
@@ -276,19 +298,21 @@ cliff_of_dover
 			"blast radius decreased" 0.1
 			"no explosion particles" 1
 			"attach particle effect" 703
-			"projectile speed increased" 2.5
+			"projectile speed increased" 1.5
 
-			"maxammo primary reduced" 0.3
-			"no primary ammo from dispensers while active" 1
-			"fire rate penalty" 2
+			// "maxammo primary reduced" 0.4
 
-			"rocket jump damage reduction" 0
+			"hidden primary max ammo bonus" 1.5
+
+			"no self blast dmg" 1
+			"rocket jump damage reduction HIDDEN" 0.0001
 			"cancel falling damage" 1
+			"rocket specialist" 1
 
 			// doesn't work
 			// "projectile sound" "scavenger_fire.mp3"
 
-			"special item description" "Fires high-power explosive tipped bolt that sticks to enemies and surfaces. Detonate after 3 seconds"
+			"special item description" "Fires explosive tipped bolt that stuns on hit and stick to enemies and surfaces. Detonate after 3 seconds"
 			"special item description 2" "Explosion damage is affected by damage bonus upgrade and distance rampup"
 		}
 
@@ -364,6 +388,7 @@ cliff_of_dover
 		Demoman 
 		{
 			Secondary {Item "Parry Addiction"}
+			Melee {Item "Caber Buster"}
 		}
 		Engineer 
 		{
@@ -480,6 +505,12 @@ cliff_of_dover
 
 	PlayerItemEquipSpawnTemplate 
 	{
+		Name Caber_Buster
+		ItemName "Caber Buster" 
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
 		Name NoMercy_Spawn
 		ItemName "No Mercy"
 	}
@@ -498,8 +529,6 @@ cliff_of_dover
 	}
 
 	SpawnTemplate Global_Filters
-
-	//add in something inbetween the drones and the tank
 
 	Wave // Wave 1
 	{
@@ -534,18 +563,22 @@ cliff_of_dover
 				TFBot
 				{
 					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
 				}
 				TFBot
 				{
 					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
 				}
 				TFBot
 				{
 					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
 				}
 				TFBot
 				{
 					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
 				}
 			}
 		}
@@ -938,7 +971,6 @@ cliff_of_dover
 			TFBot
 			{
 				Template T_TFBot_Giant_Pyro 	
-				Attributes AlwaysFireWeapon
 
 				tag bot_giant
 				// AddTemplate Gatebot
@@ -986,13 +1018,13 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "2_steel"
-			WaitForAllSpawned "2_pyros"
+			WaitForAllDead "2_charged_spam"
 			Where spawnbot
-			TotalCount 24
+			TotalCount 18
 			MaxActive 6
 			SpawnCount 6
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 3
+			WaitBetweenSpawns 0
 			TotalCurrency 100
 
 			Squad
@@ -1044,11 +1076,11 @@ cliff_of_dover
 			Name "2_heavyboys"
 			WaitForAllDead "2_pyros"
 			Where spawnbot
-			TotalCount 4
-			MaxActive 4
+			TotalCount 3
+			MaxActive 3
 			SpawnCount 1
-			WaitBeforeStarting 6
-			WaitBetweenSpawns 20
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
 			TotalCurrency 300
 
 			TFBot
@@ -1072,7 +1104,6 @@ cliff_of_dover
 			Target wave_finished_relay
 			Action Trigger
 		}
-
 		
 		WaveSpawn
 		{
@@ -1223,12 +1254,12 @@ cliff_of_dover
 		{
 			Name "3_rapidsoldiers"
 			// WaitForAllSpawned "3_pos_gshotgun_conchknight"
-			WaitForAllDead "3_gshotgun"
+			// WaitForAllDead "3_gshotgun"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
 			SpawnCount 2
-			WaitBeforeStarting 10
+			WaitBeforeStarting 35
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 		
@@ -1376,12 +1407,12 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "4_dh"
-			WaitForAllDead "4_duke"
+			// WaitForAllDead "4_duke"
 			Where spawnbot
-			TotalCount 24
+			TotalCount 27
 			MaxActive 3
 			SpawnCount 3
-			WaitBeforeStarting 0
+			WaitBeforeStarting 1
 			WaitBetweenSpawns 0
 			TotalCurrency 50
 	
@@ -1400,7 +1431,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "4_bats_bomb_push"
-			WaitForAllDead "4_duke"
+			// WaitForAllDead "4_duke"
 			Where spawnbot
 			TotalCount 4
 			MaxActive 4
@@ -1626,7 +1657,7 @@ cliff_of_dover
 			{
 				Name "teleblimpboss"
 				StartingPathTrackNode "tele_blimp_1"
-				Health 20000
+				Health 18000
 				Speed 120
 
 				SpawnTemplate Teleporter_Blimp

@@ -360,6 +360,8 @@ WaveSchedule
 
 		T_TFBot_Sergeant_Scavage
 		{
+			SpawnTemplate Yakuza_Title_Card_Scavage
+			
 			Name "Sergeant Scavage"
 
 			Class Sniper

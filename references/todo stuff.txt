@@ -1,13 +1,6 @@
+>make building level 2 on construction an upgrade
+
 >make wave 2 faster
->make rapids spawn before colonel in wave 4
 >extend wave 5
 >make blimp self destruct when dual shotgun heavies die
 >make wave 5 more potent
-
->caber buster
-
->>>>>fix suiciding with drones out to keep them
->give sergeant scavage a title card
-
-ideas:
->phd jumper bots

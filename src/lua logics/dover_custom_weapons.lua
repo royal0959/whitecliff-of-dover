@@ -26,7 +26,8 @@ local PHD_EXPLOSIONS = {
 
 local PARRY_TIME = 0.8
 
-local SCAVENGER_EXPLOSION_BASE_DAMAGE = 175
+local SCAVENGER_EXPLOSION_BASE_DAMAGE = 85
+local SCAVENGER_EXPLOSION_BASE_DAMAGE_BOSS = 175
 
 local classIndices_Internal = {
 	[1] = "Scout",
@@ -264,9 +265,21 @@ function SetScavengerMimicDamage(mimicName, projectile)
 
 	local damageMult = primary:GetAttributeValue("damage bonus") or 1
 
-	print(damageMult)
-
 	mimic.Damage = SCAVENGER_EXPLOSION_BASE_DAMAGE * damageMult
+end
+function SetScavengerMimicDamageBoss(mimicName, projectile)
+	if not IsValid(projectile) then
+		return
+	end
+
+	local mimic = ents.FindByName(mimicName)
+
+	local owner = mimic.m_hOwnerEntity
+	local primary = owner:GetPlayerItemBySlot(0)
+
+	local damageMult = primary:GetAttributeValue("damage bonus") or 1
+
+	mimic.Damage = SCAVENGER_EXPLOSION_BASE_DAMAGE_BOSS * damageMult
 end
 
 -- drone
@@ -394,6 +407,17 @@ end
 function DroneWalkerUnequip(activator, handle)
 	if not IsValid(activator) then
 		activator = nil
+	end
+
+	local dronesData = weaponsData.Drone[handle]
+
+	-- remove any existing drones
+	for _, id in pairs(dronesData.DronesStationaryIds) do
+		timer.Stop(id)
+	end
+
+	for _, projectile in pairs(dronesData.DronesList) do
+		projectile:Remove()
 	end
 
 	ClearCallbacks("Drone", activator, handle)
