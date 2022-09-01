@@ -4,3 +4,5 @@
 >extend wave 5
 >make blimp self destruct when dual shotgun heavies die
 >make wave 5 more potent
+
+>make redeemer auto collect cash

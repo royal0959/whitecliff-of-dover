@@ -103,7 +103,7 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$UndyingSpawn"
-				Param "20" // recharge time	
+				Param "25" // recharge time	
 			}
 		}
 
@@ -752,6 +752,55 @@ WaveSchedule
 				"origin" "1984 1984 99999"
 				"targetname" "middle_text"
 				"message" "SERGEANT SCAVAGE"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "1"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "4.8"
+			}
+		}
+
+		Yakuza_Title_Card_TimeConstraint1
+		{
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 0
+			}
+
+			OnSpawnOutput
+			{
+				Target "middle_text"
+				Action "Display"
+				Delay 0.2
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "BEHOLDER OF TIME"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "2"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "middle_text"
+				"message" "TIME-CONSTRAINT"
 				"x" "-1"
 				"y" "0.45"
 				"channel" "1"

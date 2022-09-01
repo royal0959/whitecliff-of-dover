@@ -508,7 +508,7 @@ function PHDEquip(_, activator)
 				local damageMult = primary:GetAttributeValue("damage bonus") or 1
 
 				for _, enemy in pairs(enemiesInRange) do
-					if not enemy:IsPlayer() then
+					if not enemy:IsCombatCharacter() then
 						goto continue
 					end
 

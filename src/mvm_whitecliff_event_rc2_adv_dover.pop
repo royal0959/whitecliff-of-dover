@@ -41,6 +41,7 @@ cliff_of_dover
 	LuaScriptFile "scripts/dover_custom_weapons.lua"
 	LuaScriptFile "scripts/dover_custom_bots.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua" 
+	LuaScriptFile "scripts/timeconstraint_boss.lua" 
 
 	DisallowUpgrade
 	{
@@ -547,11 +548,11 @@ cliff_of_dover
 		{
 			Name "1_banner_bison"
 			Where flankers
-			TotalCount 15
-			MaxActive 15
+			TotalCount 20
+			MaxActive 20
 			SpawnCount 5
 			WaitBeforeStarting 1
-			WaitBetweenSpawns 10
+			WaitBetweenSpawns 8
 			TotalCurrency 50
 		
 			Squad 
@@ -961,8 +962,8 @@ cliff_of_dover
 			Name "2_pyros"
 			WaitForAllDead "2_charged_spam"
 			Where spawnbot
-			TotalCount 4
-			MaxActive 4
+			TotalCount 2
+			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 10
@@ -1024,7 +1025,7 @@ cliff_of_dover
 			MaxActive 6
 			SpawnCount 6
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 5
 			TotalCurrency 100
 
 			Squad
@@ -1482,7 +1483,7 @@ cliff_of_dover
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 30
-			TotalCurrency 50
+			TotalCurrency 100
 
 			Support 1
 	
@@ -1502,7 +1503,7 @@ cliff_of_dover
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
-			TotalCurrency 100
+			TotalCurrency 150
 		
 			Tank
 			{
@@ -1547,11 +1548,11 @@ cliff_of_dover
 			WaitForAllDead "4_ambulance"
 			Where flankers
 			TotalCount 6
-			MaxActive 4
+			MaxActive 2
 			SpawnCount 2
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 15
-			TotalCurrency 0
+			WaitBetweenSpawns 4
+			TotalCurrency 200
 		
 			Squad 
 			{
@@ -1633,7 +1634,7 @@ cliff_of_dover
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 0
+			TotalCurrency 200
 		
 			TFBot
 			{
@@ -1652,16 +1653,19 @@ cliff_of_dover
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 200
+
+			Support 1
 		
 			Tank
 			{
 				Name "teleblimpboss"
 				StartingPathTrackNode "tele_blimp_1"
-				Health 18000
+				Health 20000
 				Speed 120
 
 				SpawnTemplate Teleporter_Blimp
 				Template Blimp
+				ClassIcon blimp_tele
 			}
 		}
 
@@ -1675,7 +1679,7 @@ cliff_of_dover
 			SpawnCount 4
 			WaitBeforeStarting 11
 			WaitBetweenSpawns 8
-			TotalCurrency 50
+			TotalCurrency 75
 
 			Support 1
 	
@@ -1748,10 +1752,10 @@ cliff_of_dover
 			WaitForAllDead "5_scavenger"
 			Where spawnbot
 			TotalCount 2
-			MaxActive 1
+			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 11
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 20
 			TotalCurrency 50
 	
 			TFBot
@@ -1770,6 +1774,29 @@ cliff_of_dover
 					"fire rate bonus" 0.2
 					"projectile spread angle penalty" 5
 				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "5_post_colonel_support"
+			WaitForAllSpawned "5_airdrop_colonel"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 25
+
+			Support 1
+	
+			TFBot
+			{
+				SpawnTemplate TeleportToBlimp
+				Template T_TFBot_Heavyweapons_Fist
+				Attributes AlwaysCrit
+				Item "The B.A.S.E. Jumper"
 			}
 		}
 
@@ -1805,6 +1832,39 @@ cliff_of_dover
 				}
 			}
 		}
+
+		WaveSpawn
+		{
+			Name "5_hell"
+			WaitForAllDead "5_airdrop_colonel"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+	
+			Squad
+			{
+				NoWaitForFormation 1
+				NoFormation 1
+				TFBot
+				{
+					SpawnTemplate TeleportToBlimp
+					Template T_TFBot_Giant_Scout_Fast
+					Item "The B.A.S.E. Jumper"
+					SpawnTemplate Bot_Carrier
+				}
+				TFBot
+				{
+					SpawnTemplate TeleportToBlimp
+					Template T_TFBot_Giant_Heavyweapons
+					Item "The B.A.S.E. Jumper"
+					SpawnTemplate Bot_Carried
+				}
+			}
+		}
 	}
 
 	Wave // Wave 6
@@ -1822,7 +1882,7 @@ cliff_of_dover
 		
 		WaveSpawn
 		{
-			Name "6_drone_ranger"
+			Name "6_tc1"
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -1833,48 +1893,9 @@ cliff_of_dover
 		
 			TFBot
 			{
-				Template T_TFBot_Giant_Engineer_DroneShoot_Slow
-			}
-		}
-		WaveSpawn
-		{
-			Name "6_drone_ranger"
-			Where flankers
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
-			TotalCurrency 50
-		
-			TFBot
-			{
-				Template T_TFBot_Giant_Engineer_DroneShoot_Slow
-			}
-		}
+				Template T_TFBot_Timeconstraint_1
 
-		WaveSpawn
-		{
-			Name "6_homing_rapid"
-			WaitForAllDead "6_drone_ranger"
-			Where spawnbot
-			TotalCount 2
-			MaxActive 2
-			SpawnCount 2
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
-			TotalCurrency 50
-		
-			Squad 
-			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Homing_Rapid
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Medic_Uber
-				}
+				tag timeconstraint1
 			}
 		}
 	}

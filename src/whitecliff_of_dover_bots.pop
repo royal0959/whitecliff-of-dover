@@ -499,7 +499,6 @@ WaveSchedule
 			}
 		}
 
-
 		T_TFBot_Giant_Soldier_Homing_Rapid
 		{
 			Name "Giant Rapid Homing Soldier"
@@ -542,6 +541,43 @@ WaveSchedule
 				"airblast vulnerability multiplier" 0.4
 				"override footstep sound set" 3
 				"Projectile speed increased" 0.65
+			}
+		}
+
+		T_TFBot_Timeconstraint_1
+		{
+			Name "Time-Constraint"
+
+			Class Heavyweapons
+			ClassIcon scout
+			Health 20000
+
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Item "The Conspiracy Cap"
+			Item "The Concheror"
+
+			Attributes MiniBoss
+			Attributes AlwaysCrit
+			Attributes SpawnWithFullCharge
+			Scale 1.9
+
+			HideIcon 1
+			
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_MINIGUN"
+				"damage bonus"	2
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+
+				"rage giving scale" 0.1
+				"increase buff duration" 9.0
 			}
 		}
 

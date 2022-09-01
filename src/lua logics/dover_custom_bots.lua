@@ -238,7 +238,7 @@ function UndyingSpawn(rechargeTime, activator)
 		local curHealth = activator.m_iHealth
 
 		-- can't detect crit damage, assume all damage are crit instead for fatal check
-		local damage = damageInfo.Damage * 3
+		local damage = damageInfo.Damage * 3.1
 
 		if curHealth - (damage + 1) <= 0 then
 			damageInfo.Damage = 0
