@@ -17,6 +17,7 @@ cliff_of_dover
 	AddSentryBusterWhenKillCountExceeds 15
 
 	PrecacheModel "models/props_mvm/mvm_comically_small_player_shield.mdl"
+	PrecacheModel "models/bots/demo/red_sentry_buster.mdl"
 	PrecacheModel "models/rcat/rcat_level2.mdl"
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
@@ -135,6 +136,15 @@ cliff_of_dover
         X "2022.725708"            
         Y "-6524.927734"                  
         Z "692.031311"        
+    }
+
+	ExtraSpawnPoint 
+    {
+        Name "timeconstraint_fast" 
+        TeamNum 3 
+        X "921"            
+        Y "-6102"                  
+        Z "621"        
     }
 
 	ExtraTankPath 
@@ -1260,7 +1270,7 @@ cliff_of_dover
 			TotalCount 2
 			MaxActive 2
 			SpawnCount 2
-			WaitBeforeStarting 35
+			WaitBeforeStarting 45
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 		
@@ -1317,10 +1327,10 @@ cliff_of_dover
 			Name "3_colonel_post_mono"
 			// WaitForAllDead "3_monoculus"
 			Where spawnbot
-			TotalCount 6
-			MaxActive 6
-			SpawnCount 6
-			WaitBeforeStarting 45
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 60
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 		
@@ -1329,16 +1339,6 @@ cliff_of_dover
 				TFBot
 				{
 					Template T_TFBot_Giant_Soldier_SlowBarrage
-					
-				}
-				TFBot
-				{
-					Template T_TFBot_Medic_Kritz
-					
-				}
-				TFBot
-				{
-					Template T_TFBot_Medic_Kritz
 					
 				}
 				TFBot
@@ -1839,11 +1839,17 @@ cliff_of_dover
 			WaitForAllDead "5_airdrop_colonel"
 			Where spawnbot
 			TotalCount 4
-			MaxActive 2
+			MaxActive 4
 			SpawnCount 2
 			WaitBeforeStarting 5
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 13
 			TotalCurrency 50
+
+			DoneOutput
+			{
+				Target teleblimpboss
+				Action Kill
+			}
 	
 			Squad
 			{
@@ -1860,6 +1866,7 @@ cliff_of_dover
 				{
 					SpawnTemplate TeleportToBlimp
 					Template T_TFBot_Giant_Heavyweapons
+					Attributes AlwaysCrit
 					Item "The B.A.S.E. Jumper"
 					SpawnTemplate Bot_Carried
 				}
@@ -1882,6 +1889,32 @@ cliff_of_dover
 		
 		WaveSpawn
 		{
+			Name "6_real"
+			Where spawnbot
+			TotalCount 1000
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+
+			TFBot
+			{
+				Class Scout
+				Action Idle
+				Attributes IgnoreFlag
+				Attributes MiniBoss
+
+				Name "Time-Constraint"
+
+				ClassIcon timer_lite
+
+				tag realcontraint
+			}
+		}
+		
+		WaveSpawn
+		{
 			Name "6_tc1"
 			Where spawnbot
 			TotalCount 1
@@ -1889,13 +1922,80 @@ cliff_of_dover
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 50
-		
-			TFBot
-			{
-				Template T_TFBot_Timeconstraint_1
+			TotalCurrency 1
 
-				tag timeconstraint1
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Timeconstraint_1
+
+						tag timeconstraint1
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "6_tc2"
+			WaitForAllDead "6_tc1"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Timeconstraint_1
+
+						tag timeconstraint2
+
+						SpawnTemplate Bot_Carried
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "6_tc2"
+			WaitForAllDead "6_tc1"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Chief_Soldier	
+						Health 15000
+						Name "Sergeants Chariot"
+
+						SpawnTemplate Bot_Carrier
+					}
+				}
 			}
 		}
 	}

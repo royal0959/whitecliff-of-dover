@@ -6,3 +6,5 @@
 >make wave 5 more potent
 
 >make redeemer auto collect cash
+
+>make black boxes non-crit

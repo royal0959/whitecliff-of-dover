@@ -19,9 +19,9 @@ local PHD_THRESHOLD = {
 local PHD_EXPLOSIONS = {
 	["Small"] = { Particle = "hammer_impact_button", Radius = 144, Damage = 25 },
 	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 144, Damage = 50 },
-	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 100 },
-	["Large"] = { Particle = "asplode_hoodoo", Radius = 200, Damage = 150 },
-	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 350 },
+	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 150 },
+	["Large"] = { Particle = "asplode_hoodoo", Radius = 200, Damage = 300 },
+	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 500 },
 }
 
 local PARRY_TIME = 0.8

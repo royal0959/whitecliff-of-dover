@@ -126,7 +126,7 @@ local function pair()
 		local iterated = 1
 		local top = lastOrigin + Vector(0, 0, height)
 		for i = 0, 1, 0.1 do
-			timer.Simple(0.03 * iterated, function ()
+			timer.Simple(0.07 * iterated, function ()
 				carried:SetAbsOrigin(top)
 			end)
 

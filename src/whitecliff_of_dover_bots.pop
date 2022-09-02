@@ -546,10 +546,11 @@ WaveSchedule
 
 		T_TFBot_Timeconstraint_1
 		{
+			SpawnTemplate Yakuza_Title_Card_TimeConstraint1
 			Name "Time-Constraint"
 
 			Class Heavyweapons
-			ClassIcon scout
+			ClassIcon timer_lite
 			Health 20000
 
 			Skill Expert
@@ -560,9 +561,44 @@ WaveSchedule
 			Attributes MiniBoss
 			Attributes AlwaysCrit
 			Attributes SpawnWithFullCharge
+			Attributes UseBossHealthBar
 			Scale 1.9
+			
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_MINIGUN"
+				"damage bonus"	2
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
 
-			HideIcon 1
+				"rage giving scale" 0.1
+				"increase buff duration" 9.0
+			}
+		}
+		T_TFBot_Timeconstraint_2
+		{
+			SpawnTemplate Yakuza_Title_Card_TimeConstraint2
+			Name "Time-Constraint"
+
+			Class Soldier
+			ClassIcon timer_lite
+			Health 20000
+
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Item "The Conspiracy Cap"
+			Item "The Concheror"
+
+			Attributes MiniBoss
+			Attributes AlwaysCrit
+			Attributes SpawnWithFullCharge
+			Attributes UseBossHealthBar
+			Scale 1.9
 			
 			ItemAttributes
 			{
