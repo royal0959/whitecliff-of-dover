@@ -101,5 +101,10 @@ function RegisterShieldThunderdome(shieldEntName, activator)
 
 	local ownerTeamnum = activator.m_iTeamNum
 
+	if ownerTeamnum == 3 then
+		shieldEnt.m_nSkin = 1
+		shieldEnt.m_iTeamNum = 3
+	end
+
 	_register(shieldEnt, "Thunderdome", ownerTeamnum, activator)
 end

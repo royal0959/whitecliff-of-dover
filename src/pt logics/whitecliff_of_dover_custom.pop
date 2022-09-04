@@ -271,7 +271,7 @@ WaveSchedule
 				Target "popscript"
 				Action "$RegisterShieldThunderdome"
 				Param "projectile_shield"
-				Delay 0.1
+				// Delay 0.1
 			}
 
 			OnSpawnOutput
@@ -279,7 +279,7 @@ WaveSchedule
 				Target "popscript"
 				Action "$RegisterShieldThunderdome"
 				Param "projectile_shield2"
-				Delay 0.1
+				// Delay 0.1
 			}
 
 			OnSpawnOutput
@@ -381,7 +381,7 @@ WaveSchedule
 
 			OnSpawnOutput
 			{
-				Target "le_sentry"
+				Target "player_sentry"
 				Action "$SetProp$m_bDisposableBuilding"
 				Param "1"
 			}
@@ -390,12 +390,12 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$DroneFired"	
-				Param "le_sentry"
+				Param "player_sentry"
 			}
 			
 			// OnSpawnOutput
 			// {
-			// 	Target "le_sentry"
+			// 	Target "player_sentry"
 			// 	Action "$SetProp$m_hBuilder"
 			// 	Param "@e@m_hOwnerEntity@!activator"	
 			// 	Delay -1
@@ -407,26 +407,6 @@ WaveSchedule
 				Action "Trigger"
 			}
 
-			// OnParentKilledOutput
-			// {
-			// 	Target "le_sentry"
-			// 	Action "RemoveHealth"
-			// 	Param "100000000000000"			
-			// }
-			// OnParentKilledOutput
-			// {
-			// 	Target "le_sentry"
-			// 	Action "kill"		
-			// 	Delay 0.1
-			// }
-
-			// OnParentKilledOutput
-			// {
-			// 	Target "le_sentry"
-			// 	Action "Kill"
-			// 	Delay 5
-			// }
-
 			OnParentKilledOutput
 			{
 				Target "droneModel"
@@ -437,21 +417,21 @@ WaveSchedule
 			{
 				"targetname" "droneModel"
 
-				// "OnTrigger" "le_sentry,$SetProp$m_nSolidType,0,0,-1" 
-				"OnTrigger" "le_sentry,$SetModelOverride,models/rcat/rcat_level2.mdl,0,-1" 
-				"OnTrigger" "le_sentry,$SetProp$m_nSkin,2,0,-1"
-				"OnTrigger" "le_sentry,SetHealth,50,0,-1"
+				// "OnTrigger" "player_sentry,$SetProp$m_nSolidType,0,0,-1" 
+				"OnTrigger" "player_sentry,$SetModelOverride,models/rcat/rcat_level2.mdl,0,-1" 
+				"OnTrigger" "player_sentry,$SetProp$m_nSkin,2,0,-1"
+				"OnTrigger" "player_sentry,SetHealth,50,0,-1"
 			}
 
 			obj_sentrygun
 			{
-				"targetname" "le_sentry"
+				"targetname" "player_sentry"
 				"teamnum" "2"
 				"defaultupgrade" "0"
 				"SolidToPlayer" "0"
 				"spawnflags" "72" // inf ammo + mini sentry
 
-				"$OnKilled" "@p@le_sentry,Kill,,-1,-1"
+				"$OnKilled" "@p@player_sentry,Kill,,-1,-1"
 			}
 		}
 
@@ -511,6 +491,18 @@ WaveSchedule
 				Param "tip_explosion"
 				// Delay 0.01
 			}
+			OnSpawnOutput 
+			{
+				Target "popscript"
+				Action "$ScavengerTeamCorrectionAttachBlue"
+				Param "attach_to_enemy"
+			}
+			OnSpawnOutput 
+			{
+				Target "popscript"
+				Action "$ScavengerTeamCorrectionAttachRed"
+				Param "attach_to_enemy_red"
+			}
 
 			//failsafe
 			OnSpawnOutput 
@@ -565,6 +557,7 @@ WaveSchedule
 				"OnUser1" "sticky_flicker,FireUser1,,0,-1"
 				"OnUser1" "sticky_sound,FireUser1,,0,-1"
 				"OnUser1" "attach_to_enemy,FireUser1,,0,-1"
+				"OnUser1" "attach_to_enemy_red,FireUser1,,0,-1"
 				"OnUser1" "detonate_position,FireUser1,,0,-1"
 				"OnUser1" "scavenger_bolt,FireUser1,,0,-1"
 				// "OnUser1" "getdamage,FireUser1,,0,-1"
@@ -635,7 +628,8 @@ WaveSchedule
 				"WeaponType" "3"
 
 				"OnUser1" "!self,FireOnce,,2,-1"
-				"OnUser4" "!self,DetonateStickies,,0,-1"
+				"OnUser4" "popscript,$ScavengerTeamCorrectionSticky,,0,-1"
+				"OnUser4" "!self,DetonateStickies,,0.03,-1"
 			}
 
 			logic_measure_movement 
@@ -722,12 +716,30 @@ WaveSchedule
 			trigger_hurt //for some reason I can't explain using a trigger_once or trigger_multiple just blocks the projectile
 			{
 				"targetname" "attach_to_enemy"
+				"StartDisabled" "1"
 				"origin" "0 0 0"
 				"mins" "-8 -8 -8"
 				"maxs" "8 8 8"
 				"Damage" "0"
 				"spawnflags" "1" 
 				"filtername" "filter_is_blue"
+
+				"OnStartTouch" "detonate_position,SetParent,!activator,0.1,-1"
+				"OnStartTouch" "!self,Disable,,0,-1"
+				"OnStartTouch" "!parent,Kill,,-1,-1"
+
+				"OnUser1" "!self,Kill,,2.1,-1"
+			}
+			trigger_hurt 
+			{
+				"targetname" "attach_to_enemy_red"
+				"StartDisabled" "1"
+				"origin" "0 0 0"
+				"mins" "-8 -8 -8"
+				"maxs" "8 8 8"
+				"Damage" "0"
+				"spawnflags" "1" 
+				"filtername" "filter_is_red"
 
 				"OnStartTouch" "detonate_position,SetParent,!activator,0.1,-1"
 				"OnStartTouch" "!self,Disable,,0,-1"

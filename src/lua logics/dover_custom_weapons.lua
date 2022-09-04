@@ -137,6 +137,10 @@ function SeducerHit(_, activator, caller)
 		return
 	end
 
+	if caller:IsRealPlayer() then
+		return
+	end
+
 	if caller.m_bIsMiniBoss ~= 0 then
 		return
 	end
@@ -282,11 +286,93 @@ function SetScavengerMimicDamageBoss(mimicName, projectile)
 	mimic.Damage = SCAVENGER_EXPLOSION_BASE_DAMAGE_BOSS * damageMult
 end
 
+-- function ScavengerTeamCorrectionAttach(triggerName, activator)
+-- 	local trigger = ents.FindByName(triggerName)
+
+-- 	if activator.m_iTeamNum == 3 then
+-- 		-- trigger["$SetKey$filtername"](trigger, "filter_is_red")
+-- 		trigger.m_iFilterName = "filter_is_red"
+-- 	end
+-- end
+function ScavengerTeamCorrectionAttachBlue(triggerName, activator)
+	local trigger = ents.FindByName(triggerName)
+
+	if activator.m_iTeamNum == 2 then
+		trigger:Enable()
+	end
+end
+function ScavengerTeamCorrectionAttachRed(triggerName, activator)
+	local trigger = ents.FindByName(triggerName)
+
+	if activator.m_iTeamNum == 3 then
+		trigger:Enable()
+	end
+end
+-- function ScavengerFired(detPosName, activator)
+-- 	local detPos = ents.FindByName(detPosName)
+
+-- 	detPos.ownerHolder = activator.m_hOwnerEntity
+-- end
+-- function ScavengerFlicker(detPosName)
+-- 	local detPos = ents.FindByName(detPosName)
+
+-- 	local owner = detPos.ownerHolder
+
+-- 	local particle = Entity("info_particle_system", true)
+
+-- 	local props = {
+-- 		start_active = 1,
+-- 		flag_as_weather = 0,
+-- 		effect_name = owner.m_iTeamNum == 2 and "stickybomb_pulse_red" or "stickybomb_pulse_blue",
+-- 	}
+	
+-- 	for propName, value in pairs(props) do
+-- 		particle:AcceptInput("$SetKey$"..propName, value)
+-- 	end
+
+-- 	particle:Start()
+
+-- 	timer.Simple(1, function ()
+-- 		particle:Remove()
+-- 	end)
+
+-- 	-- if owner.m_iTeamNum == 2 then
+-- 	-- 	util.ParticleEffect("stickybomb_pulse_red", detPos:GetAbsOrigin(), nil, detPos)
+-- 	-- else
+-- 	-- 	util.ParticleEffect("stickybomb_pulse_blue", detPos:GetAbsOrigin(), nil, detPos)
+-- 	-- end
+-- end
+-- function ScavengerTeamCorrectionParticle(flickerName, activator)
+-- 	local flicker = ents.FindByName(flickerName)
+
+-- 	if activator.m_iTeamNum == 3 then
+-- 		-- flicker["$SetKey$effect_name"](flicker, "stickybomb_pulse_blue")
+-- 		flicker.m_iszEffectName = "stickybomb_pulse_blue"
+-- 	end
+-- end
+function ScavengerTeamCorrectionSticky(_, sticky)
+	timer.Simple(0, function ()
+		local owner = sticky.m_hOwnerEntity
+
+		if owner.m_iTeamNum == 3 then
+			sticky.m_iTeamNum = 3
+		end
+	end)
+end
+
 -- drone
 function DroneFired(sentryName, projectile)
 	local owner = projectile.m_hOwnerEntity
 
 	local sentryEnt = ents.FindByName(sentryName)
+
+	if owner.m_iTeamNum == 3 then
+		timer.Simple(0, function ()
+			sentryEnt.m_nSkin = 1
+		end)
+
+		sentryEnt.m_iTeamNum = 3
+	end
 
 	sentryEnt.m_hBuilder = owner
 

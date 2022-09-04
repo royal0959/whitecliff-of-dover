@@ -986,7 +986,8 @@ cliff_of_dover
 				Template T_TFBot_Giant_Pyro 	
 
 				tag bot_giant
-				// AddTemplate Gatebot
+				Attributes AlwaysFireWeapon
+				AddTemplate Gatebot
 			}
 		}
 
@@ -1015,7 +1016,7 @@ cliff_of_dover
 			Name "2_hunts"
 			WaitForAllSpawned "2_charged_spam"
 			Where spawnbot
-			TotalCount 32
+			TotalCount 24
 			MaxActive 8
 			SpawnCount 2
 			WaitBeforeStarting 15
@@ -1089,8 +1090,8 @@ cliff_of_dover
 			Name "2_heavyboys"
 			WaitForAllDead "2_pyros"
 			Where spawnbot
-			TotalCount 3
-			MaxActive 3
+			TotalCount 2
+			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 15
@@ -1272,7 +1273,7 @@ cliff_of_dover
 			TotalCount 2
 			MaxActive 2
 			SpawnCount 2
-			WaitBeforeStarting 45
+			WaitBeforeStarting 60
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 		
@@ -1332,7 +1333,7 @@ cliff_of_dover
 			TotalCount 4
 			MaxActive 4
 			SpawnCount 4
-			WaitBeforeStarting 60
+			WaitBeforeStarting 80
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 		
@@ -1461,7 +1462,7 @@ cliff_of_dover
 			Where ambulance_support
 			TotalCount 4
 			MaxActive 4
-			SpawnCount 4
+			SpawnCount 1
 			WaitBeforeStarting 3
 			WaitBetweenSpawns 3
 			TotalCurrency 50
@@ -1484,7 +1485,7 @@ cliff_of_dover
 			MaxActive 3
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 30
+			WaitBetweenSpawns 35
 			TotalCurrency 100
 
 			Support 1
@@ -1533,7 +1534,7 @@ cliff_of_dover
 			MaxActive 2
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 40
+			WaitBetweenSpawns 50
 			TotalCurrency 50
 
 			Support 1
@@ -1654,7 +1655,7 @@ cliff_of_dover
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
-			TotalCurrency 200
+			TotalCurrency 0
 
 			Support Limited
 		
@@ -1904,15 +1905,22 @@ cliff_of_dover
 			TFBot
 			{
 				Class Scout
-				Action Idle
 				Attributes IgnoreFlag
 				Attributes MiniBoss
+
+				Action Idle
 
 				Name "Time-Constraint"
 
 				ClassIcon timer_lite
 
 				tag realcontraint
+
+				CharacterAttributes
+				{
+					"move speed bonus" 0.0001
+					"no_jump" 1
+				}
 			}
 		}
 		
@@ -2081,6 +2089,11 @@ cliff_of_dover
 						Template T_TFBot_Timeconstraint_1
 						Action Idle
 
+						CharacterAttributes
+						{
+							"move speed bonus" 0.0001
+							"no_jump" 1
+						}
 						tag timeconstraintFinal
 					}
 				}

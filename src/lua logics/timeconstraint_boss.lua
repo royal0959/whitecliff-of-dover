@@ -460,28 +460,51 @@ local function endWave()
 	end
 end
 
-local function PvPBluWin(bluPlayer)
-	chatMessage("Masterfully done my dear friend")
-
+local function PvPBluWin()
 	timer.Simple(1, function ()
+		chatMessage("Masterfully done my dear friend")
+	end)
+
+	timer.Simple(2, function ()
 		chatMessage("Let us enjoy this victory together")
 	end)
-	timer.Simple(2, function ()
+	timer.Simple(3, function ()
 		chatMessage("I hope your buddies aren't too mad at you after that")
 	end)
 
 	endWave()
 end
 local function PvPRedWin()
-	chatMessage("How embarrassing")
+	timer.Simple(1, function ()
+		chatMessage("How embarrassing")
+	end)
 
 	endWave()
 end
 
-local redPlayersAlive = 0
-local function checkPvPWinCond(bluPlayer)
+local function checkPvPWinCond()
+	local redPlayersAlive = 0
+
+	for _, player in pairs(ents.GetAllPlayers()) do
+		if not player:IsRealPlayer() then
+			goto continue
+		end
+
+		if player.m_iTeamNum ~= 2 then
+			goto continue
+		end
+
+		if not player:IsAlive() then
+			goto continue
+		end
+
+		redPlayersAlive = redPlayersAlive + 1
+
+		::continue::
+	end
+
 	if redPlayersAlive <= 0 then
-		PvPBluWin(bluPlayer)
+		PvPBluWin()
 	end
 end
 
@@ -527,6 +550,8 @@ local function HandleFinal(bot)
 		local spawn = ents.FindByName("timeconstraint_fast")
 		local spawnPos = spawn:GetAbsOrigin() + Vector(0, 0, 10)
 
+		chosenPlayer:ForceRespawn()
+
 		chosenPlayer:Teleport(spawnPos)
 		chosenPlayer:AddCond(TF_COND_REPROGRAMMED)
 
@@ -534,6 +559,7 @@ local function HandleFinal(bot)
 		chosenPlayer:SetAttributeValue("cannot pick up intelligence", 1)
 
 		chosenPlayer.m_bUseBossHealthBar = true
+		chosenPlayer.m_bIsMiniBoss = true
 
 		local chosenPlrCallbacks = {}
 		chosenPlrCallbacks.died = chosenPlayer:AddCallback(ON_DEATH, function ()
@@ -541,9 +567,12 @@ local function HandleFinal(bot)
 
 			removeCallbacks(chosenPlayer, chosenPlrCallbacks)
 		end)
+		chosenPlrCallbacks.removed = chosenPlayer:AddCallback(ON_REMOVE, function ()
+			PvPRedWin()
+		end)
 	end)
 	timer.Simple(10, function ()
-		chatMessage("Now give me a show. And don't even think about letting your former friends win intentionally. I will be watching")
+		chatMessage("Now give me a show")
 
 		for _, player in pairs(ents.GetAllPlayers()) do
 			if not player:IsRealPlayer() then
@@ -551,6 +580,7 @@ local function HandleFinal(bot)
 			end
 
 			player.m_bGlowEnabled = 1
+			player:ForceRespawnDead()
 			player:SetAttributeValue("min respawn time", 999999)
 
 			local text = player ~= chosenPlayer and
@@ -564,26 +594,24 @@ local function HandleFinal(bot)
 				goto continue
 			end
 
-			redPlayersAlive = redPlayersAlive + 1
-
 			local plrCallbacks = {}
 			plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
-				redPlayersAlive = redPlayersAlive - 1
-
-				checkPvPWinCond(chosenPlayer)
-
+				checkPvPWinCond()
 				removeCallbacks(player, plrCallbacks)
+			end)
+			plrCallbacks.removed = player:AddCallback(ON_REMOVE, function ()
+				checkPvPWinCond()
 			end)
 
 			::continue::
 		end
 
-		for _, door in pairs(ents.FindAllByName("func_door")) do
+		for _, door in pairs(ents.FindAllByClass("func_door")) do
 			door:Remove()
 		end
 
 		-- incase somehow 1 manned
-		checkPvPWinCond(chosenPlayer)
+		checkPvPWinCond()
 	end)
 
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
