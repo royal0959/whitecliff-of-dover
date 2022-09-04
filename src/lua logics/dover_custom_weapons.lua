@@ -231,7 +231,7 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 			local damageInfo = {
 				Attacker = owner,
 				Inflictor = nil,
-				Weapon = nil,
+				Weapon = secondary,
 				Damage = baseDamage * damageMult * extraDamageMult,
 				DamageType = DMG_SHOCK,
 				DamageCustom = 0,

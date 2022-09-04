@@ -1,10 +1,1 @@
 >make building level 2 on construction an upgrade
-
->make wave 2 faster
->extend wave 5
->make blimp self destruct when dual shotgun heavies die
->make wave 5 more potent
-
->make redeemer auto collect cash
-
->make black boxes non-crit

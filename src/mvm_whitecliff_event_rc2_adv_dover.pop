@@ -195,6 +195,8 @@ cliff_of_dover
 			"mod projectile heat aim error" 0
 			"mod projectile heat aim time" 100
 
+			"collect currency on kill" 1
+
 			"Blast radius decreased" 0
 
 			"projectile lifetime" 9
@@ -816,7 +818,7 @@ cliff_of_dover
 			Name "1_bb"
 			WaitForAllSpawned "1_tank"
 			Where flankers
-			TotalCount 2
+			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 16
@@ -1654,7 +1656,7 @@ cliff_of_dover
 		
 			TotalCurrency 200
 
-			Support 1
+			Support Limited
 		
 			Tank
 			{
@@ -1890,8 +1892,9 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "6_real"
+			// WaitForAllDead "6_tc3"
 			Where spawnbot
-			TotalCount 1000
+			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 0
@@ -1994,6 +1997,91 @@ cliff_of_dover
 						Name "Sergeants Chariot"
 
 						SpawnTemplate Bot_Carrier
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "6_tc3"
+			WaitForAllDead "6_tc2"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Timeconstraint_1
+
+						tag timeconstraint3
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "6_tc3"
+			WaitForAllDead "6_tc2"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 11
+			WaitBetweenSpawns 4
+			TotalCurrency 1
+
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Giant_Scout_Fast
+						Action Mobber
+						Attributes AlwaysCrit
+						AlwaysGlow 1
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "6_tc4"
+			WaitForAllDead "6_tc3"
+			Where timeconstraint_fast
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Timeconstraint_1
+						Action Idle
+
+						tag timeconstraintFinal
 					}
 				}
 			}

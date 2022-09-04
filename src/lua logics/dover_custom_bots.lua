@@ -124,14 +124,22 @@ local function pair()
 
 		-- suspend in place to prevent source jank from teleporting it back to spawn
 		local iterated = 1
-		local top = lastOrigin + Vector(0, 0, height)
 		for i = 0, 1, 0.1 do
 			timer.Simple(0.07 * iterated, function ()
-				carried:SetAbsOrigin(top)
+				carried:SetAbsOrigin(lastOrigin)
 			end)
 
 			iterated = iterated + 1
 		end
+
+		-- local top = lastOrigin + Vector(0, 0, height)
+		-- for i = 0, 1, 0.1 do
+		-- 	timer.Simple(0.07 * iterated, function ()
+		-- 		carried:SetAbsOrigin(top)
+		-- 	end)
+
+		-- 	iterated = iterated + 1
+		-- end
 		
 		-- carried:ChangeAttributes("NotCarried")
 

@@ -16,6 +16,8 @@ local LEVELS_INFO = {
 local registeredShields = {} --value is debounce players
 
 local function _register(shieldEnt, level, ownerTeamnum, activator)
+	shieldEnt.Registered = true
+
 	local handle = shieldEnt:GetHandleIndex()
 
 	print(activator)
