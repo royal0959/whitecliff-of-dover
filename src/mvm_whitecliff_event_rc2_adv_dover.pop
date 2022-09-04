@@ -61,7 +61,7 @@ cliff_of_dover
 	DisallowUpgrade
 	{
 		Upgrade	"faster reload rate" 
-		MaxLevel 1
+		MaxLevel 2
 		ItemName "Scavenger"
 	}
 

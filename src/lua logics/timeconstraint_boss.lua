@@ -460,7 +460,13 @@ local function endWave()
 	end
 end
 
+local gamestateEnded = false
 local function PvPBluWin()
+	if gamestateEnded then
+		return
+	end
+
+	gamestateEnded = true
 	timer.Simple(1, function ()
 		chatMessage("Masterfully done my dear friend")
 	end)
@@ -475,6 +481,11 @@ local function PvPBluWin()
 	endWave()
 end
 local function PvPRedWin()
+	if gamestateEnded then
+		return
+	end
+	
+	gamestateEnded = true
 	timer.Simple(1, function ()
 		chatMessage("How embarrassing")
 	end)
@@ -502,6 +513,8 @@ local function checkPvPWinCond()
 
 		::continue::
 	end
+
+	print(redPlayersAlive)
 
 	if redPlayersAlive <= 0 then
 		PvPBluWin()
@@ -567,9 +580,9 @@ local function HandleFinal(bot)
 
 			removeCallbacks(chosenPlayer, chosenPlrCallbacks)
 		end)
-		chosenPlrCallbacks.removed = chosenPlayer:AddCallback(ON_REMOVE, function ()
-			PvPRedWin()
-		end)
+		-- chosenPlrCallbacks.removed = chosenPlayer:AddCallback(ON_REMOVE, function ()
+		-- 	PvPRedWin()
+		-- end)
 	end)
 	timer.Simple(10, function ()
 		chatMessage("Now give me a show")
@@ -587,7 +600,6 @@ local function HandleFinal(bot)
 				"ELIMINATE BLU PLAYER TO WIN" or
 				"ELIMINATE ALL RED PLAYERS TO WIN"
 
-
 			player:Print(PRINT_TARGET_CENTER, text)
 
 			if player == chosenPlayer then
@@ -599,9 +611,9 @@ local function HandleFinal(bot)
 				checkPvPWinCond()
 				removeCallbacks(player, plrCallbacks)
 			end)
-			plrCallbacks.removed = player:AddCallback(ON_REMOVE, function ()
-				checkPvPWinCond()
-			end)
+			-- plrCallbacks.removed = player:AddCallback(ON_REMOVE, function ()
+			-- 	checkPvPWinCond()
+			-- end)
 
 			::continue::
 		end
