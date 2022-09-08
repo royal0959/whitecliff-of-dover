@@ -39,7 +39,7 @@ local function _register(shieldEnt, level, ownerTeamnum, activator)
 	shieldEnt:AddCallback(
 		ON_TOUCH,
 		function(_, target, hitPos)
-			if not target or not target:IsPlayer() then
+			if not target or not target:IsCombatCharacter() then
 				return
 			end
 

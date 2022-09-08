@@ -139,6 +139,16 @@ local function revertRollback()
 	fade()
 
 	timer.Simple(0.6, function ()
+		for _, player in pairs(ents.GetAllPlayers()) do
+			if not player:IsRealPlayer() then
+				goto continue
+			end
+
+			player:ForceRespawn()
+
+			::continue::
+		end
+		
 		for ent, data in pairs(rollbacks) do
 			if not IsValid(ent) or not ent:IsAlive() then
 				goto continue
@@ -215,7 +225,7 @@ end
 local playersCallback = {}
 
 local function Holder(bot)
-	timeconstraint_alive = bot
+	timeconstraint_alive = true
 	print(timeconstraint_alive)
 
 	local allPlayers = ents.GetAllPlayers()
@@ -228,8 +238,6 @@ local function Holder(bot)
 		playersCallback[player] = {}
 	
 		playersCallback[player].died = player:AddCallback(ON_DEATH, function ()
-			timeconstraint_alive = false
-
 			if not bot:IsAlive() then
 				return
 			end
@@ -300,6 +308,8 @@ local function Holder(bot)
 	end, 0)
 
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
+		timeconstraint_alive = false
+		
 		removeCallbacks(bot, callbacks)
 		removeTimers(timers)
 

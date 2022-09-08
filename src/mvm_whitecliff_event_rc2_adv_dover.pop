@@ -1195,24 +1195,24 @@ cliff_of_dover
 			Name "3_gshotgun"
 			WaitForAllDead "3_demo"
 			Where spawnbot
-			TotalCount 2
-			MaxActive 2
-			SpawnCount 2
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 100
 		
-			Squad
-			{
+			// Squad
+			// {
 				TFBot
 				{
 					Template T_TFBot_Giant_Heavyweapons_Shotgun
 				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Medic_Uber
-				}
-			}
+			// 	TFBot
+			// 	{
+			// 		Template T_TFBot_Giant_Medic_Uber
+			// 	}
+			// }
 		}
 
 		WaveSpawn
@@ -1907,10 +1907,11 @@ cliff_of_dover
 				Class Scout
 				Attributes IgnoreFlag
 				Attributes MiniBoss
+				Attributes AlwaysCrit
 
 				Action Idle
 
-				Name "Time-Constraint"
+				Name "jerma985 (ignore him"
 
 				ClassIcon timer_lite
 

@@ -1,2 +1,4 @@
 >make building level 2 on construction an upgrade
->make heavy shields damage tank
+
+>test wave 6 more
+>handle players leaving
