@@ -63,7 +63,7 @@ local callbacks = {}
 local weaponsData = {}
 local weaponTimers = {}
 
-local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD" }
+local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield" }
 for _, weaponIndex in pairs(CUSTOM_WEAPONS_INDICES) do
 	callbacks[weaponIndex] = {}
 	weaponsData[weaponIndex] = {}
@@ -114,6 +114,104 @@ function ClearTimers(index, activator, handle)
 	end
 
 	weaponTimers[index][handle] = nil
+end
+
+function PersonalProjectileShieldRefunded(_, activator)
+	print("refunded")
+	
+	activator.refunded = true
+end
+
+function PersonalProjectileShieldPurchase(_, activator)
+	print("personal shield purchased")
+	local handle = activator:GetHandleIndex()
+
+	-- force it to level 2
+	activator:GetPlayerItemBySlot(1):SetAttributeValue("generate rage on heal", 2)
+
+	activator.ShieldReplacementFlag = true
+
+	callbacks.SmolShield[handle] = {}
+	weaponTimers.SmolShield[handle] = {}
+
+	local shieldCallbacks = callbacks.SmolShield[handle]
+	local shieldTimers = weaponTimers.SmolShield[handle]
+
+	local function cancelEverything()
+		if not IsValid(activator) then
+			activator = nil
+		else
+			activator.ShieldReplacementFlag = false
+		end
+	
+		ClearCallbacks("SmolShield", activator, handle)
+		ClearTimers("SmolShield", activator, handle)
+	end
+
+	shieldCallbacks.removed = activator:AddCallback(ON_REMOVE, function()
+		cancelEverything()
+	end)
+
+	shieldCallbacks.died = activator:AddCallback(ON_DEATH, function()
+		cancelEverything()
+	end)
+
+	shieldCallbacks.spawned = activator:AddCallback(ON_SPAWN, function()
+		cancelEverything()
+	end)
+
+	shieldTimers.DefaultCharge = timer.Create(0.1, function ()
+		if activator.refunded then
+			print("timer cancelled due to refund")
+			activator.refunded = false
+			cancelEverything()
+			return
+		end
+
+		SetDefaultShieldCharge(activator)
+	end, 0)
+end
+
+-- smol shield replacement
+function ReplaceAllMedigunShields()
+	for _, shield in pairs(ents.FindAllByClass("entity_medigun_shield")) do
+		if shield.Changed then
+			goto continue
+		end
+
+		local shieldOwner = shield.m_hOwnerEntity
+
+		if (not shieldOwner) or not IsValid(shieldOwner) then
+			goto continue
+		end
+
+		if not shieldOwner.ShieldReplacementFlag then
+			goto continue
+		end
+
+		shield.Changed = true
+
+		shield:SetModel("models/props_mvm/mvm_comically_small_player_shield.mdl")
+
+		::continue::
+	end
+end
+
+--set shield charge to 25% whenever it'd be below that to mimic charging faster
+function SetDefaultShieldCharge(activator)
+	if activator.m_bRageDraining ~= 0 then
+		return
+	end
+
+	if activator.m_flRageMeter >= 35 then
+		return
+	end
+
+	activator.m_flRageMeter = 35
+end
+
+function OnGameTick()
+	ReplaceAllMedigunShields()
 end
 
 local noReprogram = {}

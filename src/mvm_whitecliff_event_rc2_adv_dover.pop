@@ -423,6 +423,17 @@ cliff_of_dover
 
 		Action {Item "Freelance Mercenary"}
 	}
+
+	// DisallowUpgrade
+	// {
+	// 	Upgrade	"cannot giftwrap" 
+	// 	MaxLevel 0 
+	// 	IfUpgradePresent 
+	// 	{
+	// 		"generate rage on heal" 1 
+	// 	}
+	// }
+
 	ExtendedUpgrades
 	{
 		redeemer_dmg
@@ -438,7 +449,37 @@ cliff_of_dover
 				ItemName "Biker's Redeemer"
 			}
 		}
+
+		smol_shield
+		{
+			Name "Personal Projectile Shield"
+			Description "Smaller shield that charges faster and deal maximum contact damage. Does not stack with Projectile Shield upgrade" 
+			Attribute "cannot giftwrap" 
+			Cap 2 
+			Increment 2
+			Cost 350
+
+			AllowedWeapons 
+			{
+				ClassName "TF_WEAPON_MEDIGUN"
+			}
+
+			SecondaryAttributes
+			{
+				"generate rage on heal" 2
+			}
+
+			OnApply
+			{
+				Output "popscript,$PersonalProjectileShieldPurchase,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$PersonalProjectileShieldRefunded,,0"
+			}
+		}
 	}
+	
 	ItemAttributes 
 	{
 		ClassName TF_WEAPON_PDA_ENGINEER_BUILD
