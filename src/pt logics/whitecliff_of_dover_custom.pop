@@ -54,54 +54,61 @@ WaveSchedule
 		{
 			OnSpawnOutput
 			{
-				Target constructed_check_loop
-				Action Trigger 
+				Target popscript
+				Action "$BuildingBuilt" 
 				Delay 0.1
 			}
 
-			$filter_sendprop
-			{
-				"targetname" "filter_constructed"
-				"$name" "m_flPercentageConstructed"
-				"$value" "1"
-				"$compare" "greater than or equal"
-				"Negated" "0"
+			// OnSpawnOutput
+			// {
+			// 	Target constructed_check_loop
+			// 	Action Trigger 
+			// 	Delay 0.1
+			// }
 
-				"OnPass" "apply_level2,Trigger,,0,-1"
-			}
+			// $filter_sendprop
+			// {
+			// 	"targetname" "filter_constructed"
+			// 	"$name" "m_flPercentageConstructed"
+			// 	"$value" "1"
+			// 	"$compare" "greater than or equal"
+			// 	"Negated" "0"
 
-			//if building was built in setup or player used building canteen, cancel
-			$filter_sendprop
-			{
-				"targetname" "filter_is_already_constructed"
-				"$name" "m_iHighestUpgradeLevel"
-				"$value" "2"
-				"$compare" "greater than or equal"
-				"Negated" "0"
+			// 	"OnPass" "apply_level2,Trigger,,0,-1"
+			// }
 
-				"OnPass" "constructed_check_loop,Disable,,0,-1"
-			}
+			// //if building was built in setup or player used building canteen, cancel
+			// $filter_sendprop
+			// {
+			// 	"targetname" "filter_is_already_constructed"
+			// 	"$name" "m_iHighestUpgradeLevel"
+			// 	"$value" "2"
+			// 	"$compare" "greater than or equal"
+			// 	"Negated" "0"
 
-			logic_relay 
-			{
-				"targetname" "constructed_check_loop"
-				"spawnflags" "2"
+			// 	"OnPass" "constructed_check_loop,Disable,,0,-1"
+			// }
 
-				"OnTrigger" "filter_constructed,TestActivator,,0,-1"
-				"OnTrigger" "filter_is_already_constructed,TestActivator,,0,-1"
+			// logic_relay 
+			// {
+			// 	"targetname" "constructed_check_loop"
+			// 	"spawnflags" "2"
 
-				"OnTrigger" "!self,Trigger,,0.1,-1"
-			}
+			// 	"OnTrigger" "filter_constructed,TestActivator,,0,-1"
+			// 	"OnTrigger" "filter_is_already_constructed,TestActivator,,0,-1"
 
-			logic_relay 
-			{
-				"targetname" "apply_level2"
-				"spawnflags" "2"
+			// 	"OnTrigger" "!self,Trigger,,0.1,-1"
+			// }
 
-				"OnTrigger" "!activator,$SetProp$m_iHighestUpgradeLevel,2,0,-1"
+			// logic_relay 
+			// {
+			// 	"targetname" "apply_level2"
+			// 	"spawnflags" "2"
 
-				"OnTrigger" "constructed_check_loop,Disable,,0,-1"
-			}
+			// 	"OnTrigger" "!activator,$SetProp$m_iHighestUpgradeLevel,2,0,-1"
+
+			// 	"OnTrigger" "constructed_check_loop,Disable,,0,-1"
+			// }
 		}
 
 		HolyDiver_Spawn

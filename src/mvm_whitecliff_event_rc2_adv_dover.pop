@@ -276,6 +276,7 @@ cliff_of_dover
 			"paintkit_proto_def_index" 217 //Bomber Soul
         	"set_item_texture_wear" 0 
 
+			"damage bonus" 1.5
 			"clip size penalty" 0.5
 
 			"engineer building teleporting pickup" 1000
@@ -424,15 +425,15 @@ cliff_of_dover
 		Action {Item "Freelance Mercenary"}
 	}
 
-	// DisallowUpgrade
-	// {
-	// 	Upgrade	"cannot giftwrap" 
-	// 	MaxLevel 0 
-	// 	IfUpgradePresent 
-	// 	{
-	// 		"generate rage on heal" 1 
-	// 	}
-	// }
+	DisallowUpgrade
+	{
+		Upgrade	"cannot giftwrap" 
+		MaxLevel 0 
+		IfUpgradePresent 
+		{
+			"generate rage on heal" 1 
+		}
+	}
 
 	ExtendedUpgrades
 	{
@@ -447,6 +448,28 @@ cliff_of_dover
 			AllowedWeapons 
 			{
 				ItemName "Biker's Redeemer"
+			}
+		}
+
+		instalevel2
+		{
+			Name "Instant Buildings Level 2" 
+			Description "All buildings start at level 2 when deployed"
+			Attribute "cannot giftwrap" 
+			Cap 1 
+			Increment 1
+			Cost 100
+
+			PlayerUpgrade 1
+			AllowPlayerClass Engineer 
+
+			OnApply
+			{
+				Output "popscript,$InstaLvLPurchase,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$InstaLvLRefunded,,0"
 			}
 		}
 
@@ -480,11 +503,11 @@ cliff_of_dover
 		}
 	}
 	
-	ItemAttributes 
-	{
-		ClassName TF_WEAPON_PDA_ENGINEER_BUILD
-		"special item description" "Buildings start at level 2 after construction"
-	}
+	// ItemAttributes 
+	// {
+	// 	ClassName TF_WEAPON_PDA_ENGINEER_BUILD
+	// 	"special item description" "Buildings start at level 2 after construction"
+	// }
 
 	PlayerItemEquipSpawnTemplate 
 	{
@@ -2084,11 +2107,11 @@ cliff_of_dover
 			Name "6_tc3"
 			WaitForAllDead "6_tc2"
 			Where spawnbot
-			TotalCount 4
-			MaxActive 4
+			TotalCount 3
+			MaxActive 3
 			SpawnCount 1
 			WaitBeforeStarting 11
-			WaitBetweenSpawns 4
+			WaitBetweenSpawns 7
 			TotalCurrency 1
 
 			Support Limited
@@ -2100,8 +2123,8 @@ cliff_of_dover
 					TFBot
 					{
 						Template T_TFBot_Giant_Scout_Fast
-						Action Mobber
-						Attributes AlwaysCrit
+						// Action Mobber
+						// Attributes AlwaysCrit
 						AlwaysGlow 1
 					}
 				}
@@ -2137,6 +2160,60 @@ cliff_of_dover
 							"no_jump" 1
 						}
 						tag timeconstraintFinal
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "6_tc4_reinforcement"
+			WaitForAllDead "6_tc3"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 60
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier_Extended_Concheror
+						AlwaysGlow 1
+						Attributes AlwaysCrit
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "6_tc4_reinforcement"
+			WaitForAllDead "6_tc3"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 65
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+
+			Support Limited
+
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Giant_Scout
+						AlwaysGlow 1
+						Attributes AlwaysCrit
 					}
 				}
 			}

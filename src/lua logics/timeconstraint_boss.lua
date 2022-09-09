@@ -52,6 +52,7 @@ local DEATH_INSULTS = {
 
 local timeconstraint_alive = false
 local cur_constraint = false -- current time constraint bot
+local gamestateEnded = false
 
 local function chatMessage(string)
 	local message = "{blue}"
@@ -184,6 +185,10 @@ ents.AddCreateCallback("entity_medigun_shield", function (shield)
 			return
 		end
 
+		if shieldOwner.ShieldReplacementFlag then
+			return
+		end
+
 		local handle = shieldOwner:GetHandleIndex()
 
 		if activeShieldOwners[handle] then
@@ -219,6 +224,7 @@ ents.AddCreateCallback("entity_medigun_shield", function (shield)
 end)
 
 function OnWaveInit()
+	gamestateEnded = false
 	timeconstraint_alive = false
 end
 
@@ -239,6 +245,10 @@ local function Holder(bot)
 	
 		playersCallback[player].died = player:AddCallback(ON_DEATH, function ()
 			if not bot:IsAlive() then
+				return
+			end
+
+			if player.m_iTeamNum ~= 2 then
 				return
 			end
 
@@ -414,7 +424,10 @@ local function Handle3(bot)
 		end
 	end)
 	timer.Simple(5, function ()
-		chatMessage("Now I'm taking away your life. Go back to spawn")
+		chatMessage("Now I'm taking away your life. Go to hell")
+
+		local britian = Vector(289.492859, 7267.859375, -10179.536133)
+
 		fade()
 		timer.Simple(1, function ()
 			for _, player in pairs(ents.GetAllPlayers()) do
@@ -423,6 +436,7 @@ local function Handle3(bot)
 				end
 
 				player:ForceRespawn()
+				player:Teleport(britian)
 
 				::continue::
 			end
@@ -461,6 +475,11 @@ local function endWave()
 		end
 
 		if player:IsRealPlayer() then
+			player:ForceRespawn()
+			player.m_bUseBossHealthBar = false
+			player.m_bIsMiniBoss = false
+			player.m_bGlowEnabled = 0
+
 			goto continue
 		end
 
@@ -470,7 +489,6 @@ local function endWave()
 	end
 end
 
-local gamestateEnded = false
 local function PvPBluWin()
 	if gamestateEnded then
 		return
@@ -531,6 +549,19 @@ local function checkPvPWinCond()
 	end
 end
 
+function OnPlayerDisconnected(player)
+	if not timeconstraint_alive then
+		return
+	end
+	
+	if player.m_iTeamNum == 3 then
+		PvPRedWin()
+		return
+	end
+
+	checkPvPWinCond()
+end
+
 local function HandleFinal(bot)
 	local callbacks = {}
 
@@ -565,11 +596,14 @@ local function HandleFinal(bot)
 		end
 
 		chosenPlayer = bestPlayer[1]
-		
+
 		chatMessage(string.format(text, chosenPlayer:GetPlayerName()))
 	end)
 	timer.Simple(8, function ()
 		chatMessage("Step right on up fella, you're on my side now")
+
+		cur_constraint.m_bUseBossHealthBar = false
+
 		local spawn = ents.FindByName("timeconstraint_fast")
 		local spawnPos = spawn:GetAbsOrigin() + Vector(0, 0, 10)
 
@@ -628,12 +662,30 @@ local function HandleFinal(bot)
 			::continue::
 		end
 
+		-- incase somehow 1 manned
+		checkPvPWinCond()
+	end)
+
+	timer.Simple(15, function ()
+		if gamestateEnded then
+			return
+		end
+
+		chatMessage("Spawn protection for both teams have been disabled")
+
 		for _, door in pairs(ents.FindAllByClass("func_door")) do
 			door:Remove()
 		end
+		for _, room in pairs(ents.FindAllByClass("func_respawnroom")) do
+			room:Remove()
+		end
+		for _, room in pairs(ents.FindAllByClass("func_respawnroomvisualizer")) do
+			room:Remove()
+		end
 
-		-- incase somehow 1 manned
-		checkPvPWinCond()
+		if cur_constraint then
+			cur_constraint:AddCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED)
+		end
 	end)
 
 	callbacks.died = bot:AddCallback(ON_DEATH, function()

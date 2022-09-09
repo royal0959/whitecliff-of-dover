@@ -116,9 +116,38 @@ function ClearTimers(index, activator, handle)
 	weaponTimers[index][handle] = nil
 end
 
+function InstaLvLRefunded(_, activator)
+	activator.InstantLevel = false
+end
+function InstaLvLPurchase(_, activator)
+	activator.InstantLevel = true
+end
+
+function BuildingBuilt(_, building)
+	if building.m_iHighestUpgradeLevel >= 2 then
+		return
+	end
+
+	if building.m_bMiniBuilding ~= 0 then
+		return
+	end
+
+	if building.m_bDisposableBuilding ~= 0 then
+		return
+	end
+
+	local owner = building.m_hBuilder
+
+	if not owner.InstantLevel then
+		return
+	end
+
+	building.m_iHighestUpgradeLevel = 2
+end
+
 function PersonalProjectileShieldRefunded(_, activator)
 	print("refunded")
-	
+
 	activator.refunded = true
 end
 
@@ -143,7 +172,7 @@ function PersonalProjectileShieldPurchase(_, activator)
 		else
 			activator.ShieldReplacementFlag = false
 		end
-	
+
 		ClearCallbacks("SmolShield", activator, handle)
 		ClearTimers("SmolShield", activator, handle)
 	end
@@ -160,7 +189,7 @@ function PersonalProjectileShieldPurchase(_, activator)
 		cancelEverything()
 	end)
 
-	shieldTimers.DefaultCharge = timer.Create(0.1, function ()
+	shieldTimers.DefaultCharge = timer.Create(0.1, function()
 		if activator.refunded then
 			print("timer cancelled due to refund")
 			activator.refunded = false
@@ -181,7 +210,7 @@ function ReplaceAllMedigunShields()
 
 		local shieldOwner = shield.m_hOwnerEntity
 
-		if (not shieldOwner) or not IsValid(shieldOwner) then
+		if not shieldOwner or not IsValid(shieldOwner) then
 			goto continue
 		end
 
@@ -262,7 +291,7 @@ function SeducerHit(_, activator, caller)
 	caller:AddCond(TF_COND_REPROGRAMMED)
 	caller:AddCond(TF_COND_CRITBOOSTED_CARD_EFFECT)
 
-	timer.Simple(8, function ()
+	timer.Simple(8, function()
 		controlled[handle] = nil
 		caller:Suicide()
 	end)
@@ -423,7 +452,7 @@ end
 -- 		flag_as_weather = 0,
 -- 		effect_name = owner.m_iTeamNum == 2 and "stickybomb_pulse_red" or "stickybomb_pulse_blue",
 -- 	}
-	
+
 -- 	for propName, value in pairs(props) do
 -- 		particle:AcceptInput("$SetKey$"..propName, value)
 -- 	end
@@ -449,7 +478,7 @@ end
 -- 	end
 -- end
 function ScavengerTeamCorrectionSticky(_, sticky)
-	timer.Simple(0, function ()
+	timer.Simple(0, function()
 		local owner = sticky.m_hOwnerEntity
 
 		if owner.m_iTeamNum == 3 then
@@ -465,7 +494,7 @@ function DroneFired(sentryName, projectile)
 	local sentryEnt = ents.FindByName(sentryName)
 
 	if owner.m_iTeamNum == 3 then
-		timer.Simple(0, function ()
+		timer.Simple(0, function()
 			sentryEnt.m_nSkin = 1
 		end)
 
@@ -656,7 +685,6 @@ function PHDEquip(_, activator)
 	local timeSpentParachuting = 0
 
 	phdTimers.rocketJumpCheck = timer.Create(0.1, function()
-
 		local jumping = activator:InCond(TF_COND_BLASTJUMPING)
 
 		if jumping == 0 then
