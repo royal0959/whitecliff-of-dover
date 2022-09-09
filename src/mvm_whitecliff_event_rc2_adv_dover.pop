@@ -2067,7 +2067,7 @@ cliff_of_dover
 					{
 						Template T_TFBot_Chief_Soldier	
 						Health 15000
-						Name "Sergeants Chariot"
+						Name "Sergeant Chariot"
 
 						SpawnTemplate Bot_Carrier
 					}

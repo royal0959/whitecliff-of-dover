@@ -1,2 +1,8 @@
 >test wave 6 more
 >handle players leaving (test this)
+>fix unequipping freelance mercenary still not letting you caber buster
+>rewrite handling small shield refund
+
+>blu win cond does not work
+ attempt to call a number value
+ [string 'scripts/dover_custom_weapons.lua']:531: Timer with id 3404 is not valid
