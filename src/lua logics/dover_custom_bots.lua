@@ -236,6 +236,11 @@ function UndyingSpawn(rechargeTime, activator)
 
 	-- on damage
 	undyingCallbacks.onDamagePre = activator:AddCallback(3, function(_, damageInfo)
+		-- just in case
+		if not activator:IsAlive() then
+			return
+		end
+
 		if botTypesData.Undying[handle].Recharging then
 			-- damageInfo.Damage = 0
 			return

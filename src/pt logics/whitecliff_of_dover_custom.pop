@@ -174,7 +174,7 @@ WaveSchedule
 			{
 				Target "!activator"
 				Action "$AddItemAttribute"
-				Param "CARD: damage bonus|1.25|2"
+				Param "CARD: damage bonus|1.5|2"
 				Delay 0
 			}
 
@@ -802,7 +802,7 @@ WaveSchedule
 				Target "!activator"
 				Action "$SetVar$FreelanceEquipped"
 				Param "1"
-				Delay 0
+				// Delay 0
 			}
 
 			OnSpawnOutput 
@@ -825,7 +825,7 @@ WaveSchedule
 				Target "!activator"
 				Action "$SetVar$FreelanceEquipped"
 				Param "0"
-				Delay -1
+				Delay 0.1
 			}
 			
 			//apply health from previous class if switched

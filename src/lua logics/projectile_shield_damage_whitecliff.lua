@@ -8,7 +8,7 @@ local LEVELS_INFO = {
 		Cooldown = 0.1
 	},
 	["Thunderdome"] = {
-		Damage = 6,
+		Damage = 8,
 		Cooldown = 0.05
 	}
 }
@@ -39,7 +39,11 @@ local function _register(shieldEnt, level, ownerTeamnum, activator)
 	shieldEnt:AddCallback(
 		ON_TOUCH,
 		function(_, target, hitPos)
-			if not target or not target:IsCombatCharacter() then
+			if not target then
+				return
+			end
+
+			if not target:IsCombatCharacter() and target.m_iClassname ~= "tank_boss" then
 				return
 			end
 

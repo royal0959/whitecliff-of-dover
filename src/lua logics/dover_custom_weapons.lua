@@ -17,11 +17,11 @@ local PHD_THRESHOLD = {
 }
 
 local PHD_EXPLOSIONS = {
-	["Small"] = { Particle = "hammer_impact_button", Radius = 144, Damage = 25 },
-	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 144, Damage = 50 },
-	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 150 },
-	["Large"] = { Particle = "asplode_hoodoo", Radius = 200, Damage = 300 },
-	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 500 },
+	["Small"] = { Particle = "hammer_impact_button", Radius = 144, Damage = 50 },
+	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 144, Damage = 125 },
+	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 200 },
+	["Large"] = { Particle = "asplode_hoodoo", Radius = 200, Damage = 350 },
+	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 700 },
 }
 
 local PARRY_TIME = 0.8
@@ -146,9 +146,7 @@ function BuildingBuilt(_, building)
 end
 
 function PersonalProjectileShieldRefunded(_, activator)
-	print("refunded")
-
-	activator.refunded = true
+	activator:GetPlayerItemBySlot(1).refunded = true
 end
 
 function PersonalProjectileShieldPurchase(_, activator)
@@ -156,7 +154,8 @@ function PersonalProjectileShieldPurchase(_, activator)
 	local handle = activator:GetHandleIndex()
 
 	-- force it to level 2
-	activator:GetPlayerItemBySlot(1):SetAttributeValue("generate rage on heal", 2)
+	local medigun = activator:GetPlayerItemBySlot(1)
+	medigun:SetAttributeValue("generate rage on heal", 2)
 
 	activator.ShieldReplacementFlag = true
 
@@ -190,9 +189,9 @@ function PersonalProjectileShieldPurchase(_, activator)
 	end)
 
 	shieldTimers.DefaultCharge = timer.Create(0.1, function()
-		if activator.refunded then
+		if medigun.refunded then
 			print("timer cancelled due to refund")
-			activator.refunded = false
+			medigun.refunded = false
 			cancelEverything()
 			return
 		end
@@ -528,8 +527,8 @@ function DroneFired(sentryName, projectile)
 		local stationaryId = dronesData.DronesStationaryIds[projectile]
 
 		if stationaryId then
-			timer.Stop(stationaryId)
 			dronesData.DronesStationaryIds[projectile] = nil
+			timer.Stop(stationaryId)
 		end
 	end)
 end

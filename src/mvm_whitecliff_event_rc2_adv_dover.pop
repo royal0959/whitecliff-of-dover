@@ -476,7 +476,7 @@ cliff_of_dover
 		smol_shield
 		{
 			Name "Personal Projectile Shield"
-			Description "Smaller shield that charges faster and deal maximum contact damage. Does not stack with Projectile Shield upgrade" 
+			Description "Smaller shield that charges faster and deal heavy contact damage" 
 			Attribute "cannot giftwrap" 
 			Cap 2 
 			Increment 2
@@ -490,6 +490,7 @@ cliff_of_dover
 			SecondaryAttributes
 			{
 				"generate rage on heal" 2
+				"dmg penalty vs players" 1.5 //50% damage bonus
 			}
 
 			OnApply
@@ -2110,7 +2111,7 @@ cliff_of_dover
 			TotalCount 3
 			MaxActive 3
 			SpawnCount 1
-			WaitBeforeStarting 11
+			WaitBeforeStarting 20
 			WaitBetweenSpawns 7
 			TotalCurrency 1
 
@@ -2176,7 +2177,7 @@ cliff_of_dover
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 
-			Support Limited
+			Support 1
 
 			Squad
 			{
@@ -2187,6 +2188,7 @@ cliff_of_dover
 						Template T_TFBot_Giant_Soldier_Extended_Concheror
 						AlwaysGlow 1
 						Attributes AlwaysCrit
+						Action Mobber
 					}
 				}
 			}
@@ -2199,11 +2201,11 @@ cliff_of_dover
 			TotalCount 3
 			MaxActive 3
 			SpawnCount 3
-			WaitBeforeStarting 65
-			WaitBetweenSpawns 0
+			WaitBeforeStarting 75
+			WaitBetweenSpawns 10
 			TotalCurrency 0
 
-			Support Limited
+			Support 1
 
 			Squad
 			{
@@ -2214,6 +2216,7 @@ cliff_of_dover
 						Template T_TFBot_Giant_Scout
 						AlwaysGlow 1
 						Attributes AlwaysCrit
+						Action Mobber
 					}
 				}
 			}

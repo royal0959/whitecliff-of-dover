@@ -52,6 +52,8 @@ local DEATH_INSULTS = {
 
 local timeconstraint_alive = false
 local cur_constraint = false -- current time constraint bot
+
+local pvpActive = false
 local gamestateEnded = false
 
 local function chatMessage(string)
@@ -226,6 +228,7 @@ end)
 function OnWaveInit()
 	gamestateEnded = false
 	timeconstraint_alive = false
+	pvpActive = false
 end
 
 local playersCallback = {}
@@ -244,6 +247,10 @@ local function Holder(bot)
 		playersCallback[player] = {}
 	
 		playersCallback[player].died = player:AddCallback(ON_DEATH, function ()
+			if pvpActive then
+				return
+			end
+
 			if not bot:IsAlive() then
 				return
 			end
@@ -398,7 +405,7 @@ local function Handle3(bot)
 
 	chatMessage("You know what. I believe we need to have an equalizer")
 
-	timer.Simple(1, function ()
+	timer.Simple(1.5, function ()
 		chatMessage("I'm taking away your money")
 
 		for _, player in pairs(ents.GetAllPlayers()) do
@@ -444,7 +451,30 @@ local function Handle3(bot)
 		end)
 	end)
 
+	timer.Simple(7.5, function ()
+		chatMessage("Just so you know, I'm sending super scouts your way. Better finish that parkour section quick aye?")
+	end)
+
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
+		-- horrible hardcoded way to kill any remaining super scouts because I'm too lazy to implement something proper
+		for _, player in pairs(ents.GetAllPlayers()) do
+			if player.m_iTeamNum ~= 3 then
+				goto continue
+			end
+	
+			if not player:IsAlive() then
+				goto continue
+			end
+	
+			if player:GetPlayerName() ~= "Super Scout" then
+				goto continue
+			end
+	
+			player:Suicide()
+	
+			::continue::
+		end
+
 		timer.Simple(0.5, function ()
 			chatMessage("This is getting tiresome")
 		end)
@@ -495,6 +525,8 @@ local function PvPBluWin()
 	end
 
 	gamestateEnded = true
+	pvpActive = false
+
 	timer.Simple(1, function ()
 		chatMessage("Masterfully done my dear friend")
 	end)
@@ -514,6 +546,8 @@ local function PvPRedWin()
 	end
 	
 	gamestateEnded = true
+	pvpActive = false
+
 	timer.Simple(1, function ()
 		chatMessage("How embarrassing")
 	end)
@@ -521,7 +555,7 @@ local function PvPRedWin()
 	endWave()
 end
 
-local function checkPvPWinCond()
+local function checkPvPWinCond(dontSayCount)
 	local redPlayersAlive = 0
 
 	for _, player in pairs(ents.GetAllPlayers()) do
@@ -543,6 +577,11 @@ local function checkPvPWinCond()
 	end
 
 	print(redPlayersAlive)
+
+	if not dontSayCount and redPlayersAlive > 0 then
+		local msg = redPlayersAlive > 1 and "%s players left" or "%s player remains!"
+		chatMessage(string.format(msg, tostring(redPlayersAlive)))
+	end
 
 	if redPlayersAlive <= 0 then
 		PvPBluWin()
@@ -583,6 +622,10 @@ local function HandleFinal(bot)
 
 		for _, player in pairs(ents.GetAllPlayers()) do
 			if not player:IsRealPlayer() then
+				goto continue
+			end
+
+			if player.m_iTeamNum ~= 2 then
 				goto continue
 			end
 
@@ -662,8 +705,10 @@ local function HandleFinal(bot)
 			::continue::
 		end
 
+		pvpActive = true
+
 		-- incase somehow 1 manned
-		checkPvPWinCond()
+		checkPvPWinCond(true)
 	end)
 
 	timer.Simple(15, function ()
