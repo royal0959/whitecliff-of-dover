@@ -34,6 +34,10 @@ function FreelanceMerc_PromptMenu(currentClass, activator, caller)
 		---@diagnostic disable-next-line: undefined-global
 		flags = MENUFLAG_BUTTON_EXIT,
 		onSelect = function(player, index)
+			if not player:IsAlive() then
+				return
+			end
+			
 			local handleIndex = player:GetHandleIndex()
 
 			if cooldowns[handleIndex] then
