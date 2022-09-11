@@ -32,6 +32,13 @@ models/player/items/all_class/gately_gibus_heavy.mdl
 </ul>
 
 <h1>Custom weapons</h1>
+<b>All Class</b>
+<ul>
+  <li>Freelance Mercenary
+  <br><br>Press the Action key to switch between classes on the fly. 5 second cooldown between uses
+  <br>(!) Goes in canteen slot
+  </li>
+</ul>
 <b>Scout</b>
 <ul>
   <li>Biker's Redeemer
