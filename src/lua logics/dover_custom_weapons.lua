@@ -155,6 +155,8 @@ function PersonalProjectileShieldPurchase(_, activator)
 
 	-- force it to level 2
 	local medigun = activator:GetPlayerItemBySlot(1)
+	local medigunHandle = medigun:GetHandleIndex()
+
 	medigun:SetAttributeValue("generate rage on heal", 2)
 
 	activator.ShieldReplacementFlag = true
@@ -185,6 +187,10 @@ function PersonalProjectileShieldPurchase(_, activator)
 	end)
 
 	shieldCallbacks.spawned = activator:AddCallback(ON_SPAWN, function()
+		if medigunHandle == activator:GetPlayerItemBySlot(1):GetHandleIndex() then
+			return
+		end
+		
 		cancelEverything()
 	end)
 
