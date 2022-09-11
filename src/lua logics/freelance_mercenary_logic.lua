@@ -31,13 +31,8 @@ function FreelanceMerc_PromptMenu(currentClass, activator, caller)
 		timeout = 0,
 		title = "Classes",
 		itemsPerPage = 10,
-		---@diagnostic disable-next-line: undefined-global
 		flags = MENUFLAG_BUTTON_EXIT,
 		onSelect = function(player, index)
-			if not player:IsAlive() then
-				return
-			end
-			
 			local handleIndex = player:GetHandleIndex()
 
 			if cooldowns[handleIndex] then
@@ -46,12 +41,15 @@ function FreelanceMerc_PromptMenu(currentClass, activator, caller)
 				return
 			end
 
+			if not player:IsAlive() then
+				return
+			end
+
 			player:SwitchClassInPlace(classIndices[index])
 			player:HideMenu()
 
 			cooldowns[handleIndex] = true
 
-			---@diagnostic disable-next-line: undefined-global
 			timer.Simple(SWITCH_COOLDOWN, function()
 				cooldowns[handleIndex] = nil
 			end)
