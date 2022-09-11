@@ -40,7 +40,6 @@ function ClearBottypeData(index, activator, handle)
 	botTypesData[index][handle] = nil
 end
 
-
 function ClearBotTimers(index, activator, handle)
 	handle = handle or activator:GetHandleIndex()
 
@@ -81,7 +80,7 @@ local function pair()
 	local carrier = waitingCarrier
 	local carried = waitingCarried
 	local height = tonumber(waitingHeight)
-	
+
 	local handle = carrier:GetHandleIndex()
 
 	local carrierCallbacks = {}
@@ -89,7 +88,7 @@ local function pair()
 
 	local lastOrigin
 	local function teleport()
-		if not IsValid(carrier)  then
+		if not IsValid(carrier) then
 			if not lastOrigin then
 				return
 			end
@@ -106,17 +105,16 @@ local function pair()
 		lastOrigin = origin
 	end
 
-	carrierTimers.teleport = timer.Create(0, function ()
+	carrierTimers.teleport = timer.Create(0, function()
 		teleport()
 	end, 0)
 
 	teleport()
 
-	carrierCallbacks.died = carrier:AddCallback(ON_DEATH, function ()
+	carrierCallbacks.died = carrier:AddCallback(ON_DEATH, function()
 		-- carried:ClearFakeParent()
 		ClearBottypeCallbacks("Pairs", carrier, handle)
 		ClearBotTimers("Pairs", carrier, handle)
-
 
 		if not lastOrigin then
 			return
@@ -125,7 +123,7 @@ local function pair()
 		-- suspend in place to prevent source jank from teleporting it back to spawn
 		local iterated = 1
 		for i = 0, 1, 0.1 do
-			timer.Simple(0.07 * iterated, function ()
+			timer.Simple(0.07 * iterated, function()
 				carried:SetAbsOrigin(lastOrigin)
 			end)
 
@@ -140,7 +138,7 @@ local function pair()
 
 		-- 	iterated = iterated + 1
 		-- end
-		
+
 		-- carried:ChangeAttributes("NotCarried")
 
 		-- if not lastOrigin then
@@ -156,9 +154,8 @@ local function pair()
 
 		-- 	iterated = iterated + 1
 		-- end
-
 	end)
-	carrierCallbacks.spawn = carrier:AddCallback(ON_SPAWN, function ()
+	carrierCallbacks.spawn = carrier:AddCallback(ON_SPAWN, function()
 		ClearBottypeCallbacks("Pairs", carrier, handle)
 		ClearBotTimers("Pairs", carrier, handle)
 	end)

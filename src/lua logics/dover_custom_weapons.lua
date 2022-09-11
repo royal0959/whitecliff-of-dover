@@ -190,7 +190,7 @@ function PersonalProjectileShieldPurchase(_, activator)
 		if medigunHandle == activator:GetPlayerItemBySlot(1):GetHandleIndex() then
 			return
 		end
-		
+
 		cancelEverything()
 	end)
 
