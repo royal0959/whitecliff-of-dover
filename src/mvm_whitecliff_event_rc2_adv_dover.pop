@@ -20,6 +20,7 @@ cliff_of_dover
 	PrecacheModel "models/bots/demo/red_sentry_buster.mdl"
 	PrecacheModel "models/rcat/rcat_level2.mdl"
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
+	PrecacheModel "models/player/items/all_class/gately_gibus_heavy.mdl"
 
 	// PrecacheSound "scavenger_fire.mp3"
 
