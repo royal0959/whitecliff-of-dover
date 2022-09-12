@@ -334,6 +334,7 @@ cliff_of_dover
 
 			"special item description" "Fires explosive tipped bolt that stuns on hit and stick to enemies and surfaces. Detonate after 3 seconds"
 			"special item description 2" "Explosion damage is affected by damage bonus upgrade and distance rampup"
+			"special item description 3" "Explosion damage and projectile speed are further increased by charge rate"
 		}
 
 		"No Mercy"
@@ -526,6 +527,12 @@ cliff_of_dover
 	{
 		Name PHD_Equip
 		ItemName "PHD Jumper"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name ScavengerSpawn
+		ItemName "Scavenger"
 	}
 
 	BuildingSpawnTemplate
@@ -1217,7 +1224,7 @@ cliff_of_dover
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
-			TotalCurrency 200
+			TotalCurrency 0//200
 		
 			Tank
 			{
@@ -1246,7 +1253,7 @@ cliff_of_dover
 			SpawnCount 2
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 100
+			TotalCurrency 300
 		
 			Squad
 			{
@@ -1743,6 +1750,41 @@ cliff_of_dover
 			}
 		}
 
+
+		WaveSpawn
+		{
+			Name "5_hell"
+			WaitForAllDead "5_scavenger"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 11
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+	
+			Squad
+			{
+				NoWaitForFormation 1
+				NoFormation 1
+				TFBot
+				{
+					SpawnTemplate TeleportToBlimp
+					Template T_TFBot_Giant_Scout_Fast
+					Item "The B.A.S.E. Jumper"
+					SpawnTemplate Bot_Carrier
+				}
+				TFBot
+				{
+					SpawnTemplate TeleportToBlimp
+					Template T_TFBot_Giant_Heavyweapons
+					Attributes AlwaysCrit
+					Item "The B.A.S.E. Jumper"
+					SpawnTemplate Bot_Carried
+				}
+			}
+		}
+
 		WaveSpawn
 		{
 			Name "5_airdrop_support"
@@ -1823,7 +1865,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "5_airdrop_colonel"
-			WaitForAllDead "5_scavenger"
+			WaitForAllDead "5_hell"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
@@ -1831,6 +1873,12 @@ cliff_of_dover
 			WaitBeforeStarting 11
 			WaitBetweenSpawns 20
 			TotalCurrency 50
+
+			DoneOutput
+			{
+				Target teleblimpboss
+				Action Kill
+			}
 	
 			TFBot
 			{
@@ -1854,7 +1902,7 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "5_post_colonel_support"
-			WaitForAllSpawned "5_airdrop_colonel"
+			WaitForAllSpawned "5_hell"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
@@ -1901,46 +1949,6 @@ cliff_of_dover
 				{
 					SpawnTemplate TeleportToBlimp
 					Template T_TFBot_Giant_Heavyweapons_Shotgun
-					Item "The B.A.S.E. Jumper"
-					SpawnTemplate Bot_Carried
-				}
-			}
-		}
-
-		WaveSpawn
-		{
-			Name "5_hell"
-			WaitForAllDead "5_airdrop_colonel"
-			Where spawnbot
-			TotalCount 4
-			MaxActive 4
-			SpawnCount 2
-			WaitBeforeStarting 5
-			WaitBetweenSpawns 13
-			TotalCurrency 50
-
-			DoneOutput
-			{
-				Target teleblimpboss
-				Action Kill
-			}
-	
-			Squad
-			{
-				NoWaitForFormation 1
-				NoFormation 1
-				TFBot
-				{
-					SpawnTemplate TeleportToBlimp
-					Template T_TFBot_Giant_Scout_Fast
-					Item "The B.A.S.E. Jumper"
-					SpawnTemplate Bot_Carrier
-				}
-				TFBot
-				{
-					SpawnTemplate TeleportToBlimp
-					Template T_TFBot_Giant_Heavyweapons
-					Attributes AlwaysCrit
 					Item "The B.A.S.E. Jumper"
 					SpawnTemplate Bot_Carried
 				}
