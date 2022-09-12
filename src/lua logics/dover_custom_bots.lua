@@ -56,6 +56,24 @@ function ClearBotTimers(index, activator, handle)
 	botTypesTimers[index][handle] = nil
 end
 
+function MonoculusDeathHandle(_, tank)
+	tank:AddCallback(ON_DAMAGE_RECEIVED_POST, function (_, damageInfo)
+		local damage = damageInfo.Damage
+
+		local curHealth = tank.m_iHealth
+
+		local isLethal = curHealth - (damage + 1) <= 0
+
+		if not isLethal then
+			return
+		end
+
+		util.ParticleEffect("eyeboss_death", tank:GetAbsOrigin(), Vector(0, 0, 0))
+
+		tank:Remove()
+	end)
+end
+
 function DroneRangerProjectileSetOwner(sentryName, projectile)
 	local owner = projectile.m_hOwnerEntity
 

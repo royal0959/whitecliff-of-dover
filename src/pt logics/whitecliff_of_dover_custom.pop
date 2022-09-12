@@ -478,6 +478,16 @@ WaveSchedule
 				"OnFail" "!activator,$SetData$m_flGravity,0.3,0,-1"
 			}
 		}
+
+		ScavengerSpawn
+		{
+			OnSpawnOutput 
+			{
+				Target "popscript"
+				Action "$ScavengerEquipped"
+				Delay 0
+			}
+		}
 	
 		Explosive_Tip_Scavenger
 		{

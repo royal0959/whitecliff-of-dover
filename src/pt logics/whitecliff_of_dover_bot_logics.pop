@@ -159,6 +159,11 @@ WaveSchedule
 			}
 			OnSpawnOutput
 			{
+				Target "popscript"
+				Action "$MonoculusDeathHandle"
+			}
+			OnSpawnOutput
+			{
 				Target "!activator"
 				Action "AddOutput"
 				Param "$OnUser5 monoculus_firer:$RotateTowards:!activator:0:-1"

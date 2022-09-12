@@ -63,7 +63,7 @@ local callbacks = {}
 local weaponsData = {}
 local weaponTimers = {}
 
-local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield" }
+local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield", "Scavenger" }
 for _, weaponIndex in pairs(CUSTOM_WEAPONS_INDICES) do
 	callbacks[weaponIndex] = {}
 	weaponsData[weaponIndex] = {}
@@ -389,6 +389,48 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 	end)
 end)
 
+local SCAVENGER_DEFAULT_PROJECTILE_SPEED = 1.5
+function ScavengerEquipped(_, activator)
+	local handle = activator:GetHandleIndex()
+
+	weaponTimers.Scavenger[handle] = {}
+	callbacks.Scavenger[handle] = {}
+	weaponsData.Scavenger[handle] = {}
+
+	local timers = weaponTimers.Scavenger[handle]
+	local data = weaponsData.Scavenger[handle]
+	local scavengerCallbacks = weaponsData.Scavenger[handle]
+
+	local primary = activator:GetPlayerItemBySlot(0)
+
+	timers.ChargeCheck = timer.Create(0.1, function ()
+		data.ChargeMult = 1 + (primary.m_flChargedDamage / 150)
+		primary:SetAttributeValue("projectile speed increased", SCAVENGER_DEFAULT_PROJECTILE_SPEED * ( (data.ChargeMult - 1) * 1.5 + 1 ))
+	end, 0)
+
+	local function unequip()
+		if not IsValid(activator) then
+			activator = nil
+		end
+
+		ClearTimers("Scavenger", activator, handle)
+		ClearCallbacks("Scavenger", activator, handle)
+		ClearData("Scavenger", activator, handle)
+	end
+
+	scavengerCallbacks.onRemoved = activator:AddCallback(ON_REMOVE, function()
+		unequip()
+	end)
+
+	scavengerCallbacks.onDeath = activator:AddCallback(ON_DEATH, function()
+		unequip()
+	end)
+
+	scavengerCallbacks.onSpawn = activator:AddCallback(ON_SPAWN, function()
+		unequip()
+	end)
+end
+
 function SetScavengerMimicDamage(mimicName, projectile)
 	if not IsValid(projectile) then
 		return
@@ -397,9 +439,15 @@ function SetScavengerMimicDamage(mimicName, projectile)
 	local mimic = ents.FindByName(mimicName)
 
 	local owner = mimic.m_hOwnerEntity
+	local handle = owner:GetHandleIndex()
+
 	local primary = owner:GetPlayerItemBySlot(0)
 
-	local damageMult = primary:GetAttributeValue("damage bonus") or 1
+	local chargeMult = weaponsData.Scavenger[handle].ChargeMult
+
+	print(chargeMult)
+
+	local damageMult = (primary:GetAttributeValue("damage bonus") or 1) * chargeMult
 
 	mimic.Damage = SCAVENGER_EXPLOSION_BASE_DAMAGE * damageMult
 end
