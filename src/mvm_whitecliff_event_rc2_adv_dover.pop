@@ -385,6 +385,7 @@ cliff_of_dover
 			OriginalItemName "Activated Campaign 3 Pass"
 			"custom item model" "models/player/items/all_class/hwn_spellbook_complete.mdl"
 			"special item description" "Press the Action key to switch between classes on the fly. 5 second cooldown between uses"
+			"special item description 2" "Items with charge meter require 8 seconds to be ready after switched to"
 		}
 	}
 

@@ -26,20 +26,26 @@ local classIndices_Internal = {
 
 local cooldowns = {}
 
-function FreelanceMerc_PromptMenu(currentClass, activator, caller)
+function FreelanceMerc_PromptMenu(currentClass, activator)
+	local handleIndex = activator:GetHandleIndex()
+
+	if cooldowns[handleIndex] then
+		--display text center
+		activator:Print(2, "Freelance Mercenary switch on cooldown")
+		return
+	end
+
 	local menu = {
 		timeout = 0,
 		title = "Classes",
 		itemsPerPage = 10,
 		flags = MENUFLAG_BUTTON_EXIT,
 		onSelect = function(player, index)
-			local handleIndex = player:GetHandleIndex()
-
-			if cooldowns[handleIndex] then
-				--display text center
-				player:Print(2, "Freelance Mercenary switch on cooldown")
-				return
-			end
+			-- if cooldowns[handleIndex] then
+			-- 	--display text center
+			-- 	player:Print(2, "Freelance Mercenary switch on cooldown")
+			-- 	return
+			-- end
 
 			if not player:IsAlive() then
 				return
@@ -47,6 +53,28 @@ function FreelanceMerc_PromptMenu(currentClass, activator, caller)
 
 			player:SwitchClassInPlace(classIndices[index])
 			player:HideMenu()
+
+			local secondary = player:GetPlayerItemBySlot(1)
+			local melee = player:GetPlayerItemBySlot(2)
+
+			local props = player:DumpProperties()
+
+			-- shoutout to np_sub for giving me the idea to do .... whatever this is
+			-- I hate
+			for i, v in pairs(props.m_iAmmo) do
+				if v == 1 then
+					player:AcceptInput("$SetProp$m_iAmmo$" .. i - 1, 0)
+				end
+			end
+
+			secondary.m_flEffectBarRegenTime = CurTime() + 8
+			-- wrap assassin/sandman
+			melee.m_flEffectBarRegenTime = CurTime() + 8
+
+			-- for lunch boxes to display properly
+			for i, _ in pairs(props.m_flItemChargeMeter) do
+				player:AcceptInput("$SetProp$m_flItemChargeMeter$" .. i - 1, 0)
+			end
 
 			cooldowns[handleIndex] = true
 
