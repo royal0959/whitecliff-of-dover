@@ -26,6 +26,20 @@ local classIndices_Internal = {
 
 local cooldowns = {}
 
+local function getMaxHealth(player)
+	local net = player:GetNetIndex() + 1
+
+	local playerResource = ents.FindByClass("tf_player_manager")
+
+	local props = playerResource:DumpProperties()
+
+	for playerNetIndex, maxHealth in pairs(props.m_iMaxBuffedHealth) do
+		if playerNetIndex == net then
+			return maxHealth
+		end
+	end
+end
+
 function FreelanceMerc_PromptMenu(currentClass, activator)
 	local handleIndex = activator:GetHandleIndex()
 
@@ -41,17 +55,26 @@ function FreelanceMerc_PromptMenu(currentClass, activator)
 		itemsPerPage = 10,
 		flags = MENUFLAG_BUTTON_EXIT,
 		onSelect = function(player, index)
-			-- if cooldowns[handleIndex] then
-			-- 	--display text center
-			-- 	player:Print(2, "Freelance Mercenary switch on cooldown")
-			-- 	return
-			-- end
-
 			if not player:IsAlive() then
 				return
 			end
 
+			player.PreFreelanceSwitchHealth = player.m_iHealth
+
 			player:SwitchClassInPlace(classIndices[index])
+
+			timer.Simple(0.1, function ()
+				local chosenHealth = player.PreFreelanceSwitchHealth
+
+				local maxHealth = tonumber(getMaxHealth(player))
+	
+				if chosenHealth > maxHealth then
+					chosenHealth = maxHealth
+				end
+	
+				player.m_iHealth = chosenHealth
+			end)
+
 			player:HideMenu()
 
 			local secondary = player:GetPlayerItemBySlot(1)

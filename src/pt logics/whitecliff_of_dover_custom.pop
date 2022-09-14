@@ -815,20 +815,20 @@ WaveSchedule
 				// Delay 0
 			}
 
-			OnSpawnOutput 
-			{
-				Target "!activator"
-				Action "$GetVar$PreFreelanceSwitchHealth"
-				Param "apply_last_health|$SetKey$CompareValue|-1"
-				Delay 0
-			}
+			// OnSpawnOutput 
+			// {
+			// 	Target "!activator"
+			// 	Action "$GetVar$PreFreelanceSwitchHealth"
+			// 	Param "apply_last_health|$SetKey$CompareValue|-1"
+			// 	Delay 0
+			// }
 
-			OnSpawnOutput 
-			{
-				Target "apply_last_health"
-				Action "Compare"
-				Delay 0.06
-			}
+			// OnSpawnOutput 
+			// {
+			// 	Target "apply_last_health"
+			// 	Action "Compare"
+			// 	Delay 0.06
+			// }
 
 			OnParentKilledOutput 
 			{
@@ -860,7 +860,7 @@ WaveSchedule
 				"Negated" "1"
 
 				//"OnPass" "class_select_menu,$DisplayMenu,!activator,0,-1"
-				"OnPass" "!activator,$SetVar$PreFreelanceSwitchHealth,$$= !activator.m_iHealth ,-1,-1"
+				// "OnPass" "!activator,$SetVar$PreFreelanceSwitchHealth,$$= !activator.m_iHealth ,-1,-1"
 				"OnPass" "popscript,$FreelanceMerc_PromptMenu,$$=!activator.m_iClass,0,-1"
 
 				// "OnPass" "!activator,$SetVar$PreFreelanceSwitchHealth,$$= !activator.m_iHealth ,-1,-1"
