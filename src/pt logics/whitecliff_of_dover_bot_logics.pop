@@ -745,7 +745,7 @@ WaveSchedule
 				"filtername" "filter_is_red"
 
 				"OnStartTouch" "popscript,$CritPickup,crit_pickup,0,-1"
-				"OnStartTouch" "!activator,$AddCond,37 8,0,-1"
+				"OnStartTouch" "!activator,$AddCond,37 10,0,-1"
 			}
 
 			prop_dynamic
