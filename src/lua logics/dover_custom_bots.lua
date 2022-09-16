@@ -74,6 +74,12 @@ function MonoculusDeathHandle(_, tank)
 	end)
 end
 
+function CritPickup(pickupPropName, activator)
+	local pickupProp = ents.FindByName(pickupPropName)
+
+	pickupProp:HideTo(activator)
+end
+
 function DroneRangerProjectileSetOwner(sentryName, projectile)
 	local owner = projectile.m_hOwnerEntity
 

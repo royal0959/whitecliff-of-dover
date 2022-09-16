@@ -1742,7 +1742,7 @@ cliff_of_dover
 			{
 				Name "teleblimpboss"
 				StartingPathTrackNode "tele_blimp_1"
-				Health 20000
+				Health 16000
 				Speed 120
 
 				SpawnTemplate Teleporter_Blimp

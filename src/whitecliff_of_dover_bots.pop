@@ -361,6 +361,7 @@ WaveSchedule
 		T_TFBot_Sergeant_Scavage
 		{
 			SpawnTemplate Yakuza_Title_Card_Scavage
+			SpawnTemplate CritDropOnDeath
 			
 			Name "Sergeant Scavage"
 

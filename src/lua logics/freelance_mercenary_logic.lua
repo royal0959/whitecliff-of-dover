@@ -63,15 +63,15 @@ function FreelanceMerc_PromptMenu(currentClass, activator)
 
 			player:SwitchClassInPlace(classIndices[index])
 
-			timer.Simple(0.1, function ()
+			timer.Simple(0.1, function()
 				local chosenHealth = player.PreFreelanceSwitchHealth
 
 				local maxHealth = tonumber(getMaxHealth(player))
-	
+
 				if chosenHealth > maxHealth then
 					chosenHealth = maxHealth
 				end
-	
+
 				player.m_iHealth = chosenHealth
 			end)
 
