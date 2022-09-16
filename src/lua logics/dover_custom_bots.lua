@@ -246,7 +246,7 @@ function UndyingSpawn(rechargeTime, activator)
 	local handle = activator:GetHandleIndex()
 
 	if callbacks.Undying[handle] then
-		ParryAddictionUnequip(_, activator)
+		UndyingEnd(activator, handle)
 	end
 
 	botTypesData.Undying[handle] = { MaxHealth = activator.m_iHealth, Recharging = false }
