@@ -675,44 +675,6 @@ cliff_of_dover
 			}
 		}
 
-		//1 out of 4 crit
-		// WaveSpawn
-		// {
-		// 	Name "1_bat_scouts"
-		// 	Where spawnbot
-		// 	TotalCount 32
-		// 	MaxActive 8
-		// 	SpawnCount 4
-		// 	WaitBeforeStarting 0
-		// 	WaitBetweenSpawns 12
-		// 	TotalCurrency 25
-		
-		// 	RandomChoice
-		// 	{
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 			Attributes AlwaysCrit
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 		}
-		// 	}
-		// }
-
 		// WaveSpawn
 		// {
 		// 	Name "1_pocket_samurai"
@@ -796,9 +758,9 @@ cliff_of_dover
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 15
+			WaitBeforeStarting 10
 			WaitBetweenSpawns 0
-			TotalCurrency 100
+			TotalCurrency 50
 		
 			TFBot
 			{
@@ -825,7 +787,7 @@ cliff_of_dover
 			SpawnCount 1
 			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
-			TotalCurrency 200
+			TotalCurrency 100
 		
 			TFBot
 			{
@@ -842,10 +804,84 @@ cliff_of_dover
 			}
 		}
 
+		WaveSpawn
+		{
+			Name "1_heater"
+			WaitForAllDead "1_droner"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heater
+					Name "Giant Heater Heavy"
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+
+
+		//1 out of 4 crit
+		WaveSpawn
+		{
+			Name "1_bat_scouts"
+			Where spawnbot
+			WaitForAllSpawned "1_droner"
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+		
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+				}
+			}
+		}
+
 		WaveSpawn 
 		{
 			Name "1_tank"
-			WaitForAllDead "1_droner"
+			WaitForAllDead "1_heater"
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
@@ -1647,9 +1683,10 @@ cliff_of_dover
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Scout 
-					WeaponRestrictions PrimaryOnly 
-					// Attributes AlwaysFireWeapon
+					// Template T_TFBot_Giant_Scout 
+					// WeaponRestrictions PrimaryOnly 
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+
 					SpawnTemplate Bot_Carried
 				}
 			}
@@ -1779,7 +1816,7 @@ cliff_of_dover
 				{
 					SpawnTemplate TeleportToBlimp
 					Template T_TFBot_Giant_Heavyweapons
-					Attributes AlwaysCrit
+					// Attributes AlwaysCrit
 					Item "The B.A.S.E. Jumper"
 					SpawnTemplate Bot_Carried
 				}
