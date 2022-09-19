@@ -245,9 +245,9 @@ function UndyingSpawn(rechargeTime, activator)
 
 	local handle = activator:GetHandleIndex()
 
-	if callbacks.Undying[handle] then
-		UndyingEnd(activator, handle)
-	end
+	-- if callbacks.Undying[handle] then
+	-- 	UndyingEnd(activator, handle)
+	-- end
 
 	botTypesData.Undying[handle] = { MaxHealth = activator.m_iHealth, Recharging = false }
 
