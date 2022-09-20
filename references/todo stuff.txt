@@ -1,0 +1,10 @@
+make caber buster be able to be healed and no collision
+make conchs on wave 3 start sooner
+make dual heavies on wave 5 start sooner
+disable reanimators on finale
+you get permanent low gravity on mission restart after win
+
+make airdash upgrade for winger
+rework phase 2/3 of time-constraint
+
+make carried bot not immediately attack after dropping down
