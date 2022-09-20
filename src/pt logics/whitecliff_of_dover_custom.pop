@@ -463,6 +463,7 @@ WaveSchedule
 				"spawnflags" "2"
 
 				"OnTrigger" "filter_ducked,TestActivator,,0,-1"
+				"OnTrigger" "popscript,$NoMercyFailSafe,filter_ducked,0.01,-1"
 				"OnTrigger" "!self,Trigger,,0.1,-1"
 			}
 

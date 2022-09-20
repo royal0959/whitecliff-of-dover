@@ -1403,7 +1403,7 @@ cliff_of_dover
 			Name "3_heavies"
 			WaitForAllSpawned "3_gshotgun"
 			Where flankers
-			TotalCount 30
+			TotalCount 35
 			MaxActive 10
 			SpawnCount 5
 			WaitBeforeStarting 8

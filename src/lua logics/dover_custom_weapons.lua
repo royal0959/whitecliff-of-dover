@@ -24,6 +24,12 @@ local PHD_EXPLOSIONS = {
 	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 700 },
 }
 
+local PHD_FEEDBACK_CONDS = {
+	["Medium"] = TF_COND_SNIPERCHARGE_RAGE_BUFF,
+	["Large"] = TF_COND_CRITBOOSTED_CARD_EFFECT,
+	["Nuke"] = TF_COND_SODAPOPPER_HYPE,
+}
+
 local PARRY_TIME = 0.8
 
 local SCAVENGER_EXPLOSION_BASE_DAMAGE = 85
@@ -114,6 +120,20 @@ function ClearTimers(index, activator, handle)
 	end
 
 	weaponTimers[index][handle] = nil
+end
+
+function NoMercyFailSafe(exEntName, activator, caller)
+	local primary = activator:GetPlayerItemBySlot(0)
+
+	if primary == nil then
+		return
+	end
+
+	local exEnt = ents.FindByName(exEntName)
+
+	exEnt:Remove()
+	caller:Remove()
+	activator.m_flGravity = 0
 end
 
 function InstaLvLRefunded(_, activator)
@@ -403,9 +423,12 @@ function ScavengerEquipped(_, activator)
 
 	local primary = activator:GetPlayerItemBySlot(0)
 
-	timers.ChargeCheck = timer.Create(0.1, function ()
+	timers.ChargeCheck = timer.Create(0.1, function()
 		data.ChargeMult = 1 + (primary.m_flChargedDamage / 150)
-		primary:SetAttributeValue("projectile speed increased", SCAVENGER_DEFAULT_PROJECTILE_SPEED * ( (data.ChargeMult - 1) * 1.5 + 1 ))
+		primary:SetAttributeValue(
+			"projectile speed increased",
+			SCAVENGER_DEFAULT_PROJECTILE_SPEED * ((data.ChargeMult - 1) * 1.5 + 1)
+		)
 	end, 0)
 
 	local function unequip()
@@ -737,25 +760,49 @@ function PHDEquip(_, activator)
 
 	local timeSpentParachuting = 0
 
+	local function getCurrentThreshold(timeDiff)
+		local currentThreshold = { nil, -10000 }
+
+		for thresHoldName, timeRequired in pairs(PHD_THRESHOLD) do
+			if timeRequired > currentThreshold[2] and timeDiff > timeRequired then
+				currentThreshold = { thresHoldName, timeRequired }
+			end
+		end
+
+		local chosenThreshold = currentThreshold[1]
+
+		return chosenThreshold
+	end
+
+	local primary = activator:GetPlayerItemBySlot(0)
+
 	phdTimers.rocketJumpCheck = timer.Create(0.1, function()
 		local jumping = activator:InCond(TF_COND_BLASTJUMPING)
 
+		local timeDiff
+		local chosenThreshold
+
+		if phdData.JumpStartTime then
+			timeDiff = CurTime() - phdData.JumpStartTime - timeSpentParachuting
+			chosenThreshold = getCurrentThreshold(timeDiff)
+
+			local parachuting = activator:InCond(TF_COND_PARACHUTE_ACTIVE)
+
+			if parachuting ~= 0 then
+				timeSpentParachuting = timeSpentParachuting + 0.1
+			end
+
+			if PHD_FEEDBACK_CONDS[chosenThreshold] then
+				primary:SetAttributeValue("add cond when active", PHD_FEEDBACK_CONDS[chosenThreshold])
+			end
+		end
+
 		if jumping == 0 then
 			if phdData.JumpStartTime then
-				local timeDiff = CurTime() - phdData.JumpStartTime - timeSpentParachuting
 				print(timeDiff, timeSpentParachuting)
 
 				timeSpentParachuting = 0
 
-				local currentThreshold = { nil, -10000 }
-
-				for thresHoldName, timeRequired in pairs(PHD_THRESHOLD) do
-					if timeRequired > currentThreshold[2] and timeDiff > timeRequired then
-						currentThreshold = { thresHoldName, timeRequired }
-					end
-				end
-
-				local chosenThreshold = currentThreshold[1]
 				print(chosenThreshold)
 
 				local activatorOrigin = activator:GetAbsOrigin()
@@ -767,8 +814,6 @@ function PHDEquip(_, activator)
 				local damage = explosionData.Damage
 
 				local enemiesInRange = ents.FindInSphere(activatorOrigin, radius) --ents.GetAllPlayers()
-
-				local primary = activator:GetPlayerItemBySlot(0)
 
 				local damageMult = primary:GetAttributeValue("damage bonus") or 1
 
@@ -803,13 +848,9 @@ function PHDEquip(_, activator)
 				phdData.JumpStartTime = false
 			end
 
+			primary:SetAttributeValue("add cond when active", nil)
+
 			return
-		end
-
-		local parachuting = activator:InCond(TF_COND_PARACHUTE_ACTIVE)
-
-		if parachuting ~= 0 then
-			timeSpentParachuting = timeSpentParachuting + 0.1
 		end
 
 		if phdData.JumpStartTime then
