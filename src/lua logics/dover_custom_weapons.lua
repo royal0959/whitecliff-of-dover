@@ -326,7 +326,7 @@ local redeemerDebounces = {} --value is debounce players
 
 -- redeemer
 ents.AddCreateCallback("tf_projectile_rocket", function(entity)
-	timer.Simple(0.01, function()
+	timer.Simple(0, function()
 		if not IsValid(entity) then
 			return
 		end
