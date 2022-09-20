@@ -166,7 +166,11 @@ function BuildingBuilt(_, building)
 end
 
 function PersonalProjectileShieldRefunded(_, activator)
-	activator:GetPlayerItemBySlot(1).refunded = true
+	if IsValid(activator) then
+		ClearCallbacks("SmolShield", activator, activator:GetHandleIndex())
+		ClearTimers("SmolShield", activator, activator:GetHandleIndex())
+		activator.ShieldReplacementFlag = nil
+	end
 end
 
 function PersonalProjectileShieldPurchase(_, activator)
@@ -189,10 +193,10 @@ function PersonalProjectileShieldPurchase(_, activator)
 
 	local function cancelEverything()
 		if not IsValid(activator) then
-			activator = nil
-		else
-			activator.ShieldReplacementFlag = false
+			return
 		end
+
+		activator.ShieldReplacementFlag = nil
 
 		ClearCallbacks("SmolShield", activator, handle)
 		ClearTimers("SmolShield", activator, handle)
@@ -215,11 +219,8 @@ function PersonalProjectileShieldPurchase(_, activator)
 	end)
 
 	shieldTimers.DefaultCharge = timer.Create(0.1, function()
-		if medigun.refunded then
-			print("timer cancelled due to refund")
-			medigun.refunded = false
-			cancelEverything()
-			return
+		if not IsValid(activator) then
+			return true
 		end
 
 		SetDefaultShieldCharge(activator)
