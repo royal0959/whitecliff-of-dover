@@ -881,11 +881,11 @@ cliff_of_dover
 		WaveSpawn 
 		{
 			Name "1_tank"
-			WaitForAllDead "1_heater"
+			WaitForAllSpawned "1_heater"
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 2
+			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 100
@@ -936,7 +936,7 @@ cliff_of_dover
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 16
+			WaitBeforeStarting 23
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 		
@@ -1310,24 +1310,40 @@ cliff_of_dover
 			Name "3_gshotgun"
 			WaitForAllDead "3_demo"
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 6
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 100
 		
-			// Squad
-			// {
+			Squad
+			{
 				TFBot
 				{
 					Template T_TFBot_Giant_Heavyweapons_Shotgun
 				}
-			// 	TFBot
-			// 	{
-			// 		Template T_TFBot_Giant_Medic_Uber
-			// 	}
-			// }
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
 		}
 
 		WaveSpawn
@@ -1353,32 +1369,33 @@ cliff_of_dover
 			}
 		}
 
-		// WaveSpawn
-		// {
-		// 	Name "3_pos_gshotgun_conchknight"
-		// 	WaitForAllDead "3_gshotgun"
-		// 	Where spawnbot
-		// 	TotalCount 1
-		// 	MaxActive 1
-		// 	SpawnCount 1
-		// 	WaitBeforeStarting 8
-		// 	WaitBetweenSpawns 0
-		// 	TotalCurrency 200
+		WaveSpawn
+		{
+			Name "3_pos_gshotgun_conchknight"
+			WaitForAllDead "3_gshotgun"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 200
 		
-		// 	TFBot
-		// 	{
-		// 		Template T_TFBot_Giant_DemoMan_PrinceTavish
-		// 		Name "Giant Conch Demoknight"
+			TFBot
+			{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish
+				Name "Giant Conch Demoknight"
 				
-		// 		ClassIcon demoknight_conch_lite
-		// 		Attributes SpawnWithFullCharge
-		// 		Item "The Concheror"
-		// 		CharacterAttributes
-		// 		{
-		// 			"increase buff duration"	9.0
-		// 		}
-		// 	}
-		// }
+				ClassIcon demoknight_conch_lite
+				Attributes SpawnWithFullCharge
+				Item "The Concheror"
+				CharacterAttributes
+				{
+					"increase buff duration"	9.0
+				}
+			}
+		}
+
 		WaveSpawn
 		{
 			Name "3_rapidsoldiers"
