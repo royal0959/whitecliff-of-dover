@@ -250,6 +250,7 @@ cliff_of_dover
 		{
 			OriginalItemName "The Ullapool Caber" 
 
+			"not solid to players" 1
 			"special item description" "Becomes a Sentry Buster. Taunt to detonate (revert back to a regular Demoman on detonation)"
 		}
 
@@ -605,6 +606,11 @@ cliff_of_dover
 	{
 		Name NoMercy_Spawn
 		ItemName "No Mercy"
+	}
+
+	PlayeSpawnTemplate 
+	{
+		Name Gravity_FailSafe
 	}
 
 	PlayerShootTemplate
@@ -1372,12 +1378,12 @@ cliff_of_dover
 		WaveSpawn
 		{
 			Name "3_pos_gshotgun_conchknight"
-			WaitForAllDead "3_gshotgun"
+			WaitForAllSpawned "3_gshotgun"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
 			SpawnCount 2
-			WaitBeforeStarting 0
+			WaitBeforeStarting 40
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 		

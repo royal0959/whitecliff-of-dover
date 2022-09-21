@@ -166,6 +166,16 @@ local function revertRollback()
 	end)
 end
 
+ents.AddCreateCallback("entity_revive_marker", function(entity)
+	if not pvpActive then
+		return
+	end
+
+	timer.Simple(0, function ()
+		entity:Remove()
+	end)
+end)
+
 local activeShieldOwners = {}
 ents.AddCreateCallback("entity_medigun_shield", function (shield)
 	if not timeconstraint_alive then

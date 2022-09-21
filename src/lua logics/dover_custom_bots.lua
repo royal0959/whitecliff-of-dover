@@ -136,6 +136,8 @@ local function pair()
 	teleport()
 
 	carrierCallbacks.died = carrier:AddCallback(ON_DEATH, function()
+		carried:SetAttributeValue("no_attack", nil)
+
 		-- carried:ClearFakeParent()
 		ClearBottypeCallbacks("Pairs", carrier, handle)
 		ClearBotTimers("Pairs", carrier, handle)
@@ -203,6 +205,8 @@ function PairCarrierSpawn(height, activator)
 end
 function PairCarriedSpawn(_, activator)
 	waitingCarried = activator
+
+	activator:SetAttributeValue("no_attack", 1)
 
 	if waitingCarrier then
 		pair()
