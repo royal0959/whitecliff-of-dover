@@ -86,7 +86,7 @@ cliff_of_dover
 		Objective DestroySentries
 		InitialCooldown 0
 		BeginAtWave 1
-		RunForThisManyWaves 7
+		RunForThisManyWaves 5
 		CooldownTime 40
 		TFBot
 		{
