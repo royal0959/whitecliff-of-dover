@@ -56,6 +56,9 @@ local cur_constraint = false -- current time constraint bot
 local pvpActive = false
 local gamestateEnded = false
 
+local PHASE3_SUBWAVES = 3
+local finishedSubwaves = 0
+
 local function chatMessage(string)
 	local message = "{blue}"
 	.. "Time-Constraint{reset} : "
@@ -239,6 +242,8 @@ function OnWaveInit()
 	gamestateEnded = false
 	timeconstraint_alive = false
 	pvpActive = false
+
+	finishedSubwaves = 0
 end
 
 local playersCallback = {}
@@ -408,6 +413,19 @@ local function Handle2(bot)
 	end)
 end
 
+function Phase3SubwaveDone()
+	finishedSubwaves = finishedSubwaves + 1
+
+	if finishedSubwaves >= PHASE3_SUBWAVES then
+		if not cur_constraint then
+			return
+		end
+
+		cur_constraint:Suicide()
+	end
+end
+
+
 local function Handle3(bot)
 	local callbacks = {}
 
@@ -467,23 +485,23 @@ local function Handle3(bot)
 
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
 		-- horrible hardcoded way to kill any remaining super scouts because I'm too lazy to implement something proper
-		for _, player in pairs(ents.GetAllPlayers()) do
-			if player.m_iTeamNum ~= 3 then
-				goto continue
-			end
+		-- for _, player in pairs(ents.GetAllPlayers()) do
+		-- 	if player.m_iTeamNum ~= 3 then
+		-- 		goto continue
+		-- 	end
 	
-			if not player:IsAlive() then
-				goto continue
-			end
+		-- 	if not player:IsAlive() then
+		-- 		goto continue
+		-- 	end
 	
-			if player:GetPlayerName() ~= "Super Scout" then
-				goto continue
-			end
+		-- 	if player:GetPlayerName() ~= "Super Scout" then
+		-- 		goto continue
+		-- 	end
 	
-			player:Suicide()
+		-- 	player:Suicide()
 	
-			::continue::
-		end
+		-- 	::continue::
+		-- end
 
 		timer.Simple(0.5, function ()
 			chatMessage("This is getting tiresome")

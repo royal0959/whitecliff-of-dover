@@ -376,6 +376,8 @@ cliff_of_dover
 
 			"fire input on hit" "popscript^$SeducerHit^"
 
+			"add cond when active" 46
+
 			"special item description" "On hit: force a non-giant enemy to fight on your side"
 			"special item description 2" "Controlled enemies are crit boosted and will self-destruct after 8 seconds"
 			"special item description 3" "8 seconds cooldown"
@@ -482,6 +484,36 @@ cliff_of_dover
 			}
 		}
 
+		wingermybeloved
+		{
+			Name "Multi-Directional Dash"
+			Description "Alt-fire to dash in the direction you're facing. 3 seconds cooldown"
+			Attribute "cannot giftwrap" 
+			Cap 1
+			Increment 1
+			Cost 200
+
+			AllowedWeapons 
+			{
+				ItemName "The Winger"
+			}
+
+			SecondaryAttributes
+			{
+				"add cond when active" 46
+				"special item description" "Alt-fire to dash in the direction you're facing. 3 seconds cooldown" 
+			}
+
+			OnApply
+			{
+				Output "popscript,$WingerDashPurchased,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$WingerDashRefunded,,0"
+			}
+		}
+
 		smol_shield
 		{
 			Name "Personal Projectile Shield"
@@ -500,6 +532,7 @@ cliff_of_dover
 			{
 				"generate rage on heal" 2
 				"dmg penalty vs players" 1.5 //50% damage bonus
+				"special item description" "Smaller shield that charges faster and deal heavy contact damage" 
 			}
 
 			OnApply
@@ -608,7 +641,7 @@ cliff_of_dover
 		ItemName "No Mercy"
 	}
 
-	PlayeSpawnTemplate 
+	PlayerSpawnTemplate 
 	{
 		Name Gravity_FailSafe
 	}
@@ -2112,8 +2145,7 @@ cliff_of_dover
 				{
 					TFBot
 					{
-						Template T_TFBot_Timeconstraint_1
-						Health 15000
+						Template T_TFBot_Timeconstraint_2
 
 						tag timeconstraint2
 
@@ -2143,7 +2175,7 @@ cliff_of_dover
 					TFBot
 					{
 						Template T_TFBot_Chief_Soldier	
-						Health 13000
+						Health 10000
 						Name "Sergeant Chariot"
 
 						SpawnTemplate Bot_Carrier
@@ -2172,10 +2204,65 @@ cliff_of_dover
 				{
 					TFBot
 					{
-						Template T_TFBot_Timeconstraint_1
-						Health 15000
+						// Template T_TFBot_Timeconstraint_1
+						// Health 15000
+						Class Heavy
+						Scale 0.0001
+						
+						Action Idle
+						CharacterAttributes
+						{
+							"move speed bonus" 0.0001
+							"no_jump" 1
+						}
+
 
 						tag timeconstraint3
+					}
+				}
+			}
+		}
+
+		// phase 3 scouts
+		WaveSpawn
+		{
+			Name "6_tc3"
+			WaitForAllDead "6_tc2"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			DoneOutput
+			{
+				Target popscript
+				Action "$Phase3SubwaveDone"
+			}
+
+			Squad
+			{
+				Squad
+				{
+					NoWaitForFormation 1
+					NoFormation 1
+					TFBot
+					{
+						Template T_TFBot_Giant_Scout_Fast 
+						AlwaysGlow 1
+						SpawnTemplate Bot_Carrier
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier_SlowBarrage
+						AlwaysGlow 1
+						Attributes AlwaysCrit
+
+						SpawnTemplate Bot_Carried
 					}
 				}
 			}
@@ -2185,25 +2272,81 @@ cliff_of_dover
 			Name "6_tc3"
 			WaitForAllDead "6_tc2"
 			Where spawnbot
-			TotalCount 3
-			MaxActive 3
-			SpawnCount 1
-			WaitBeforeStarting 20
-			WaitBetweenSpawns 7
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 27
+			WaitBetweenSpawns 0
 			TotalCurrency 1
 
 			Support Limited
+
+			DoneOutput
+			{
+				Target popscript
+				Action "$Phase3SubwaveDone"
+			}
 
 			Squad
 			{
 				Squad
 				{
+					NoWaitForFormation 1
+					NoFormation 1
 					TFBot
 					{
-						Template T_TFBot_Giant_Scout_Fast
-						// Action Mobber
-						// Attributes AlwaysCrit
+						Template T_TFBot_Giant_Scout_Fast 
 						AlwaysGlow 1
+						SpawnTemplate Bot_Carrier
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Heavyweapons_Deflector
+						AlwaysGlow 1
+						SpawnTemplate Bot_Carried
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "6_tc3"
+			WaitForAllDead "6_tc2"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 34
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			DoneOutput
+			{
+				Target popscript
+				Action "$Phase3SubwaveDone"
+			}
+
+			Squad
+			{
+				Squad
+				{
+					NoWaitForFormation 1
+					NoFormation 1
+					TFBot
+					{
+						Template T_TFBot_Giant_Scout_Fast 
+						AlwaysGlow 1
+						SpawnTemplate Bot_Carrier
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Pyro_Flare_Spammer 
+						AlwaysGlow 1
+						Attributes AlwaysCrit
+
+						SpawnTemplate Bot_Carried
 					}
 				}
 			}

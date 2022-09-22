@@ -581,23 +581,22 @@ WaveSchedule
 				"increase buff duration" 9.0
 			}
 		}
+		
 		T_TFBot_Timeconstraint_2
 		{
-			SpawnTemplate Yakuza_Title_Card_TimeConstraint2
+			SpawnTemplate Yakuza_Title_Card_TimeConstraint1
 			Name "Time-Constraint"
 
-			Class Soldier
+			Class Heavyweapons
 			ClassIcon timer_lite
-			Health 20000
+			Health 12000
 
 			Skill Expert
 			WeaponRestrictions PrimaryOnly
 			Item "The Conspiracy Cap"
-			Item "The Concheror"
 
 			Attributes MiniBoss
 			Attributes AlwaysCrit
-			Attributes SpawnWithFullCharge
 			Attributes UseBossHealthBar
 			Scale 1.9
 			
@@ -617,6 +616,7 @@ WaveSchedule
 				"increase buff duration" 9.0
 			}
 		}
+
 
 	    Gatebot
         {

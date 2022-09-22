@@ -1,2 +1,0 @@
-make airdash upgrade for winger
-rework phase 2/3 of time-constraint

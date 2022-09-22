@@ -6,6 +6,8 @@ local REDEEMER_HIT_DAMAGE = 50
 local REDEEMER_HIT_DAMAGE_ADDITION_MULT_ADDITIVE = 1 -- increased each hit
 local REDEEMER_HIT_DAMAGE_ADDITION_CAP_ADDITIVE = 10
 
+local WINGER_COOLDOWN = 3
+
 local DRONES_CAP = 2
 
 local PHD_THRESHOLD = {
@@ -69,7 +71,7 @@ local callbacks = {}
 local weaponsData = {}
 local weaponTimers = {}
 
-local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield", "Scavenger" }
+local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield", "WingerDash", "Scavenger" }
 for _, weaponIndex in pairs(CUSTOM_WEAPONS_INDICES) do
 	callbacks[weaponIndex] = {}
 	weaponsData[weaponIndex] = {}
@@ -165,6 +167,88 @@ function BuildingBuilt(_, building)
 	building.m_iHighestUpgradeLevel = 2
 end
 
+local cooldown_players = {}
+
+local function _getPlayerCameraAngleUp(player)
+	local pitch = player["m_angEyeAngles[0]"]
+
+	return Vector(0, 0, -pitch)
+end
+
+local function _dash(player)
+	local handle = player:GetHandleIndex()
+
+	if cooldown_players[handle] then
+		return
+	end
+
+	cooldown_players[handle] = true
+
+	local secondary = player:GetPlayerItemBySlot(1)
+	secondary:SetAttributeValue("add cond when active", nil)
+
+	timer.Simple(WINGER_COOLDOWN, function()
+		cooldown_players[handle] = nil
+
+		if IsValid(secondary) then
+			secondary:SetAttributeValue("add cond when active", TF_COND_SNIPERCHARGE_RAGE_BUFF)
+		end
+	end)
+
+	local angle = _getPlayerCameraAngleUp(player)
+
+	player:SetForwardVelocity(1000)
+	player:AddOutput("BaseVelocity " .. tostring(angle * 10))
+end
+
+function WingerDashPurchased(_, activator)
+	local handle = activator:GetHandleIndex()
+	callbacks.WingerDash[handle] = {}
+
+	local dashCallbacks = callbacks.WingerDash[handle]
+
+	dashCallbacks.input = activator:AddCallback(ON_KEY_PRESSED, function(_, key)
+		if key ~= IN_ATTACK2 then
+			return
+		end
+
+		local secondary = activator:GetPlayerItemBySlot(1)
+		local secondaryHandle = secondary:GetHandleIndex()
+		
+		if activator.m_hActiveWeapon:GetHandleIndex() ~= secondaryHandle then
+			return
+		end
+
+		_dash(activator)
+	end)
+
+	dashCallbacks.died = activator:AddCallback(ON_DEATH, function()
+		local secondary = activator:GetPlayerItemBySlot(1)
+
+		if secondary:GetAttributeValue("cannot giftwrap") then
+			return
+		end
+
+		WingerDashRefunded(_, activator)
+	end)
+
+	dashCallbacks.spawned = activator:AddCallback(ON_SPAWN, function()
+		local secondary = activator:GetPlayerItemBySlot(1)
+
+		if secondary:GetAttributeValue("cannot giftwrap") then
+			return
+		end
+
+		WingerDashRefunded(_, activator)
+	end)
+end
+
+function WingerDashRefunded(_, activator)
+	if IsValid(activator) then
+		ClearCallbacks("WingerDash", activator, activator:GetHandleIndex())
+	end
+end
+
 function PersonalProjectileShieldRefunded(_, activator)
 	if IsValid(activator) then
 		ClearCallbacks("SmolShield", activator, activator:GetHandleIndex())
@@ -210,7 +294,7 @@ function PersonalProjectileShieldPurchase(_, activator)
 		if medigunHandle == activator:GetPlayerItemBySlot(1):GetHandleIndex() then
 			return
 		end
-		
+
 		cancelEverything()
 	end)
 
@@ -321,9 +405,16 @@ function SeducerHit(_, activator, caller)
 	caller:AddCond(TF_COND_REPROGRAMMED)
 	caller:AddCond(TF_COND_CRITBOOSTED_CARD_EFFECT)
 
+	local secondary = activator:GetPlayerItemBySlot(1)
+	secondary:SetAttributeValue("add cond when active", nil)
+
 	timer.Simple(8, function()
 		controlled[handle] = nil
 		caller:Suicide()
+
+		if IsValid(secondary) then
+			secondary:SetAttributeValue("add cond when active", TF_COND_SNIPERCHARGE_RAGE_BUFF)
+		end
 	end)
 end
 

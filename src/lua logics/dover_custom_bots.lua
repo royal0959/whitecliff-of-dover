@@ -136,7 +136,9 @@ local function pair()
 	teleport()
 
 	carrierCallbacks.died = carrier:AddCallback(ON_DEATH, function()
-		carried:SetAttributeValue("no_attack", nil)
+		timer.Simple(2, function ()
+			carried:SetAttributeValue("no_attack", nil)
+		end)
 
 		-- carried:ClearFakeParent()
 		ClearBottypeCallbacks("Pairs", carrier, handle)
@@ -216,6 +218,10 @@ end
 
 -- teleport back to spawn instead of dying
 function UndyingActivate(rechargeTime, activator, handle)
+	if botTypesData.Undying[handle].Recharging then
+		return
+	end
+
 	activator:ChangeAttributes("Recharging")
 	activator:AcceptInput("$TeleportToEntity", "spawnbot")
 
