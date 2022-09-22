@@ -218,10 +218,6 @@ end
 
 -- teleport back to spawn instead of dying
 function UndyingActivate(rechargeTime, activator, handle)
-	if botTypesData.Undying[handle].Recharging then
-		return
-	end
-
 	activator:ChangeAttributes("Recharging")
 	activator:AcceptInput("$TeleportToEntity", "spawnbot")
 
