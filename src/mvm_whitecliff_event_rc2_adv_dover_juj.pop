@@ -86,7 +86,7 @@ cliff_of_dover
 		Objective DestroySentries
 		InitialCooldown 0
 		BeginAtWave 1
-		RunForThisManyWaves 7
+		RunForThisManyWaves 5
 		CooldownTime 40
 		TFBot
 		{
@@ -250,6 +250,7 @@ cliff_of_dover
 		{
 			OriginalItemName "The Ullapool Caber" 
 
+			"not solid to players" 1
 			"special item description" "Becomes a Sentry Buster. Taunt to detonate (revert back to a regular Demoman on detonation)"
 		}
 
@@ -269,6 +270,7 @@ cliff_of_dover
 			OriginalItemName "Upgradeable TF_WEAPON_MINIGUN" 
 
 			"hidden primary max ammo bonus" 0.0001
+			"move speed bonus" 1.5
 			"cannot be upgraded" 1
 			"special item description" "Create 2 small projectile shields that orbit around you and damage enemies"
 			"special item description 2" "Increased damage for secondary and melee"
@@ -374,6 +376,8 @@ cliff_of_dover
 			"damage penalty" 0.1
 
 			"fire input on hit" "popscript^$SeducerHit^"
+
+			"add cond when active" 46
 
 			"special item description" "On hit: force a non-giant enemy to fight on your side"
 			"special item description 2" "Controlled enemies are crit boosted and will self-destruct after 8 seconds"
@@ -481,6 +485,36 @@ cliff_of_dover
 			}
 		}
 
+		wingermybeloved
+		{
+			Name "Multi-Directional Dash"
+			Description "Alt-fire to dash in the direction you're facing. 3 seconds cooldown"
+			Attribute "cannot giftwrap" 
+			Cap 1
+			Increment 1
+			Cost 100
+
+			AllowedWeapons 
+			{
+				ItemName "The Winger"
+			}
+
+			SecondaryAttributes
+			{
+				"add cond when active" 46
+				"special item description" "Alt-fire to dash in the direction you're facing. 3 seconds cooldown" 
+			}
+
+			OnApply
+			{
+				Output "popscript,$WingerDashPurchased,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$WingerDashRefunded,,0"
+			}
+		}
+
 		smol_shield
 		{
 			Name "Personal Projectile Shield"
@@ -499,6 +533,7 @@ cliff_of_dover
 			{
 				"generate rage on heal" 2
 				"dmg penalty vs players" 1.5 //50% damage bonus
+				"special item description" "Smaller shield that charges faster and deal heavy contact damage" 
 			}
 
 			OnApply
@@ -607,6 +642,11 @@ cliff_of_dover
 		ItemName "No Mercy"
 	}
 
+	PlayerSpawnTemplate 
+	{
+		Name Gravity_FailSafe
+	}
+
 	PlayerShootTemplate
 	{
 		Name Explosive_Tip_Scavenger
@@ -674,44 +714,6 @@ cliff_of_dover
 				}
 			}
 		}
-
-		//1 out of 4 crit
-		// WaveSpawn
-		// {
-		// 	Name "1_bat_scouts"
-		// 	Where spawnbot
-		// 	TotalCount 32
-		// 	MaxActive 8
-		// 	SpawnCount 4
-		// 	WaitBeforeStarting 0
-		// 	WaitBetweenSpawns 12
-		// 	TotalCurrency 25
-		
-		// 	RandomChoice
-		// 	{
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 			Attributes AlwaysCrit
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Scout_Melee
-		// 			ClassIcon scout_bat
-		// 		}
-		// 	}
-		// }
 
 		// WaveSpawn
 		// {
@@ -796,9 +798,9 @@ cliff_of_dover
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 15
+			WaitBeforeStarting 10
 			WaitBetweenSpawns 0
-			TotalCurrency 100
+			TotalCurrency 50
 		
 			TFBot
 			{
@@ -825,7 +827,7 @@ cliff_of_dover
 			SpawnCount 1
 			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
-			TotalCurrency 200
+			TotalCurrency 100
 		
 			TFBot
 			{
@@ -842,14 +844,88 @@ cliff_of_dover
 			}
 		}
 
+		WaveSpawn
+		{
+			Name "1_heater"
+			WaitForAllDead "1_droner"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heater
+					Name "Giant Heater Heavy"
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+
+
+		//1 out of 4 crit
+		WaveSpawn
+		{
+			Name "1_bat_scouts"
+			Where spawnbot
+			WaitForAllSpawned "1_droner"
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+		
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					ClassIcon scout_bat
+				}
+			}
+		}
+
 		WaveSpawn 
 		{
 			Name "1_tank"
-			WaitForAllDead "1_droner"
+			WaitForAllSpawned "1_heater"
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 2
+			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 100
@@ -858,7 +934,7 @@ cliff_of_dover
 			{
 				Name "tankboss"
 				StartingPathTrackNode "tank_path_1"
-				Health 18000
+				Health 13500
 				Speed 75
 
 				ClassIcon tank_shield
@@ -900,7 +976,7 @@ cliff_of_dover
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 16
+			WaitBeforeStarting 23
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 		
@@ -1274,24 +1350,40 @@ cliff_of_dover
 			Name "3_gshotgun"
 			WaitForAllDead "3_demo"
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 6
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 100
 		
-			// Squad
-			// {
+			Squad
+			{
 				TFBot
 				{
 					Template T_TFBot_Giant_Heavyweapons_Shotgun
 				}
-			// 	TFBot
-			// 	{
-			// 		Template T_TFBot_Giant_Medic_Uber
-			// 	}
-			// }
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
 		}
 
 		WaveSpawn
@@ -1317,32 +1409,33 @@ cliff_of_dover
 			}
 		}
 
-		// WaveSpawn
-		// {
-		// 	Name "3_pos_gshotgun_conchknight"
-		// 	WaitForAllDead "3_gshotgun"
-		// 	Where spawnbot
-		// 	TotalCount 1
-		// 	MaxActive 1
-		// 	SpawnCount 1
-		// 	WaitBeforeStarting 8
-		// 	WaitBetweenSpawns 0
-		// 	TotalCurrency 200
+		WaveSpawn
+		{
+			Name "3_pos_gshotgun_conchknight"
+			WaitForAllSpawned "3_gshotgun"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 40
+			WaitBetweenSpawns 0
+			TotalCurrency 200
 		
-		// 	TFBot
-		// 	{
-		// 		Template T_TFBot_Giant_DemoMan_PrinceTavish
-		// 		Name "Giant Conch Demoknight"
+			TFBot
+			{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish
+				Name "Giant Conch Demoknight"
 				
-		// 		ClassIcon demoknight_conch_lite
-		// 		Attributes SpawnWithFullCharge
-		// 		Item "The Concheror"
-		// 		CharacterAttributes
-		// 		{
-		// 			"increase buff duration"	9.0
-		// 		}
-		// 	}
-		// }
+				ClassIcon demoknight_conch_lite
+				Attributes SpawnWithFullCharge
+				Item "The Concheror"
+				CharacterAttributes
+				{
+					"increase buff duration"	9.0
+				}
+			}
+		}
+
 		WaveSpawn
 		{
 			Name "3_rapidsoldiers"
@@ -1367,7 +1460,7 @@ cliff_of_dover
 			Name "3_heavies"
 			WaitForAllSpawned "3_gshotgun"
 			Where flankers
-			TotalCount 30
+			TotalCount 35
 			MaxActive 10
 			SpawnCount 5
 			WaitBeforeStarting 8
@@ -1647,9 +1740,10 @@ cliff_of_dover
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Scout 
-					WeaponRestrictions PrimaryOnly 
-					// Attributes AlwaysFireWeapon
+					// Template T_TFBot_Giant_Scout 
+					// WeaponRestrictions PrimaryOnly 
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+
 					SpawnTemplate Bot_Carried
 				}
 			}
@@ -1779,7 +1873,7 @@ cliff_of_dover
 				{
 					SpawnTemplate TeleportToBlimp
 					Template T_TFBot_Giant_Heavyweapons
-					Attributes AlwaysCrit
+					// Attributes AlwaysCrit
 					Item "The B.A.S.E. Jumper"
 					SpawnTemplate Bot_Carried
 				}
@@ -2052,8 +2146,7 @@ cliff_of_dover
 				{
 					TFBot
 					{
-						Template T_TFBot_Timeconstraint_1
-						Health 15000
+						Template T_TFBot_Timeconstraint_2
 
 						tag timeconstraint2
 
@@ -2083,7 +2176,7 @@ cliff_of_dover
 					TFBot
 					{
 						Template T_TFBot_Chief_Soldier	
-						Health 13000
+						Health 10000
 						Name "Sergeant Chariot"
 
 						SpawnTemplate Bot_Carrier
@@ -2112,10 +2205,65 @@ cliff_of_dover
 				{
 					TFBot
 					{
-						Template T_TFBot_Timeconstraint_1
-						Health 15000
+						// Template T_TFBot_Timeconstraint_1
+						// Health 15000
+						Class Heavy
+						Scale 0.0001
+						
+						Action Idle
+						CharacterAttributes
+						{
+							"move speed bonus" 0.0001
+							"no_jump" 1
+						}
+
 
 						tag timeconstraint3
+					}
+				}
+			}
+		}
+
+		// phase 3 scouts
+		WaveSpawn
+		{
+			Name "6_tc3"
+			WaitForAllDead "6_tc2"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			DoneOutput
+			{
+				Target popscript
+				Action "$Phase3SubwaveDone"
+			}
+
+			Squad
+			{
+				Squad
+				{
+					NoWaitForFormation 1
+					NoFormation 1
+					TFBot
+					{
+						Template T_TFBot_Giant_Scout_Fast 
+						AlwaysGlow 1
+						SpawnTemplate Bot_Carrier
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier_SlowBarrage
+						AlwaysGlow 1
+						Attributes AlwaysCrit
+
+						SpawnTemplate Bot_Carried
 					}
 				}
 			}
@@ -2125,25 +2273,81 @@ cliff_of_dover
 			Name "6_tc3"
 			WaitForAllDead "6_tc2"
 			Where spawnbot
-			TotalCount 3
-			MaxActive 3
-			SpawnCount 1
-			WaitBeforeStarting 20
-			WaitBetweenSpawns 7
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 27
+			WaitBetweenSpawns 0
 			TotalCurrency 1
 
 			Support Limited
+
+			DoneOutput
+			{
+				Target popscript
+				Action "$Phase3SubwaveDone"
+			}
 
 			Squad
 			{
 				Squad
 				{
+					NoWaitForFormation 1
+					NoFormation 1
 					TFBot
 					{
-						Template T_TFBot_Giant_Scout_Fast
-						// Action Mobber
-						// Attributes AlwaysCrit
+						Template T_TFBot_Giant_Scout_Fast 
 						AlwaysGlow 1
+						SpawnTemplate Bot_Carrier
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Heavyweapons_Deflector
+						AlwaysGlow 1
+						SpawnTemplate Bot_Carried
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "6_tc3"
+			WaitForAllDead "6_tc2"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 34
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+
+			DoneOutput
+			{
+				Target popscript
+				Action "$Phase3SubwaveDone"
+			}
+
+			Squad
+			{
+				Squad
+				{
+					NoWaitForFormation 1
+					NoFormation 1
+					TFBot
+					{
+						Template T_TFBot_Giant_Scout_Fast 
+						AlwaysGlow 1
+						SpawnTemplate Bot_Carrier
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Pyro_Flare_Spammer 
+						AlwaysGlow 1
+						Attributes AlwaysCrit
+
+						SpawnTemplate Bot_Carried
 					}
 				}
 			}
@@ -2163,19 +2367,28 @@ cliff_of_dover
 
 			Support Limited
 
+			DoneOutput
+			{
+				Target popscript
+				Action "$PvPBluWin"
+			}
+
 			Squad
 			{
 				Squad
 				{
 					TFBot
 					{
-						Template T_TFBot_Timeconstraint_1
+						Template T_TFBot_Timeconstraint_2
 						Action Idle
+
+						Health 150 // timer
 
 						CharacterAttributes
 						{
 							"move speed bonus" 0.0001
 							"no_jump" 1
+							"no_attack" 1
 						}
 						tag timeconstraintFinal
 					}
