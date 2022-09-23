@@ -270,6 +270,7 @@ cliff_of_dover
 			OriginalItemName "Upgradeable TF_WEAPON_MINIGUN" 
 
 			"hidden primary max ammo bonus" 0.0001
+			"move speed bonus" 1.5
 			"cannot be upgraded" 1
 			"special item description" "Create 2 small projectile shields that orbit around you and damage enemies"
 			"special item description 2" "Increased damage for secondary and melee"
@@ -491,7 +492,7 @@ cliff_of_dover
 			Attribute "cannot giftwrap" 
 			Cap 1
 			Increment 1
-			Cost 200
+			Cost 100
 
 			AllowedWeapons 
 			{
@@ -933,7 +934,7 @@ cliff_of_dover
 			{
 				Name "tankboss"
 				StartingPathTrackNode "tank_path_1"
-				Health 18000
+				Health 13500
 				Speed 75
 
 				ClassIcon tank_shield
@@ -2366,19 +2367,28 @@ cliff_of_dover
 
 			Support Limited
 
+			DoneOutput
+			{
+				Target popscript
+				Action "$PvPBluWin"
+			}
+
 			Squad
 			{
 				Squad
 				{
 					TFBot
 					{
-						Template T_TFBot_Timeconstraint_1
+						Template T_TFBot_Timeconstraint_2
 						Action Idle
+
+						Health 150 // timer
 
 						CharacterAttributes
 						{
 							"move speed bonus" 0.0001
 							"no_jump" 1
+							"no_attack" 1
 						}
 						tag timeconstraintFinal
 					}

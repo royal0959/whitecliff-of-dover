@@ -673,7 +673,9 @@ function DroneFired(sentryName, projectile)
 		sentryEnt.m_iTeamNum = 3
 	end
 
-	sentryEnt.m_hBuilder = owner
+	timer.Simple(0.6, function ()
+		sentryEnt.m_hBuilder = owner
+	end)
 
 	local ownerHandle = owner:GetHandleIndex()
 

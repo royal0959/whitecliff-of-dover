@@ -145,6 +145,10 @@ local function revertRollback()
 	fade()
 
 	timer.Simple(0.6, function ()
+		for _, door in pairs(ents.FindAllByClass("func_door")) do
+			door:Remove()
+		end
+
 		for _, player in pairs(ents.GetAllPlayers()) do
 			if not player:IsRealPlayer() then
 				goto continue
@@ -154,16 +158,16 @@ local function revertRollback()
 
 			::continue::
 		end
-		
+
 		for ent, data in pairs(rollbacks) do
 			if not IsValid(ent) or not ent:IsAlive() then
 				goto continue
 			end
-	
+
 			-- ent:SetAbsOrigin(data.Origin)
 			-- ent:SetAbsAngles(data.Angles)
 			ent:Teleport(data.Origin, data.Angles)
-	
+
 			::continue::
 		end
 	end)
@@ -524,20 +528,20 @@ end
 
 local function endWave()
 	for _, player in pairs(ents.GetAllPlayers()) do
+		if player:IsRealPlayer() then
+			-- player:ForceRespawn()
+			player.m_bUseBossHealthBar = false
+			player.m_bIsMiniBoss = false
+			player.m_bGlowEnabled = 0
+
+			goto continue
+		end
+
 		if player.m_iTeamNum ~= 3 then
 			goto continue
 		end
 
 		if not player:IsAlive() then
-			goto continue
-		end
-
-		if player:IsRealPlayer() then
-			player:ForceRespawn()
-			player.m_bUseBossHealthBar = false
-			player.m_bIsMiniBoss = false
-			player.m_bGlowEnabled = 0
-
 			goto continue
 		end
 
@@ -673,7 +677,9 @@ local function HandleFinal(bot)
 	timer.Simple(8, function ()
 		chatMessage("Step right on up fella, you're on my side now")
 
-		cur_constraint.m_bUseBossHealthBar = false
+		-- cur_constraint.m_bUseBossHealthBar = false
+		---@diagnostic disable-next-line: need-check-nil
+		cur_constraint:SetAttributeValue("is suicide counter", 1)
 
 		local spawn = ents.FindByName("timeconstraint_fast")
 		local spawnPos = spawn:GetAbsOrigin() + Vector(0, 0, 10)
@@ -682,6 +688,12 @@ local function HandleFinal(bot)
 
 		chosenPlayer:Teleport(spawnPos)
 		chosenPlayer:AddCond(TF_COND_REPROGRAMMED)
+
+		-- no resistance
+		chosenPlayer:SetAttributeValue("dmg taken from fire reduced", nil)
+		chosenPlayer:SetAttributeValue("dmg taken from blast reduced", nil)
+		chosenPlayer:SetAttributeValue("dmg taken from bullets reduced", nil)
+		chosenPlayer:SetAttributeValue("dmg taken from crit reduced", nil)
 
 		chosenPlayer:SetAttributeValue("max health additive bonus", 5000)
 		chosenPlayer:SetAttributeValue("cannot pick up intelligence", 1)
@@ -712,7 +724,7 @@ local function HandleFinal(bot)
 			player:SetAttributeValue("min respawn time", 999999)
 
 			local text = player ~= chosenPlayer and
-				"ELIMINATE BLU PLAYER TO WIN" or
+				"ELIMINATE BLU PLAYER BEFORE TIME RUNS OUT" or
 				"ELIMINATE ALL RED PLAYERS TO WIN"
 
 			player:Print(PRINT_TARGET_CENTER, text)
@@ -746,8 +758,11 @@ local function HandleFinal(bot)
 
 		chatMessage("Spawn protection for both teams have been disabled")
 
-		for _, door in pairs(ents.FindAllByClass("func_door")) do
-			door:Remove()
+		-- for _, door in pairs(ents.FindAllByClass("func_door")) do
+		-- 	door:Remove()
+		-- end
+		for _, kit in pairs(ents.FindAllByClass("item_healthkit*")) do
+			kit:Remove()
 		end
 		for _, room in pairs(ents.FindAllByClass("func_respawnroom")) do
 			room:Remove()
