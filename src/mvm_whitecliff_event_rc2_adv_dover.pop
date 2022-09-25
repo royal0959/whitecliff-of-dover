@@ -2389,6 +2389,7 @@ cliff_of_dover
 							"move speed bonus" 0.0001
 							"no_jump" 1
 							"no_attack" 1
+							"mod weapon blocks healing" 1
 						}
 						tag timeconstraintFinal
 					}
