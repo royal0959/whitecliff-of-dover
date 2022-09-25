@@ -470,7 +470,7 @@ cliff_of_dover
 			Attribute "cannot giftwrap" 
 			Cap 1 
 			Increment 1
-			Cost 100
+			Cost 150
 
 			PlayerUpgrade 1
 			AllowPlayerClass Engineer 

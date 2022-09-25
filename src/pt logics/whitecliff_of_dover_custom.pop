@@ -947,7 +947,7 @@ WaveSchedule
 			{
 				Target "freelance_mercenary_not_equipped"
 				Action "TestActivator"
-				Delay 0.1
+				Delay 0
 			}
 			// OnSpawnOutput
 			// {
