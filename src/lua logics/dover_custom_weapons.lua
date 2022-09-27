@@ -708,6 +708,8 @@ function DroneFired(sentryName, projectile)
 	end)
 end
 
+local notificationsShown = {}
+
 function DroneWalkerEquip(_, activator)
 	-- fix weird quirk with template being spawned after you switch to a different class
 	if classIndices_Internal[activator.m_iClass] ~= "Engineer" then
@@ -719,7 +721,10 @@ function DroneWalkerEquip(_, activator)
 
 	if callbacks.Drone[handle] then
 		DroneWalkerUnequip(activator, handle)
-	else
+	end
+
+	if not notificationsShown[handle] then
+		notificationsShown[handle] = true
 		activator["$DisplayTextCenter"](activator, "Press alt-fire to make drones stationary")
 	end
 
