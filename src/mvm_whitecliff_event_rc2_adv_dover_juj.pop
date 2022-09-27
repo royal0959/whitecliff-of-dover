@@ -965,6 +965,7 @@ cliff_of_dover
 			TFBot
 			{
 				Template T_TFBot_Scout_Scattergun_SlowFire
+				Name "Scout"
 			}
 		}
 
@@ -1307,7 +1308,7 @@ cliff_of_dover
 			{
 				Name "tankboss"
 				StartingPathTrackNode "monoculus_alt_1"
-				Health 18000
+				Health 12500
 				Speed 75
 
 				SpawnTemplate Monoculus_Annotation
@@ -1968,12 +1969,6 @@ cliff_of_dover
 			WaitBeforeStarting 11
 			WaitBetweenSpawns 20
 			TotalCurrency 50
-
-			DoneOutput
-			{
-				Target teleblimpboss
-				Action Kill
-			}
 	
 			TFBot
 			{
@@ -2028,6 +2023,12 @@ cliff_of_dover
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 50
+
+			DoneOutput
+			{
+				Target teleblimpboss
+				Action Kill
+			}
 	
 			Squad
 			{
