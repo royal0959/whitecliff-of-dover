@@ -694,8 +694,9 @@ local function HandleFinal(bot)
 		chosenPlayer:SetAttributeValue("dmg taken from blast reduced", nil)
 		chosenPlayer:SetAttributeValue("dmg taken from bullets reduced", nil)
 		chosenPlayer:SetAttributeValue("dmg taken from crit reduced", nil)
+		chosenPlayer:SetAttributeValue("health regen", nil)
 
-		chosenPlayer:SetAttributeValue("max health additive bonus", 5000)
+		chosenPlayer:SetAttributeValue("max health additive bonus", 8000)
 		chosenPlayer:SetAttributeValue("cannot pick up intelligence", 1)
 
 		chosenPlayer.m_bUseBossHealthBar = true
