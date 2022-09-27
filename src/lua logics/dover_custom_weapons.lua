@@ -719,6 +719,8 @@ function DroneWalkerEquip(_, activator)
 
 	if callbacks.Drone[handle] then
 		DroneWalkerUnequip(activator, handle)
+	else
+		activator["$DisplayTextCenter"](activator, "Press alt-fire to make drones stationary")
 	end
 
 	local meleeWeapon = activator:GetPlayerItemBySlot(2)
