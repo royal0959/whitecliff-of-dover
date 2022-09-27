@@ -405,6 +405,13 @@ WaveSchedule
 		{
 			OnSpawnOutput 
 			{
+				Target "!activator"
+				Action "AddOutput"
+				Param "OnHealthBelow40Percent junior:SetAnimation:panic:0:-1"
+			}
+
+			OnSpawnOutput 
+			{
 				Target "ambulance_support"
 				Action "Enable"
 			}
@@ -426,15 +433,35 @@ WaveSchedule
 				"pressuredelay" "0"
 				"physdamagescale" "1.0"
 				"PerformanceMode" "0"
-				"model" "models/ambulance.mdl"
+				"model" "models/workshop/player/items/medic/taunt_the_mannbulance/taunt_the_mannbulance.mdl"
 				"body" "0"
 
-				"origin" "50 0 0"
-				"angles" "0 -90 0"
+				"origin" "20 0 0"
+				"angles" "0 0 0"
 
-				"modelscale" "1.1"
+				"modelscale" "3"
+				"skin" "1"
+			}
 
-				"OnUser1" "!self,Kill,,2,-1"
+			prop_dynamic
+			{
+				"targetname" "junior"
+				"spawnflags" "0"
+				"solid" "0"
+				"rendercolor" "255 255 255"
+				"renderamt" "255"
+				"RandomAnimation" "0"
+				"pressuredelay" "0"
+				"physdamagescale" "1.0"
+				"PerformanceMode" "0"
+				"model" "models/bots/bot_worker/bot_worker.mdl"
+				"body" "0"
+
+				"origin" "35 0 45"
+				"angles" "0 0 0"
+
+				"DefaultAnim" "idle"
+				"skin" "1"
 			}
 
 			dispenser_touch_trigger

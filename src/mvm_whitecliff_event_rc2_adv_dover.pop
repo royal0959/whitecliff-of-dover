@@ -965,6 +965,7 @@ cliff_of_dover
 			TFBot
 			{
 				Template T_TFBot_Scout_Scattergun_SlowFire
+				Name "Scout"
 			}
 		}
 
