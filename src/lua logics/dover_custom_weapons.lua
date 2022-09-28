@@ -22,7 +22,7 @@ local PHD_EXPLOSIONS = {
 	["Small"] = { Particle = "hammer_impact_button", Radius = 144, Damage = 50 },
 	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 144, Damage = 125 },
 	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 200 },
-	["Large"] = { Particle = "asplode_hoodoo", Radius = 200, Damage = 350 },
+	["Large"] = { Particle = "ExplosionCore_Wall", Radius = 200, Damage = 350 }, --asplode_hoodoo
 	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 700 },
 }
 

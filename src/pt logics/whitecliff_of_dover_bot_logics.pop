@@ -829,7 +829,7 @@ WaveSchedule
 			{
 				"origin" "1984 1984 99999"
 				"targetname" "upper_text"
-				"message" "RAVENGER OF THE NIGHT"
+				"message" "RAVAGER OF THE NIGHT"
 				"x" "-1"
 				"y" "0.4"
 				"spawnflags" "1"

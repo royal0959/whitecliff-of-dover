@@ -1308,7 +1308,7 @@ cliff_of_dover
 			{
 				Name "tankboss"
 				StartingPathTrackNode "monoculus_alt_1"
-				Health 12500
+				Health 12000
 				Speed 75
 
 				SpawnTemplate Monoculus_Annotation
