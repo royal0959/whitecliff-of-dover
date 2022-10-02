@@ -19,6 +19,8 @@ models/player/items/all_class/gately_gibus_heavy.mdl
 <ul>
   <li>Biker Redeemer:
   <br>Damage bonus - Damage bonus for specific weapon</li>
+   <li>Winger:
+  <br>Multi-Directional Dash - Altfire to dash toward eye direction</li>
 </ul>
 <b>Medic</b>
 <ul>
@@ -36,6 +38,7 @@ models/player/items/all_class/gately_gibus_heavy.mdl
 <ul>
   <li>Freelance Mercenary
   <br><br>Press the Action key to switch between classes on the fly. 5 second cooldown between uses
+  <br><br>After switching: charge meter items are unusable for 8 seconds
   <br>(!) Goes in canteen slot
   </li>
 </ul>
@@ -80,6 +83,7 @@ models/player/items/all_class/gately_gibus_heavy.mdl
   <li>Thunderdome
   <br><br>Create 2 small projectile shields that orbit around you and damage enemies
 	<br>Increased damage for secondary and melee
+	<br>+50% move speed
 	<br>No primary weapon
   </li>
 </ul>
