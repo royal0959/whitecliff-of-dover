@@ -564,8 +564,6 @@ function SetScavengerMimicDamage(mimicName, projectile)
 
 	local chargeMult = weaponsData.Scavenger[handle].ChargeMult
 
-	print(chargeMult)
-
 	local damageMult = (primary:GetAttributeValue("damage bonus") or 1) * chargeMult
 
 	mimic.Damage = SCAVENGER_EXPLOSION_BASE_DAMAGE * damageMult
@@ -904,11 +902,7 @@ function PHDEquip(_, activator)
 
 		if jumping == 0 then
 			if phdData.JumpStartTime then
-				print(timeDiff, timeSpentParachuting)
-
 				timeSpentParachuting = 0
-
-				print(chosenThreshold)
 
 				local activatorOrigin = activator:GetAbsOrigin()
 
@@ -947,8 +941,6 @@ function PHDEquip(_, activator)
 
 					::continue::
 				end
-
-				print("kaboom")
 
 				phdData.JumpStartTime = false
 			end
