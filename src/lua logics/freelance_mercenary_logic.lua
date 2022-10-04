@@ -80,23 +80,25 @@ function FreelanceMerc_PromptMenu(currentClass, activator)
 			local secondary = player:GetPlayerItemBySlot(1)
 			local melee = player:GetPlayerItemBySlot(2)
 
-			local props = player:DumpProperties()
 
 			-- shoutout to np_sub for giving me the idea to do .... whatever this is
 			-- I hate
-			for i, v in pairs(props.m_iAmmo) do
+
+			for i = 1, #player.m_iAmmo do
+				local v = player.m_iAmmo[i]
 				if v == 1 then
 					player:AcceptInput("$SetProp$m_iAmmo$" .. i - 1, 0)
+					-- player.m_iAmmo[i] = 0
 				end
 			end
 
 			secondary.m_flEffectBarRegenTime = CurTime() + 8
-			-- wrap assassin/sandman
-			melee.m_flEffectBarRegenTime = CurTime() + 8
+			melee.m_flEffectBarRegenTime = CurTime() + 8 -- wrap assassin/sandman
 
 			-- for lunch boxes to display properly
-			for i, _ in pairs(props.m_flItemChargeMeter) do
+			for i = 1, #player.m_flItemChargeMeter do
 				player:AcceptInput("$SetProp$m_flItemChargeMeter$" .. i - 1, 0)
+				-- player.m_flItemChargeMeter[i] = 0
 			end
 
 			cooldowns[handleIndex] = true
