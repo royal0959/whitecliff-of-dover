@@ -307,11 +307,11 @@ WaveSchedule
 				Action "$RemoveOutput"
 				Param "OnPass"
 			}
-			OnParentKilledOutput
-			{
-				Target "teleblimp_support"
-				Action "Disable"
-			}
+			// OnParentKilledOutput
+			// {
+			// 	Target "teleblimp_support"
+			// 	Action "Disable"
+			// }
 
 			logic_relay
 			{

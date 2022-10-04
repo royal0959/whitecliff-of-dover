@@ -746,15 +746,15 @@ WaveSchedule
 				"targetname" "attach_to_enemy"
 				"StartDisabled" "1"
 				"origin" "0 0 0"
-				"mins" "-8 -8 -8"
-				"maxs" "8 8 8"
+				"mins" "-2.5 -2.5 -2.5"
+				"maxs" "2.5 2.5 2.5"
 				"Damage" "0"
 				"spawnflags" "1" 
 				"filtername" "filter_is_blue"
 
 				"OnStartTouch" "detonate_position,SetParent,!activator,0.1,-1"
 				"OnStartTouch" "!self,Disable,,0,-1"
-				"OnStartTouch" "!parent,Kill,,-1,-1"
+				// "OnStartTouch" "!parent,Kill,,-1,-1"
 
 				"OnUser1" "!self,Kill,,2.1,-1"
 			}
@@ -763,15 +763,15 @@ WaveSchedule
 				"targetname" "attach_to_enemy_red"
 				"StartDisabled" "1"
 				"origin" "0 0 0"
-				"mins" "-8 -8 -8"
-				"maxs" "8 8 8"
+				"mins" "-2.5 -2.5 -2.5"
+				"maxs" "2.5 2.5 2.5"
 				"Damage" "0"
 				"spawnflags" "1" 
 				"filtername" "filter_is_red"
 
 				"OnStartTouch" "detonate_position,SetParent,!activator,0.1,-1"
 				"OnStartTouch" "!self,Disable,,0,-1"
-				"OnStartTouch" "!parent,Kill,,-1,-1"
+				// "OnStartTouch" "!parent,Kill,,-1,-1"
 
 				"OnUser1" "!self,Kill,,2.1,-1"
 			}

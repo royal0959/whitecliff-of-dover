@@ -137,7 +137,7 @@ cliff_of_dover
 
 	ExtraSpawnPoint 
     {
-        Name "teleblimp_support" //gets disabled after blimp death
+        Name "teleblimp_support"
         TeamNum 3 
         X "2022.725708"            
         Y "-6524.927734"                  

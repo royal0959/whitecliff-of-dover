@@ -97,11 +97,12 @@ end
 
 local rollbacks = {}
 
+local CLASSES = {"player", "obj_*"}
+
 local function storeRollback()
 	rollbacks = {}
-	local classes = {"player", "obj_*"}
 
-	for _, class in pairs(classes) do
+	for _, class in pairs(CLASSES) do
 		for _, ent in pairs(ents.FindAllByClass(class)) do
 			if not ent:IsCombatCharacter() then
 				goto continue
@@ -112,8 +113,9 @@ local function storeRollback()
 			end
 
 			rollbacks[ent] = {
-				Origin = ent:GetAbsOrigin() + Vector(0, 0, 10),
-				Angles = ent:GetAbsAngles()
+				Origin = ent:GetAbsOrigin(), --+ Vector(0, 0, 0),
+				Angles = ent:GetAbsAngles(),
+				IsPlayer = class == "player" and true
 			}
 
 			::continue::
@@ -166,7 +168,18 @@ local function revertRollback()
 
 			-- ent:SetAbsOrigin(data.Origin)
 			-- ent:SetAbsAngles(data.Angles)
-			ent:Teleport(data.Origin, data.Angles)
+
+			if data.IsPlayer then
+				ent:SetAbsOrigin(data.Origin)
+
+				ent:SnapEyeAngles(data.Angles)
+
+				-- local pitch = ent["m_angEyeAngles[0]"]
+				-- local yaw = ent["m_angEyeAngles[1]"]
+				-- ent:SnapEyeAngles(Vector(-pitch, yaw, 0))
+			else
+				ent:Teleport(data.Origin, data.Angles)
+			end
 
 			::continue::
 		end
@@ -242,15 +255,21 @@ ents.AddCreateCallback("entity_medigun_shield", function (shield)
 	end)
 end)
 
+local playersCallback = {}
+local timers = {}
+
 function OnWaveInit()
 	gamestateEnded = false
 	timeconstraint_alive = false
 	pvpActive = false
 
 	finishedSubwaves = 0
-end
 
-local playersCallback = {}
+	removeTimers(timers)
+	for player, plrCallbacks in pairs(playersCallback) do
+		removeCallbacks(player, plrCallbacks)
+	end
+end
 
 local function Holder(bot)
 	timeconstraint_alive = true
@@ -291,7 +310,6 @@ local function Holder(bot)
 
 	
 	local callbacks = {}
-	local timers = {}
 
 	storeRollback()
 
@@ -351,7 +369,7 @@ local function Holder(bot)
 
 		for player, plrCallbacks in pairs(playersCallback) do
 			removeCallbacks(player, plrCallbacks)
-			removeTimers(timers)
+			-- removeTimers(timers)
 		end
 	end)
 	callbacks.spawned = bot:AddCallback(ON_SPAWN, function()
@@ -360,7 +378,7 @@ local function Holder(bot)
 
 		for player, plrCallbacks in pairs(playersCallback) do
 			removeCallbacks(player, plrCallbacks)
-			removeTimers(timers)
+			-- removeTimers(timers)
 		end
 	end)
 end
