@@ -469,7 +469,7 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 				return false
 			end
 
-			local targetTeamnum = target._iTeamNu
+			local targetTeamnum = target._iTeamNum
 
 			if targetTeamnum == owner.m_iTeamNum then
 				return false
@@ -488,7 +488,7 @@ ents.AddCreateCallback("tf_projectile_rocket", function(entity)
 				Attacker = owner,
 				Inflictor = nil,
 				Weapon = secondary,
-				Damage = baseDamage * damageMult * extraDamagmeMult,
+				Damage = baseDamage * damageMult * extraDamageMult,
 				DamageType = DMG_SHOCK,
 				DamageCustom = 0,
 				DamagePosition = visualHitPost,
