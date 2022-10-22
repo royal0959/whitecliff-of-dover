@@ -301,7 +301,7 @@ function UndyingSpawn(rechargeTime, activator)
 				ReportedPosition = damageInfo.ReportedPosition,
 			}
 
-			print(activator:TakeDamage(setHealthDmgInfo))
+			activator:TakeDamage(setHealthDmgInfo)
 
 			UndyingActivate(rechargeTime, activator, handle)
 
