@@ -1302,7 +1302,7 @@ cliff_of_dover
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
-			TotalCurrency 0//200
+			TotalCurrency 0 //200
 		
 			Tank
 			{
