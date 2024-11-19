@@ -124,17 +124,13 @@ local function storeRollback()
 end
 
 local function fade()
-	local fadeEnt = Entity("env_fade", true)
-	local properties = {
+	-- local fadeEnt = Entity("env_fade", true)
+	local fadeEnt = ents.CreateWithKeys("env_fade", {
 		holdtime = 1,
 		duration = 0.5,
-		rendercolor = "255, 255, 255",
+		rendercolor = ("255, 255, 255"),
 		renderamt = 255
-	}
-
-	for name, value in pairs(properties) do
-		fadeEnt:AcceptInput("$SetKey$"..name, value)
-	end
+	}, true, true)
 
 	fadeEnt.Fade(fadeEnt)
 
@@ -283,7 +279,7 @@ local function Holder(bot)
 		end
 
 		playersCallback[player] = {}
-	
+
 		playersCallback[player].died = player:AddCallback(ON_DEATH, function ()
 			if pvpActive then
 				return
@@ -299,16 +295,16 @@ local function Holder(bot)
 
 			local allInsults = DEATH_INSULTS[classIndices_Internal[player.m_iClass]]
 			local chosenInsult = allInsults[math.random(#allInsults)]
-			
+
 			local name = player:GetPlayerName()
-	
+
 			chatMessage(string.format(chosenInsult, name))
 		end)
 
 		::continue::
 	end
 
-	
+
 	local callbacks = {}
 
 	storeRollback()
@@ -363,7 +359,7 @@ local function Holder(bot)
 
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
 		timeconstraint_alive = false
-		
+
 		removeCallbacks(bot, callbacks)
 		removeTimers(timers)
 
@@ -497,7 +493,7 @@ local function Handle3(bot)
 
 				::continue::
 			end
-			
+
 		end)
 	end)
 
@@ -511,17 +507,17 @@ local function Handle3(bot)
 		-- 	if player.m_iTeamNum ~= 3 then
 		-- 		goto continue
 		-- 	end
-	
+
 		-- 	if not player:IsAlive() then
 		-- 		goto continue
 		-- 	end
-	
+
 		-- 	if player:GetPlayerName() ~= "Super Scout" then
 		-- 		goto continue
 		-- 	end
-	
+
 		-- 	player:Suicide()
-	
+
 		-- 	::continue::
 		-- end
 
@@ -594,7 +590,7 @@ local function PvPRedWin()
 	if gamestateEnded then
 		return
 	end
-	
+
 	gamestateEnded = true
 	pvpActive = false
 
@@ -642,7 +638,7 @@ function OnPlayerDisconnected(player)
 	if not timeconstraint_alive then
 		return
 	end
-	
+
 	if player.m_iTeamNum == 3 then
 		PvPRedWin()
 		return
