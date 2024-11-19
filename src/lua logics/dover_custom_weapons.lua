@@ -386,7 +386,7 @@ function SeducerHit(_, activator, caller)
 		return
 	end
 
-	if caller:InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) ~= 0 then
+	if caller:InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) then
 		return
 	end
 
