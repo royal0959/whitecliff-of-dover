@@ -15,6 +15,7 @@ local DEATH_INSULTS = {
 	Scout = {
 		"Jumping won't save you, %s",
 		"Unequip the Fan-o-War, %s",
+		"Try upgrading your primary weapon, %s"
 	},
 	Soldier = {
 		"Unbind your attack key, %s",
@@ -28,26 +29,32 @@ local DEATH_INSULTS = {
 	Demoman = {
 		"Try using your movement keys next time, %s",
 		"Are you actually drunk, %s? You're playing like you are",
+		"Your incompetency is truly explosive, %s",
 	},
 	Heavyweapons = {
 		"Consider playing a more interesting class, %s",
 		"I hope that got you to leave a negative review on the end-of-operation survey, %s",
+		"Keep standing directly infront me, %s, see how that goes next time",
 	},
 	Engineer = {
 		"Build yourself better gamesense, %s",
 		"Sentry blocking going well, aye %s?",
+		"Unequip the wrangler, %s"
 	},
 	Medic = {
 		"How's that canteen spam going for you, %s?",
 		"Try idling more %s, maybe that will work",
+		"Too bad you can't reanimate yourself, %s",
 	},
 	Sniper = {
+		"Stop aiming for my head and start aiming to be better at the game, %s",
 		"Thanks for standing still, %s!",
 	},
 	Spy = {
 		"I hate the french",
+		"Try running in circle harder, %s",
+		"Couldn't dead ring that one, %s? Unfortunate",
 	}
-
 }
 
 local timeconstraint_alive = false
@@ -55,6 +62,8 @@ local cur_constraint = false -- current time constraint bot
 
 local pvpActive = false
 local gamestateEnded = false
+
+local specialLinePlaying = false
 
 -- local PHASE3_SUBWAVES = 3
 -- local finishedSubwaves = 0
@@ -198,6 +207,10 @@ ents.AddCreateCallback("entity_medigun_shield", function (shield)
 		return
 	end
 
+	if specialLinePlaying then
+		return
+	end
+
 	timer.Simple(0.1, function()
 		if shield.Registered then
 			return
@@ -225,6 +238,8 @@ ents.AddCreateCallback("entity_medigun_shield", function (shield)
 
 		activeShieldOwners[handle] = true
 
+		specialLinePlaying = true
+
 		chatMessage("Projectile Shield?")
 
 		-- aaaaaaaaaaa
@@ -246,6 +261,8 @@ ents.AddCreateCallback("entity_medigun_shield", function (shield)
 
 			timer.Simple(0.8, function()
 				chatMessage("I don't think so")
+
+				specialLinePlaying = false
 			end)
 		end)
 	end)
@@ -259,6 +276,8 @@ function OnWaveInit()
 	timeconstraint_alive = false
 	pvpActive = false
 
+	specialLinePlaying = false
+
 	finishedSubwaves = 0
 
 	removeTimers(timers)
@@ -267,9 +286,34 @@ function OnWaveInit()
 	end
 end
 
+local function handlePlayerDeath(player)
+	playersCallback[player] = {}
+
+	playersCallback[player].died = player:AddCallback(ON_DEATH, function ()
+		if pvpActive then
+			return
+		end
+
+		if specialLinePlaying then
+			return
+		end
+
+		if player.m_iTeamNum ~= 2 then
+			return
+		end
+
+		local allInsults = DEATH_INSULTS[classIndices_Internal[player.m_iClass]]
+		local chosenInsult = allInsults[math.random(#allInsults)]
+
+		local name = player:GetPlayerName()
+
+		chatMessage(string.format(chosenInsult, name))
+	end)
+
+end
+
 local function Holder(bot)
 	timeconstraint_alive = true
-	print(timeconstraint_alive)
 
 	local allPlayers = ents.GetAllPlayers()
 
@@ -278,28 +322,7 @@ local function Holder(bot)
 			goto continue
 		end
 
-		playersCallback[player] = {}
-
-		playersCallback[player].died = player:AddCallback(ON_DEATH, function ()
-			if pvpActive then
-				return
-			end
-
-			if not bot:IsAlive() then
-				return
-			end
-
-			if player.m_iTeamNum ~= 2 then
-				return
-			end
-
-			local allInsults = DEATH_INSULTS[classIndices_Internal[player.m_iClass]]
-			local chosenInsult = allInsults[math.random(#allInsults)]
-
-			local name = player:GetPlayerName()
-
-			chatMessage(string.format(chosenInsult, name))
-		end)
+		handlePlayerDeath(player)
 
 		::continue::
 	end
@@ -342,6 +365,8 @@ local function Holder(bot)
 
 		milkers[handle] = true
 
+		specialLinePlaying = true
+
 		chatMessage("Are you seriously using mad milk?")
 
 		timer.Simple(0.8, function ()
@@ -353,6 +378,8 @@ local function Holder(bot)
 			milker:WeaponSwitchSlot(LOADOUT_POSITION_SECONDARY)
 
 			milkers[handle] = nil
+
+			specialLinePlaying = false
 		end)
 
 	end, 0)
@@ -385,6 +412,8 @@ local function Handle1(bot)
 	storeRollback()
 
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
+		specialLinePlaying = true
+
 		timer.Simple(0.5, function ()
 			chatMessage("That's not supposed to happen")
 		end)
@@ -394,6 +423,7 @@ local function Handle1(bot)
 		end)
 
 		timer.Simple(3.5, function ()
+			specialLinePlaying = false
 			revertRollback()
 		end)
 
@@ -412,6 +442,7 @@ local function Handle2(bot)
 	chatMessage("My chariot will carry me to victory")
 
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
+		specialLinePlaying = true
 		timer.Simple(0.5, function ()
 			chatMessage("Fatal miscalculations were made")
 		end)
@@ -421,6 +452,7 @@ local function Handle2(bot)
 		end)
 
 		timer.Simple(3.5, function ()
+			specialLinePlaying = false
 			revertRollback()
 		end)
 
@@ -467,7 +499,6 @@ local function HandleSubwave3Bot(bot)
 		removeCallbacks(bot, callbacks)
 	end)
 end
-
 
 local function Handle3(bot)
 	local callbacks = {}
@@ -546,6 +577,8 @@ local function Handle3(bot)
 		-- 	::continue::
 		-- end
 
+		specialLinePlaying = true
+
 		timer.Simple(0.5, function ()
 			chatMessage("This is getting tiresome")
 		end)
@@ -555,6 +588,7 @@ local function Handle3(bot)
 		end)
 
 		timer.Simple(3.5, function ()
+			specialLinePlaying = false
 			revertRollback()
 		end)
 
@@ -598,6 +632,8 @@ local function PvPBluWin()
 	gamestateEnded = true
 	pvpActive = false
 
+	specialLinePlaying = true
+
 	timer.Simple(1, function ()
 		chatMessage("Masterfully done my dear friend")
 	end)
@@ -618,6 +654,8 @@ local function PvPRedWin()
 
 	gamestateEnded = true
 	pvpActive = false
+
+	specialLinePlaying = true
 
 	timer.Simple(1, function ()
 		chatMessage("How embarrassing")
@@ -659,6 +697,47 @@ local function checkPvPWinCond(dontSayCount)
 	end
 end
 
+local function handlePvPLateJoin(player)
+	-- player:ForceRespawn()
+	player:SetAttributeValue("min respawn time", 999999)
+	-- player:Suicide()
+
+	chatMessage("A new challenger enters the field? Very well, I'll allow it")
+
+	local plrCallbacks = {}
+	-- just incase
+	plrCallbacks.spawned = player:AddCallback(ON_SPAWN , function ()
+		player:SetAttributeValue("min respawn time", 999999)
+		checkPvPWinCond()
+	end)
+	plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
+		checkPvPWinCond()
+		removeCallbacks(player, plrCallbacks)
+	end)
+end
+
+local function handlePlayerPvPDeath(player)
+	local plrCallbacks = {}
+	plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
+		checkPvPWinCond()
+		removeCallbacks(player, plrCallbacks)
+	end)
+end
+
+function OnPlayerConnected(player)
+	if not timeconstraint_alive then
+		return
+	end
+
+	if pvpActive then
+		handlePvPLateJoin(player)
+		checkPvPWinCond(true)
+		-- handlePlayerPvPDeath(player)
+	end
+
+	handlePlayerDeath(player)
+end
+
 function OnPlayerDisconnected(player)
 	if not timeconstraint_alive then
 		return
@@ -676,6 +755,8 @@ local function HandleFinal(bot)
 	local callbacks = {}
 
 	storeRollback()
+
+	specialLinePlaying = true
 
 	chatMessage("Seeing as I myself am entirely unable to best you all")
 
@@ -754,6 +835,8 @@ local function HandleFinal(bot)
 	timer.Simple(10, function ()
 		chatMessage("Now give me a show")
 
+		specialLinePlaying = false
+
 		for _, player in pairs(ents.GetAllPlayers()) do
 			if not player:IsRealPlayer() then
 				goto continue
@@ -773,11 +856,14 @@ local function HandleFinal(bot)
 				goto continue
 			end
 
-			local plrCallbacks = {}
-			plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
-				checkPvPWinCond()
-				removeCallbacks(player, plrCallbacks)
-			end)
+			-- local plrCallbacks = {}
+			-- plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
+			-- 	checkPvPWinCond()
+			-- 	removeCallbacks(player, plrCallbacks)
+			-- end)
+
+			handlePlayerPvPDeath(player)
+
 			-- plrCallbacks.removed = player:AddCallback(ON_REMOVE, function ()
 			-- 	checkPvPWinCond()
 			-- end)
